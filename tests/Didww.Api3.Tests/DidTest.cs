@@ -92,6 +92,50 @@ public class DidTest : BaseTest
     }
 
     [Fact]
+    public async Task TestUpdateDidSetVoiceInTrunkNullifiesTrunkGroup()
+    {
+        StubPatch("dids/9df99644-f1a5-4a3c-99a4-559d758eb96b", "dids/update.json");
+
+        var did = Did.Build("9df99644-f1a5-4a3c-99a4-559d758eb96b");
+        var trunk = VoiceInTrunk.Build("41b94706-325e-4704-a433-d65105758836");
+        did.VoiceInTrunk = trunk;
+
+        await Client.Dids().UpdateAsync(did);
+
+        var requests = WireMock.LogEntries.Where(e =>
+            e.RequestMessage.Method == "PATCH").ToList();
+        requests.Should().HaveCount(1);
+        var body = requests[0].RequestMessage.Body;
+        var json = Newtonsoft.Json.Linq.JObject.Parse(body);
+        var relationships = json["data"]!["relationships"]!;
+
+        // voice_in_trunk_group should be nullified
+        relationships["voice_in_trunk_group"]!["data"]!.Type.Should().Be(Newtonsoft.Json.Linq.JTokenType.Null);
+    }
+
+    [Fact]
+    public async Task TestUpdateDidSetVoiceInTrunkGroupNullifiesTrunk()
+    {
+        StubPatch("dids/9df99644-f1a5-4a3c-99a4-559d758eb96b", "dids/update.json");
+
+        var did = Did.Build("9df99644-f1a5-4a3c-99a4-559d758eb96b");
+        var trunkGroup = VoiceInTrunkGroup.Build("some-trunk-group-id");
+        did.VoiceInTrunkGroup = trunkGroup;
+
+        await Client.Dids().UpdateAsync(did);
+
+        var requests = WireMock.LogEntries.Where(e =>
+            e.RequestMessage.Method == "PATCH").ToList();
+        requests.Should().HaveCount(1);
+        var body = requests[0].RequestMessage.Body;
+        var json = Newtonsoft.Json.Linq.JObject.Parse(body);
+        var relationships = json["data"]!["relationships"]!;
+
+        // voice_in_trunk should be nullified
+        relationships["voice_in_trunk"]!["data"]!.Type.Should().Be(Newtonsoft.Json.Linq.JTokenType.Null);
+    }
+
+    [Fact]
     public async Task TestFindDidWithAddressVerificationAndDidGroup()
     {
         StubGet("dids/21d0b02c-b556-4d3e-acbf-504b78295dbe", "dids/show_with_address_verification_and_did_group.json");
