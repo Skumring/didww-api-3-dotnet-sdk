@@ -1,13 +1,13 @@
 # DIDWW API v3 .NET SDK
 
-[![Tests](https://github.com/didww/didww-api-3-dotnet-sdk/actions/workflows/tests.yml/badge.svg)](https://github.com/didww/didww-api-3-dotnet-sdk/actions/workflows/tests.yml)
-![Coverage](https://didww.github.io/didww-api-3-dotnet-sdk/coverage/coverage.svg)
+[![Tests](https://github.com/didww/didww-api-3-dotnet-sdk/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/didww/didww-api-3-dotnet-sdk/actions/workflows/tests.yml)
+![Coverage](https://raw.githubusercontent.com/didww/didww-api-3-dotnet-sdk/badges/badges/coverage.svg)
 
 .NET SDK for the [DIDWW API v3](https://doc.didww.com).
 
 ## Requirements
 
-- .NET 9.0 or later
+- .NET 10.0 or later
 
 ## Installation
 

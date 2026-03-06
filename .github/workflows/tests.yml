@@ -47,14 +47,13 @@ jobs:
           echo "percentage=$COVERAGE" >> $GITHUB_OUTPUT
           echo "Coverage: $COVERAGE%"
 
-      - name: Generate coverage badge
+      - name: Generate and commit coverage badge
+        if: github.ref == 'refs/heads/main'
         run: |
-          mkdir -p ./coverage/badge
           COVERAGE="${{ steps.coverage.outputs.percentage }}"
           if [ -z "$COVERAGE" ]; then
             COVERAGE="0"
           fi
-          # Determine color based on coverage
           if (( $(echo "$COVERAGE >= 90" | bc -l) )); then
             COLOR="brightgreen"
           elif (( $(echo "$COVERAGE >= 80" | bc -l) )); then
@@ -66,13 +65,16 @@ jobs:
           else
             COLOR="red"
           fi
-          curl -s "https://img.shields.io/badge/coverage-${COVERAGE}%25-${COLOR}" > ./coverage/badge/coverage.svg
+          curl -s "https://img.shields.io/badge/coverage-${COVERAGE}%25-${COLOR}" > /tmp/coverage.svg
 
-      - name: Deploy coverage to GitHub Pages
-        if: github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./coverage/badge
-          destination_dir: coverage
-          keep_files: true
+          # Commit badge to badges branch
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin badges || true
+          git checkout --orphan badges-tmp
+          git rm -rf .
+          mkdir -p badges
+          cp /tmp/coverage.svg badges/coverage.svg
+          git add badges/coverage.svg
+          git commit -m "Update coverage badge: ${COVERAGE}%"
+          git push origin HEAD:badges --force
