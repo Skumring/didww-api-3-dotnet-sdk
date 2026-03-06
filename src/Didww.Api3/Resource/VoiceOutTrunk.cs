@@ -59,6 +59,12 @@ public class VoiceOutTrunk : BaseResource
     [JsonProperty("username")]
     public string? Username { get; set; }
 
+    [JsonProperty("password")]
+    public string? Password { get; set; }
+
+    [JsonProperty("threshold_reached")]
+    public bool? ThresholdReached { get; set; }
+
     [JsonProperty("created_at")]
     public DateTimeOffset? CreatedAt { get; set; }
 
