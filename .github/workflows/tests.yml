@@ -15,6 +15,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -65,16 +67,9 @@ jobs:
           else
             COLOR="red"
           fi
-          curl -s "https://img.shields.io/badge/coverage-${COVERAGE}%25-${COLOR}" > /tmp/coverage.svg
+          curl -s "https://img.shields.io/badge/coverage-${COVERAGE}%25-${COLOR}" > .github/badges/coverage.svg
 
-          # Commit badge to badges branch
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git fetch origin badges || true
-          git checkout --orphan badges-tmp
-          git rm -rf .
-          mkdir -p badges
-          cp /tmp/coverage.svg badges/coverage.svg
-          git add badges/coverage.svg
-          git commit -m "Update coverage badge: ${COVERAGE}%"
-          git push origin HEAD:badges --force
+          git add .github/badges/coverage.svg
+          git diff --cached --quiet || git commit -m "Update coverage badge: ${COVERAGE}%" && git push
