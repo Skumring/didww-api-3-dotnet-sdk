@@ -218,6 +218,51 @@ public class SupportingDocumentTemplateTest : BaseTest
 
 
 
+public class RequirementValidationTest : BaseTest
+{
+    [Fact]
+    public async Task TestCreateRequirementValidation()
+    {
+        StubPost("requirement_validations", "requirement_validations/create.json");
+
+        var validation = new RequirementValidation();
+        validation.Address = Address.Build("d3414687-40f4-4346-a267-c2c65117d28c");
+        validation.Requirement = new Requirement { Id = "aea92b24-a044-4864-9740-89d3e15b65c7" };
+
+        var response = await Client.RequirementValidations().CreateAsync(validation);
+        response.Data.Id.Should().Be("aea92b24-a044-4864-9740-89d3e15b65c7");
+    }
+}
+
+public class PermanentSupportingDocumentTest : BaseTest
+{
+    [Fact]
+    public async Task TestCreatePermanentSupportingDocument()
+    {
+        StubPost("permanent_supporting_documents", "permanent_supporting_documents/create.json");
+
+        var doc = new PermanentSupportingDocument();
+        doc.Identity = Identity.Build("5e9df058-50d2-4e34-b0d4-d1746b86f41a");
+        doc.Template = SupportingDocumentTemplate.Build("4199435f-646e-4e9d-a143-8f3b972b10c5");
+        doc.Files = new List<EncryptedFile> { EncryptedFile.Build("254b3c2d-c40c-4ff7-93b1-a677aee7fa10") };
+
+        var queryParams = new QueryParams().Include("template");
+        var response = await Client.PermanentSupportingDocuments().CreateAsync(doc, queryParams);
+        var created = response.Data;
+
+        created.Id.Should().Be("19510da3-c07e-4fa9-a696-6b9ab89cc172");
+        created.CreatedAt.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task TestDeletePermanentSupportingDocument()
+    {
+        var id = "19510da3-c07e-4fa9-a696-6b9ab89cc172";
+        StubDelete("permanent_supporting_documents/" + id);
+        await Client.PermanentSupportingDocuments().DeleteAsync(id);
+    }
+}
+
 public class EncryptedFileTest : BaseTest
 {
     [Fact]

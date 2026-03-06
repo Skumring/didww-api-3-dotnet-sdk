@@ -171,6 +171,8 @@ public class PermanentSupportingDocument : BaseResource
     public override string Type => "permanent_supporting_documents";
     public static PermanentSupportingDocument Build(string id) => BaseResource.Build<PermanentSupportingDocument>(id);
 
+    [JsonProperty("created_at")] public DateTimeOffset? CreatedAt { get; set; }
+
     private Identity? _identity;
     [JsonProperty("identity")]
     public Identity? Identity { get => _identity; set => _identity = MarkDirty("identity", value); }
@@ -187,6 +189,7 @@ public class PermanentSupportingDocument : BaseResource
 public class SupportingDocumentTemplate : BaseResource
 {
     public override string Type => "supporting_document_templates";
+    public static SupportingDocumentTemplate Build(string id) => BaseResource.Build<SupportingDocumentTemplate>(id);
 
     [JsonProperty("name")] public string? Name { get; set; }
     [JsonProperty("permanent")] public bool? Permanent { get; set; }
