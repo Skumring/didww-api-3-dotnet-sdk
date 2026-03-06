@@ -27,7 +27,8 @@ public class DidwwApiException : System.Exception
             sb.Append(": ");
             for (int i = 0; i < errors.Count; i++)
             {
-                if (i > 0) sb.Append("; ");
+                if (i > 0)
+                    sb.Append("; ");
                 sb.Append(errors[i].Detail);
             }
         }

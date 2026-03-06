@@ -94,7 +94,8 @@ public class Repository<T> : ReadOnlyRepository<T> where T : BaseResource
 
                     var jsonProp = prop.GetCustomAttributes(typeof(JsonPropertyAttribute), false)
                         .OfType<JsonPropertyAttribute>().FirstOrDefault();
-                    if (jsonProp == null) continue;
+                    if (jsonProp == null)
+                        continue;
 
                     var relName = jsonProp.PropertyName ?? prop.Name;
                     if (!resource.IsFieldDirty(relName))
