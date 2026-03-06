@@ -136,6 +136,20 @@ public class DidTest : BaseTest
     }
 
     [Fact]
+    public async Task TestIncludedResourcesHaveDirtyTracking()
+    {
+        StubGet("dids/9df99644-f1a5-4a3c-99a4-559d758eb96b", "dids/show_with_included_trunk.json");
+
+        var queryParams = new QueryParams().Include("voice_in_trunk");
+        var response = await Client.Dids().FindAsync("9df99644-f1a5-4a3c-99a4-559d758eb96b", queryParams);
+        var did = response.Data;
+
+        did.IsDirtyTrackingEnabled.Should().BeTrue();
+        did.VoiceInTrunk.Should().NotBeNull();
+        did.VoiceInTrunk!.IsDirtyTrackingEnabled.Should().BeTrue();
+    }
+
+    [Fact]
     public async Task TestFindDidWithAddressVerificationAndDidGroup()
     {
         StubGet("dids/21d0b02c-b556-4d3e-acbf-504b78295dbe", "dids/show_with_address_verification_and_did_group.json");

@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Reflection;
 using Didww.Api3.Converter;
 using Didww.Api3.Exception;
 using Didww.Api3.Http;
@@ -97,15 +99,46 @@ public class ReadOnlyRepository<T> where T : BaseResource
     protected void EnableDirtyTracking(T resource)
     {
         if (resource is BaseResource br)
-            br.EnableDirtyTracking();
+            EnableDirtyTrackingRecursive(br, new HashSet<BaseResource>(ReferenceEqualityComparer.Instance));
     }
 
     protected void EnableDirtyTracking(List<T> resources)
     {
+        var visited = new HashSet<BaseResource>(ReferenceEqualityComparer.Instance);
         foreach (var resource in resources)
         {
             if (resource is BaseResource br)
-                br.EnableDirtyTracking();
+                EnableDirtyTrackingRecursive(br, visited);
+        }
+    }
+
+    private static void EnableDirtyTrackingRecursive(BaseResource resource, HashSet<BaseResource> visited)
+    {
+        if (!visited.Add(resource))
+            return;
+
+        resource.EnableDirtyTracking();
+
+        for (var type = resource.GetType();
+             type != null && typeof(BaseResource).IsAssignableFrom(type);
+             type = type.BaseType)
+        {
+            foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+            {
+                var value = prop.GetValue(resource);
+                if (value is BaseResource relatedResource)
+                {
+                    EnableDirtyTrackingRecursive(relatedResource, visited);
+                }
+                else if (value is IEnumerable enumerable and not string)
+                {
+                    foreach (var item in enumerable)
+                    {
+                        if (item is BaseResource relatedItem)
+                            EnableDirtyTrackingRecursive(relatedItem, visited);
+                    }
+                }
+            }
         }
     }
 }

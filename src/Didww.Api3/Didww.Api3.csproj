@@ -16,6 +16,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Didww.Api3.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="JsonApiSerializer" Version="2.0.1" />
   </ItemGroup>
 
