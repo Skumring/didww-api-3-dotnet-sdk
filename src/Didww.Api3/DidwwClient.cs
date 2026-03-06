@@ -121,6 +121,45 @@ public class DidwwClient
         return idsNode.Select(n => n.ToString()).ToList();
     }
 
+    public async Task DownloadExportAsync(Export export, string filePath)
+    {
+        ArgumentNullException.ThrowIfNull(export);
+        ArgumentNullException.ThrowIfNull(filePath);
+
+        var url = export.Url ?? throw new DidwwClientException("Export URL is null");
+
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
+        request.Headers.Add("Api-Key", _credentials.ApiKey);
+        request.Headers.Add(ApiVersionHeader, ApiVersion);
+
+        var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+        if (!response.IsSuccessStatusCode)
+            throw new DidwwClientException($"Failed to download export: HTTP {(int)response.StatusCode}");
+
+        await using var stream = await response.Content.ReadAsStreamAsync();
+        await using var fileStream = File.Create(filePath);
+        await stream.CopyToAsync(fileStream);
+    }
+
+    public async Task DownloadExportAsync(Export export, Stream outputStream)
+    {
+        ArgumentNullException.ThrowIfNull(export);
+        ArgumentNullException.ThrowIfNull(outputStream);
+
+        var url = export.Url ?? throw new DidwwClientException("Export URL is null");
+
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
+        request.Headers.Add("Api-Key", _credentials.ApiKey);
+        request.Headers.Add(ApiVersionHeader, ApiVersion);
+
+        var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+        if (!response.IsSuccessStatusCode)
+            throw new DidwwClientException($"Failed to download export: HTTP {(int)response.StatusCode}");
+
+        await using var stream = await response.Content.ReadAsStreamAsync();
+        await stream.CopyToAsync(outputStream);
+    }
+
     public class Builder
     {
         internal DidwwCredentials? Credentials { get; private set; }
