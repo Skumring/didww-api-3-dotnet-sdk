@@ -103,16 +103,9 @@ public class DidwwClient
         {
             Content = content
         };
-        request.Headers.Add("Api-Key", _credentials.ApiKey);
-        request.Headers.Add(ApiVersionHeader, ApiVersion);
         request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("User-Agent", SdkUserAgent);
 
-        using var uploadClient = new HttpClient();
-        if (_httpClient.Timeout != TimeSpan.Zero)
-            uploadClient.Timeout = _httpClient.Timeout;
-
-        var response = await uploadClient.SendAsync(request);
+        using var response = await _httpClient.SendAsync(request);
         var responseBody = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
@@ -134,10 +127,9 @@ public class DidwwClient
         var url = export.Url ?? throw new DidwwClientException("Export URL is null");
 
         var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Add("Api-Key", _credentials.ApiKey);
-        request.Headers.Add(ApiVersionHeader, ApiVersion);
+        request.Headers.Add("Accept", "application/octet-stream");
 
-        var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+        using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
         if (!response.IsSuccessStatusCode)
             throw new DidwwClientException($"Failed to download export: HTTP {(int)response.StatusCode}");
 
@@ -209,10 +201,20 @@ public class DidwwClient
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            request.Headers.TryAddWithoutValidation("Content-Type", "application/vnd.api+json");
-            request.Headers.TryAddWithoutValidation("Accept", "application/vnd.api+json");
-            request.Headers.TryAddWithoutValidation("User-Agent", SdkUserAgent);
-            request.Headers.TryAddWithoutValidation(ApiVersionHeader, ApiVersion);
+            if (!request.Headers.Contains("Accept"))
+            {
+                request.Headers.TryAddWithoutValidation("Accept", "application/vnd.api+json");
+            }
+
+            if (!request.Headers.Contains("User-Agent"))
+            {
+                request.Headers.TryAddWithoutValidation("User-Agent", SdkUserAgent);
+            }
+
+            if (!request.Headers.Contains(ApiVersionHeader))
+            {
+                request.Headers.TryAddWithoutValidation(ApiVersionHeader, ApiVersion);
+            }
 
             var path = request.RequestUri?.AbsolutePath ?? "";
             if (!path.Contains("public_keys"))
