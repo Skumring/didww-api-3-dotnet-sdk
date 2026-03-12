@@ -76,7 +76,6 @@ public class Repository<T> : ReadOnlyRepository<T> where T : BaseResource
                 return payload;
 
             var relationshipsNode = dataNode["relationships"] as JObject ?? new JObject();
-            bool changed = false;
 
             ForEachDeclaredProperty(resource, prop =>
             {
@@ -91,11 +90,7 @@ public class Repository<T> : ReadOnlyRepository<T> where T : BaseResource
                 {
                     ["data"] = IsListRelationship(prop) ? (JToken)new JArray() : JValue.CreateNull()
                 };
-                changed = true;
             });
-
-            if (!changed)
-                return payload;
 
             dataNode["relationships"] = relationshipsNode;
             return rootNode.ToString(Formatting.None);
