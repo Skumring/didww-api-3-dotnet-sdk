@@ -11,58 +11,58 @@ public class VoiceOutTrunk : BaseResource
 
     private string? _name;
     [JsonProperty("name")]
-    public string? Name { get => _name; set => _name = MarkDirty("name", value); }
+    public string? Name { get => _name; set => SetProperty(ref _name, value); }
 
     private List<string>? _allowedSipIps;
     [JsonProperty("allowed_sip_ips")]
-    public List<string>? AllowedSipIps { get => _allowedSipIps; set => _allowedSipIps = MarkDirty("allowedSipIps", value); }
+    public List<string>? AllowedSipIps { get => _allowedSipIps; set => SetProperty(ref _allowedSipIps, value); }
 
     private OnCliMismatchAction? _onCliMismatchAction;
     [JsonProperty("on_cli_mismatch_action")]
-    public OnCliMismatchAction? OnCliMismatchAction { get => _onCliMismatchAction; set => _onCliMismatchAction = MarkDirty("onCliMismatchAction", value); }
+    public OnCliMismatchAction? OnCliMismatchAction { get => _onCliMismatchAction; set => SetProperty(ref _onCliMismatchAction, value); }
 
     private List<string>? _allowedRtpIps;
     [JsonProperty("allowed_rtp_ips")]
-    public List<string>? AllowedRtpIps { get => _allowedRtpIps; set => _allowedRtpIps = MarkDirty("allowedRtpIps", value); }
+    public List<string>? AllowedRtpIps { get => _allowedRtpIps; set => SetProperty(ref _allowedRtpIps, value); }
 
     private bool? _allowAnyDidAsCli;
     [JsonProperty("allow_any_did_as_cli")]
-    public bool? AllowAnyDidAsCli { get => _allowAnyDidAsCli; set => _allowAnyDidAsCli = MarkDirty("allowAnyDidAsCli", value); }
+    public bool? AllowAnyDidAsCli { get => _allowAnyDidAsCli; set => SetProperty(ref _allowAnyDidAsCli, value); }
 
     [JsonProperty("status")]
     public VoiceOutTrunkStatus? Status { get; set; }
 
     private int? _capacityLimit;
     [JsonProperty("capacity_limit")]
-    public int? CapacityLimit { get => _capacityLimit; set => _capacityLimit = MarkDirty("capacityLimit", value); }
+    public int? CapacityLimit { get => _capacityLimit; set => SetProperty(ref _capacityLimit, value); }
 
     private decimal? _thresholdAmount;
     [JsonProperty("threshold_amount")]
-    public decimal? ThresholdAmount { get => _thresholdAmount; set => _thresholdAmount = MarkDirty("thresholdAmount", value); }
+    public decimal? ThresholdAmount { get => _thresholdAmount; set => SetProperty(ref _thresholdAmount, value); }
 
     private MediaEncryptionMode? _mediaEncryptionMode;
     [JsonProperty("media_encryption_mode")]
-    public MediaEncryptionMode? MediaEncryptionMode { get => _mediaEncryptionMode; set => _mediaEncryptionMode = MarkDirty("mediaEncryptionMode", value); }
+    public MediaEncryptionMode? MediaEncryptionMode { get => _mediaEncryptionMode; set => SetProperty(ref _mediaEncryptionMode, value); }
 
     private DefaultDstAction? _defaultDstAction;
     [JsonProperty("default_dst_action")]
-    public DefaultDstAction? DefaultDstAction { get => _defaultDstAction; set => _defaultDstAction = MarkDirty("defaultDstAction", value); }
+    public DefaultDstAction? DefaultDstAction { get => _defaultDstAction; set => SetProperty(ref _defaultDstAction, value); }
 
     private List<string>? _dstPrefixes;
     [JsonProperty("dst_prefixes")]
-    public List<string>? DstPrefixes { get => _dstPrefixes; set => _dstPrefixes = MarkDirty("dstPrefixes", value); }
+    public List<string>? DstPrefixes { get => _dstPrefixes; set => SetProperty(ref _dstPrefixes, value); }
 
     private bool? _forceSymmetricRtp;
     [JsonProperty("force_symmetric_rtp")]
-    public bool? ForceSymmetricRtp { get => _forceSymmetricRtp; set => _forceSymmetricRtp = MarkDirty("forceSymmetricRtp", value); }
+    public bool? ForceSymmetricRtp { get => _forceSymmetricRtp; set => SetProperty(ref _forceSymmetricRtp, value); }
 
     private bool? _rtpPing;
     [JsonProperty("rtp_ping")]
-    public bool? RtpPing { get => _rtpPing; set => _rtpPing = MarkDirty("rtpPing", value); }
+    public bool? RtpPing { get => _rtpPing; set => SetProperty(ref _rtpPing, value); }
 
     private string? _callbackUrl;
     [JsonProperty("callback_url")]
-    public string? CallbackUrl { get => _callbackUrl; set => _callbackUrl = MarkDirty("callbackUrl", value); }
+    public string? CallbackUrl { get => _callbackUrl; set => SetProperty(ref _callbackUrl, value); }
 
     [JsonProperty("username")]
     public string? Username { get; set; }
@@ -78,11 +78,11 @@ public class VoiceOutTrunk : BaseResource
 
     private List<Did>? _dids;
     [JsonProperty("dids")]
-    public List<Did>? Dids { get => _dids; set => _dids = MarkDirty("dids", value); }
+    public List<Did>? Dids { get => _dids; set => SetProperty(ref _dids, value); }
 
     private Did? _defaultDid;
     [JsonProperty("default_did")]
-    public Did? DefaultDid { get => _defaultDid; set => _defaultDid = MarkDirty("defaultDid", value); }
+    public Did? DefaultDid { get => _defaultDid; set => SetProperty(ref _defaultDid, value); }
 
     [JsonProperty("voice_in_trunk_group")]
     public VoiceInTrunkGroup? VoiceInTrunkGroup { get; set; }

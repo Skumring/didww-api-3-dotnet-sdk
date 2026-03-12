@@ -13,55 +13,55 @@ public class Identity : BaseResource, IProofEntity
 
     private string? _firstName;
     [JsonProperty("first_name")]
-    public string? FirstName { get => _firstName; set => _firstName = MarkDirty("firstName", value); }
+    public string? FirstName { get => _firstName; set => SetProperty(ref _firstName, value); }
 
     private string? _lastName;
     [JsonProperty("last_name")]
-    public string? LastName { get => _lastName; set => _lastName = MarkDirty("lastName", value); }
+    public string? LastName { get => _lastName; set => SetProperty(ref _lastName, value); }
 
     private string? _phoneNumber;
     [JsonProperty("phone_number")]
-    public string? PhoneNumber { get => _phoneNumber; set => _phoneNumber = MarkDirty("phoneNumber", value); }
+    public string? PhoneNumber { get => _phoneNumber; set => SetProperty(ref _phoneNumber, value); }
 
     private string? _idNumber;
     [JsonProperty("id_number")]
-    public string? IdNumber { get => _idNumber; set => _idNumber = MarkDirty("idNumber", value); }
+    public string? IdNumber { get => _idNumber; set => SetProperty(ref _idNumber, value); }
 
     private string? _birthDate;
     [JsonProperty("birth_date")]
-    public string? BirthDate { get => _birthDate; set => _birthDate = MarkDirty("birthDate", value); }
+    public string? BirthDate { get => _birthDate; set => SetProperty(ref _birthDate, value); }
 
     private string? _companyName;
     [JsonProperty("company_name")]
-    public string? CompanyName { get => _companyName; set => _companyName = MarkDirty("companyName", value); }
+    public string? CompanyName { get => _companyName; set => SetProperty(ref _companyName, value); }
 
     private string? _companyRegNumber;
     [JsonProperty("company_reg_number")]
-    public string? CompanyRegNumber { get => _companyRegNumber; set => _companyRegNumber = MarkDirty("companyRegNumber", value); }
+    public string? CompanyRegNumber { get => _companyRegNumber; set => SetProperty(ref _companyRegNumber, value); }
 
     private string? _vatId;
     [JsonProperty("vat_id")]
-    public string? VatId { get => _vatId; set => _vatId = MarkDirty("vatId", value); }
+    public string? VatId { get => _vatId; set => SetProperty(ref _vatId, value); }
 
     private string? _description;
     [JsonProperty("description")]
-    public string? Description { get => _description; set => _description = MarkDirty("description", value); }
+    public string? Description { get => _description; set => SetProperty(ref _description, value); }
 
     private string? _personalTaxId;
     [JsonProperty("personal_tax_id")]
-    public string? PersonalTaxId { get => _personalTaxId; set => _personalTaxId = MarkDirty("personalTaxId", value); }
+    public string? PersonalTaxId { get => _personalTaxId; set => SetProperty(ref _personalTaxId, value); }
 
     private IdentityType? _identityType;
     [JsonProperty("identity_type")]
-    public IdentityType? IdentityType { get => _identityType; set => _identityType = MarkDirty("identityType", value); }
+    public IdentityType? IdentityType { get => _identityType; set => SetProperty(ref _identityType, value); }
 
     private string? _externalReferenceId;
     [JsonProperty("external_reference_id")]
-    public string? ExternalReferenceId { get => _externalReferenceId; set => _externalReferenceId = MarkDirty("externalReferenceId", value); }
+    public string? ExternalReferenceId { get => _externalReferenceId; set => SetProperty(ref _externalReferenceId, value); }
 
     private string? _contactEmail;
     [JsonProperty("contact_email")]
-    public string? ContactEmail { get => _contactEmail; set => _contactEmail = MarkDirty("contactEmail", value); }
+    public string? ContactEmail { get => _contactEmail; set => SetProperty(ref _contactEmail, value); }
 
     [JsonProperty("created_at")]
     public DateTimeOffset? CreatedAt { get; set; }
@@ -71,7 +71,7 @@ public class Identity : BaseResource, IProofEntity
 
     private Country? _country;
     [JsonProperty("country")]
-    public Country? Country { get => _country; set => _country = MarkDirty("country", value); }
+    public Country? Country { get => _country; set => SetProperty(ref _country, value); }
 
     [JsonProperty("proofs")]
     public List<Proof>? Proofs { get; set; }

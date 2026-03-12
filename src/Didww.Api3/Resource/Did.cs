@@ -22,7 +22,7 @@ public class Did : BaseResource
     public bool? Terminated
     {
         get => _terminated;
-        set => _terminated = MarkDirty("terminated", value);
+        set => SetProperty(ref _terminated, value);
     }
 
     private string? _description;
@@ -30,7 +30,7 @@ public class Did : BaseResource
     public string? Description
     {
         get => _description;
-        set => _description = MarkDirty("description", value);
+        set => SetProperty(ref _description, value);
     }
 
     private int? _capacityLimit;
@@ -38,7 +38,7 @@ public class Did : BaseResource
     public int? CapacityLimit
     {
         get => _capacityLimit;
-        set => _capacityLimit = MarkDirty("capacityLimit", value);
+        set => SetProperty(ref _capacityLimit, value);
     }
 
     [JsonProperty("channels_included_count")]
@@ -49,7 +49,7 @@ public class Did : BaseResource
     public int? DedicatedChannelsCount
     {
         get => _dedicatedChannelsCount;
-        set => _dedicatedChannelsCount = MarkDirty("dedicatedChannelsCount", value);
+        set => SetProperty(ref _dedicatedChannelsCount, value);
     }
 
     [JsonProperty("created_at")]
@@ -63,7 +63,7 @@ public class Did : BaseResource
     public int? BillingCyclesCount
     {
         get => _billingCyclesCount;
-        set => _billingCyclesCount = MarkDirty("billingCyclesCount", value);
+        set => SetProperty(ref _billingCyclesCount, value);
     }
 
     [JsonProperty("order")]
@@ -79,8 +79,9 @@ public class Did : BaseResource
         get => _voiceInTrunk;
         set
         {
-            _voiceInTrunk = MarkDirty("voiceInTrunk", value);
-            _voiceInTrunkGroup = MarkDirty<VoiceInTrunkGroup?>("voiceInTrunkGroup", null);
+            SetProperty(ref _voiceInTrunk, value);
+            _voiceInTrunkGroup = null;
+            MarkDirty("voiceInTrunkGroup");
         }
     }
 
@@ -91,18 +92,19 @@ public class Did : BaseResource
         get => _voiceInTrunkGroup;
         set
         {
-            _voiceInTrunkGroup = MarkDirty("voiceInTrunkGroup", value);
-            _voiceInTrunk = MarkDirty<VoiceInTrunk?>("voiceInTrunk", null);
+            SetProperty(ref _voiceInTrunkGroup, value);
+            _voiceInTrunk = null;
+            MarkDirty("voiceInTrunk");
         }
     }
 
     private CapacityPool? _capacityPool;
     [JsonProperty("capacity_pool")]
-    public CapacityPool? CapacityPool { get => _capacityPool; set => _capacityPool = MarkDirty("capacityPool", value); }
+    public CapacityPool? CapacityPool { get => _capacityPool; set => SetProperty(ref _capacityPool, value); }
 
     private SharedCapacityGroup? _sharedCapacityGroup;
     [JsonProperty("shared_capacity_group")]
-    public SharedCapacityGroup? SharedCapacityGroup { get => _sharedCapacityGroup; set => _sharedCapacityGroup = MarkDirty("sharedCapacityGroup", value); }
+    public SharedCapacityGroup? SharedCapacityGroup { get => _sharedCapacityGroup; set => SetProperty(ref _sharedCapacityGroup, value); }
 
     [JsonProperty("address_verification")]
     public AddressVerification? AddressVerification { get; set; }

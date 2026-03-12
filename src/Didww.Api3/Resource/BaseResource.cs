@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 
 namespace Didww.Api3.Resource;
@@ -19,6 +20,12 @@ public abstract class BaseResource
         instance.Id = id;
         instance.EnableDirtyTracking();
         return instance;
+    }
+
+    protected void SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        field = value;
+        MarkDirty(propertyName ?? string.Empty);
     }
 
     protected T MarkDirty<T>(string fieldName, T value)

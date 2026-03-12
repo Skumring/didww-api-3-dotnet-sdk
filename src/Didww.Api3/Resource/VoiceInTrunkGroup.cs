@@ -13,7 +13,7 @@ public class VoiceInTrunkGroup : BaseResource
     public string? Name
     {
         get => _name;
-        set => _name = MarkDirty("name", value);
+        set => SetProperty(ref _name, value);
     }
 
     private int? _capacityLimit;
@@ -21,7 +21,7 @@ public class VoiceInTrunkGroup : BaseResource
     public int? CapacityLimit
     {
         get => _capacityLimit;
-        set => _capacityLimit = MarkDirty("capacityLimit", value);
+        set => SetProperty(ref _capacityLimit, value);
     }
 
     [JsonProperty("created_at")]
@@ -32,6 +32,6 @@ public class VoiceInTrunkGroup : BaseResource
     public List<VoiceInTrunk>? VoiceInTrunks
     {
         get => _voiceInTrunks;
-        set => _voiceInTrunks = MarkDirty("voiceInTrunks", value);
+        set => SetProperty(ref _voiceInTrunks, value);
     }
 }
