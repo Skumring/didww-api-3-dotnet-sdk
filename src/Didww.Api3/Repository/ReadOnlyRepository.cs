@@ -26,9 +26,17 @@ public class ReadOnlyRepository<T> where T : BaseResource
         Endpoint = endpoint;
     }
 
+    protected string BuildUrl(string? id = null, QueryParams? queryParams = null)
+    {
+        var url = BaseUrl + "/" + Endpoint;
+        if (id != null) url += "/" + id;
+        url += queryParams?.ToQueryString() ?? "";
+        return url;
+    }
+
     public async Task<ApiResponse<List<T>>> ListAsync(QueryParams? queryParams = null)
     {
-        var url = BaseUrl + "/" + Endpoint + (queryParams?.ToQueryString() ?? "");
+        var url = BuildUrl(queryParams: queryParams);
         var response = await HttpClient.GetAsync(url);
         await HandleErrorResponseAsync(response);
         var body = await response.Content.ReadAsStringAsync();
@@ -40,7 +48,7 @@ public class ReadOnlyRepository<T> where T : BaseResource
 
     public async Task<ApiResponse<T>> FindAsync(string id, QueryParams? queryParams = null)
     {
-        var url = BaseUrl + "/" + Endpoint + "/" + id + (queryParams?.ToQueryString() ?? "");
+        var url = BuildUrl(id, queryParams);
         var response = await HttpClient.GetAsync(url);
         await HandleErrorResponseAsync(response);
         var body = await response.Content.ReadAsStringAsync();
