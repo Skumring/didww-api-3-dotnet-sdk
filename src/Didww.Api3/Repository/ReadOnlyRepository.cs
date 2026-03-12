@@ -29,7 +29,8 @@ public class ReadOnlyRepository<T> where T : BaseResource
     protected string BuildUrl(string? id = null, QueryParams? queryParams = null)
     {
         var url = BaseUrl + "/" + Endpoint;
-        if (id != null) url += "/" + id;
+        if (id != null)
+            url += "/" + id;
         url += queryParams?.ToQueryString() ?? "";
         return url;
     }
