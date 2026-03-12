@@ -72,56 +72,23 @@ public class Repository<T> : ReadOnlyRepository<T> where T : BaseResource
         try
         {
             var rootNode = JObject.Parse(payload);
-            var dataNode = rootNode["data"] as JObject;
-            if (dataNode == null)
+            if (rootNode["data"] is not JObject dataNode)
+                return payload;
+
+            var nulledRelationships = GetDeclaredProperties(resource)
+                .Where(IsRelationshipProperty)
+                .Where(prop => resource.IsFieldDirty(GetJsonPropertyName(prop)) && prop.GetValue(resource) == null)
+                .ToDictionary(GetJsonPropertyName, prop => new JObject
+                {
+                    ["data"] = IsListRelationship(prop) ? (JToken)new JArray() : JValue.CreateNull()
+                });
+
+            if (nulledRelationships.Count == 0)
                 return payload;
 
             var relationshipsNode = dataNode["relationships"] as JObject ?? new JObject();
-            bool changed = false;
-
-            for (var type = resource.GetType();
-                 type != null && typeof(BaseResource).IsAssignableFrom(type);
-                 type = type.BaseType)
-            {
-                foreach (var prop in type.GetProperties(System.Reflection.BindingFlags.Public |
-                    System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.DeclaredOnly))
-                {
-                    if (!typeof(BaseResource).IsAssignableFrom(prop.PropertyType) &&
-                        !(prop.PropertyType.IsGenericType &&
-                          prop.PropertyType.GetGenericTypeDefinition() == typeof(List<>) &&
-                          typeof(BaseResource).IsAssignableFrom(prop.PropertyType.GetGenericArguments()[0])))
-                        continue;
-
-                    var jsonProp = prop.GetCustomAttributes(typeof(JsonPropertyAttribute), false)
-                        .OfType<JsonPropertyAttribute>().FirstOrDefault();
-                    if (jsonProp == null)
-                        continue;
-
-                    var relName = jsonProp.PropertyName ?? prop.Name;
-                    if (!resource.IsFieldDirty(relName))
-                        continue;
-
-                    var value = prop.GetValue(resource);
-                    if (value == null)
-                    {
-                        var relNode = new JObject();
-                        if (prop.PropertyType.IsGenericType &&
-                            prop.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
-                        {
-                            relNode["data"] = new JArray();
-                        }
-                        else
-                        {
-                            relNode["data"] = JValue.CreateNull();
-                        }
-                        relationshipsNode[relName] = relNode;
-                        changed = true;
-                    }
-                }
-            }
-
-            if (!changed)
-                return payload;
+            foreach (var (relName, relNode) in nulledRelationships)
+                relationshipsNode[relName] = relNode;
 
             dataNode["relationships"] = relationshipsNode;
             return rootNode.ToString(Formatting.None);
@@ -131,4 +98,17 @@ public class Repository<T> : ReadOnlyRepository<T> where T : BaseResource
             return payload;
         }
     }
+
+    private static bool IsRelationshipProperty(PropertyInfo prop) =>
+        typeof(BaseResource).IsAssignableFrom(prop.PropertyType) || IsListRelationship(prop);
+
+    private static bool IsListRelationship(PropertyInfo prop) =>
+        prop.PropertyType.IsGenericType &&
+        prop.PropertyType.GetGenericTypeDefinition() == typeof(List<>) &&
+        typeof(BaseResource).IsAssignableFrom(prop.PropertyType.GetGenericArguments()[0]);
+
+    private static string GetJsonPropertyName(PropertyInfo prop) =>
+        prop.GetCustomAttributes(typeof(JsonPropertyAttribute), false)
+            .OfType<JsonPropertyAttribute>()
+            .FirstOrDefault()?.PropertyName ?? prop.Name;
 }

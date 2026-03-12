@@ -26,9 +26,18 @@ public class ReadOnlyRepository<T> where T : BaseResource
         Endpoint = endpoint;
     }
 
+    protected string BuildUrl(string? id = null, QueryParams? queryParams = null)
+    {
+        var url = BaseUrl + "/" + Endpoint;
+        if (id != null)
+            url += "/" + id;
+        url += queryParams?.ToQueryString() ?? "";
+        return url;
+    }
+
     public async Task<ApiResponse<List<T>>> ListAsync(QueryParams? queryParams = null)
     {
-        var url = BaseUrl + "/" + Endpoint + (queryParams?.ToQueryString() ?? "");
+        var url = BuildUrl(queryParams: queryParams);
         var response = await HttpClient.GetAsync(url);
         await HandleErrorResponseAsync(response);
         var body = await response.Content.ReadAsStringAsync();
@@ -40,7 +49,7 @@ public class ReadOnlyRepository<T> where T : BaseResource
 
     public async Task<ApiResponse<T>> FindAsync(string id, QueryParams? queryParams = null)
     {
-        var url = BaseUrl + "/" + Endpoint + "/" + id + (queryParams?.ToQueryString() ?? "");
+        var url = BuildUrl(id, queryParams);
         var response = await HttpClient.GetAsync(url);
         await HandleErrorResponseAsync(response);
         var body = await response.Content.ReadAsStringAsync();
@@ -119,26 +128,38 @@ public class ReadOnlyRepository<T> where T : BaseResource
 
         resource.EnableDirtyTracking();
 
+        ForEachDeclaredProperty(resource, prop =>
+        {
+            var value = prop.GetValue(resource);
+            if (value is BaseResource relatedResource)
+            {
+                EnableDirtyTrackingRecursive(relatedResource, visited);
+            }
+            else if (value is IEnumerable enumerable and not string)
+            {
+                foreach (var item in enumerable)
+                {
+                    if (item is BaseResource relatedItem)
+                        EnableDirtyTrackingRecursive(relatedItem, visited);
+                }
+            }
+        });
+    }
+
+    protected static IEnumerable<PropertyInfo> GetDeclaredProperties(BaseResource resource)
+    {
         for (var type = resource.GetType();
              type != null && typeof(BaseResource).IsAssignableFrom(type);
              type = type.BaseType)
         {
             foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
-            {
-                var value = prop.GetValue(resource);
-                if (value is BaseResource relatedResource)
-                {
-                    EnableDirtyTrackingRecursive(relatedResource, visited);
-                }
-                else if (value is IEnumerable enumerable and not string)
-                {
-                    foreach (var item in enumerable)
-                    {
-                        if (item is BaseResource relatedItem)
-                            EnableDirtyTrackingRecursive(relatedItem, visited);
-                    }
-                }
-            }
+                yield return prop;
         }
+    }
+
+    protected static void ForEachDeclaredProperty(BaseResource resource, Action<PropertyInfo> action)
+    {
+        foreach (var prop in GetDeclaredProperties(resource))
+            action(prop);
     }
 }

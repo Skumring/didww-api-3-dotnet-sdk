@@ -16,7 +16,7 @@ public class VoiceInTrunk : BaseResource
     public string? Name
     {
         get => _name;
-        set => _name = MarkDirty("name", value);
+        set => SetProperty(ref _name, value);
     }
 
     private int? _priority;
@@ -24,7 +24,7 @@ public class VoiceInTrunk : BaseResource
     public int? Priority
     {
         get => _priority;
-        set => _priority = MarkDirty("priority", value);
+        set => SetProperty(ref _priority, value);
     }
 
     private int? _weight;
@@ -32,7 +32,7 @@ public class VoiceInTrunk : BaseResource
     public int? Weight
     {
         get => _weight;
-        set => _weight = MarkDirty("weight", value);
+        set => SetProperty(ref _weight, value);
     }
 
     private CliFormat? _cliFormat;
@@ -40,7 +40,7 @@ public class VoiceInTrunk : BaseResource
     public CliFormat? CliFormat
     {
         get => _cliFormat;
-        set => _cliFormat = MarkDirty("cliFormat", value);
+        set => SetProperty(ref _cliFormat, value);
     }
 
     private string? _cliPrefix;
@@ -48,7 +48,7 @@ public class VoiceInTrunk : BaseResource
     public string? CliPrefix
     {
         get => _cliPrefix;
-        set => _cliPrefix = MarkDirty("cliPrefix", value);
+        set => SetProperty(ref _cliPrefix, value);
     }
 
     private string? _description;
@@ -56,7 +56,7 @@ public class VoiceInTrunk : BaseResource
     public string? Description
     {
         get => _description;
-        set => _description = MarkDirty("description", value);
+        set => SetProperty(ref _description, value);
     }
 
     private int? _ringingTimeout;
@@ -64,7 +64,7 @@ public class VoiceInTrunk : BaseResource
     public int? RingingTimeout
     {
         get => _ringingTimeout;
-        set => _ringingTimeout = MarkDirty("ringingTimeout", value);
+        set => SetProperty(ref _ringingTimeout, value);
     }
 
     private int? _capacityLimit;
@@ -72,7 +72,7 @@ public class VoiceInTrunk : BaseResource
     public int? CapacityLimit
     {
         get => _capacityLimit;
-        set => _capacityLimit = MarkDirty("capacityLimit", value);
+        set => SetProperty(ref _capacityLimit, value);
     }
 
     [JsonProperty("created_at")]
@@ -84,7 +84,7 @@ public class VoiceInTrunk : BaseResource
     public TrunkConfiguration? Configuration
     {
         get => _configuration;
-        set => _configuration = MarkDirty("configuration", value);
+        set => SetProperty(ref _configuration, value);
     }
 
     private Pop? _pop;
@@ -92,7 +92,7 @@ public class VoiceInTrunk : BaseResource
     public Pop? Pop
     {
         get => _pop;
-        set => _pop = MarkDirty("pop", value);
+        set => SetProperty(ref _pop, value);
     }
 
     private VoiceInTrunkGroup? _voiceInTrunkGroup;
@@ -100,6 +100,6 @@ public class VoiceInTrunk : BaseResource
     public VoiceInTrunkGroup? VoiceInTrunkGroup
     {
         get => _voiceInTrunkGroup;
-        set => _voiceInTrunkGroup = MarkDirty("voiceInTrunkGroup", value);
+        set => SetProperty(ref _voiceInTrunkGroup, value);
     }
 }

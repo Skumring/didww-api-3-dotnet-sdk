@@ -19,6 +19,6 @@ public class VoiceOutTrunkRegenerateCredential : BaseResource
     public VoiceOutTrunk? VoiceOutTrunk
     {
         get => _voiceOutTrunk;
-        set => _voiceOutTrunk = MarkDirty("voiceOutTrunk", value);
+        set => SetProperty(ref _voiceOutTrunk, value);
     }
 }

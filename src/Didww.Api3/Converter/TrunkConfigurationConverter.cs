@@ -30,7 +30,6 @@ public class TrunkConfigurationConverter : JsonConverter<TrunkConfiguration>
             return;
         }
 
-        var wrapper = PolymorphicJsonHelper.Serialize(value, value.ConfigurationType, serializer);
-        wrapper.WriteTo(writer);
+        PolymorphicJsonHelper.Serialize(value, value.ConfigurationType, serializer).WriteTo(writer);
     }
 }

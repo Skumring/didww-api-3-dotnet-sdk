@@ -141,7 +141,7 @@ public class DidwwClient
     public async Task DownloadAndDecompressExportAsync(Export export, string filePath)
     {
         ArgumentNullException.ThrowIfNull(filePath);
-        var tempFile = Path.GetTempFileName();
+        var tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         try
         {
             await DownloadExportAsync(export, tempFile);

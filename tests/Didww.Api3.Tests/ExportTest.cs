@@ -104,7 +104,7 @@ public class ExportTest : BaseTest
         );
 
         var export = new Export { Id = "02bf6df4-3af9-416c-96be-16e5b7eeb651", Url = exportUrl };
-        var tempFile = Path.GetTempFileName();
+        var tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         try
         {
             await Client.DownloadExportAsync(export, tempFile);
@@ -137,7 +137,7 @@ public class ExportTest : BaseTest
         );
 
         var export = new Export { Id = "02bf6df4-3af9-416c-96be-16e5b7eeb651", Url = exportUrl };
-        var tempFile = Path.GetTempFileName();
+        var tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         try
         {
             await Client.DownloadAndDecompressExportAsync(export, tempFile);
@@ -191,7 +191,7 @@ public class ExportTest : BaseTest
         );
 
         var export = new Export { Id = "test-id", Url = exportUrl };
-        var tempFile = Path.GetTempFileName();
+        var tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         try
         {
             await Client.DownloadExportAsync(export, tempFile);

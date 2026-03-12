@@ -43,10 +43,7 @@ public class OrderItemConverter : JsonConverter<List<OrderItemBase>>
 
         writer.WriteStartArray();
         foreach (var item in value)
-        {
-            var wrapper = PolymorphicJsonHelper.Serialize(item, item.ItemType, serializer);
-            wrapper.WriteTo(writer);
-        }
+            PolymorphicJsonHelper.Serialize(item, item.ItemType, serializer).WriteTo(writer);
         writer.WriteEndArray();
     }
 }

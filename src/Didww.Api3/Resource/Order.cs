@@ -31,7 +31,7 @@ public class Order : BaseResource
     public string? CallbackUrl
     {
         get => _callbackUrl;
-        set => _callbackUrl = MarkDirty("callbackUrl", value);
+        set => SetProperty(ref _callbackUrl, value);
     }
 
     private CallbackMethod? _callbackMethod;
@@ -39,7 +39,7 @@ public class Order : BaseResource
     public CallbackMethod? CallbackMethod
     {
         get => _callbackMethod;
-        set => _callbackMethod = MarkDirty("callbackMethod", value);
+        set => SetProperty(ref _callbackMethod, value);
     }
 
     private bool? _allowBackOrdering;
@@ -47,7 +47,7 @@ public class Order : BaseResource
     public bool? AllowBackOrdering
     {
         get => _allowBackOrdering;
-        set => _allowBackOrdering = MarkDirty("allowBackOrdering", value);
+        set => SetProperty(ref _allowBackOrdering, value);
     }
 
     private List<OrderItemBase>? _items;
@@ -56,6 +56,6 @@ public class Order : BaseResource
     public List<OrderItemBase>? Items
     {
         get => _items;
-        set => _items = MarkDirty("items", value);
+        set => SetProperty(ref _items, value);
     }
 }
