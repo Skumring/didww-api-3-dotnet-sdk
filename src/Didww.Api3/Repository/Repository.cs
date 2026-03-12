@@ -75,7 +75,7 @@ public class Repository<T> : ReadOnlyRepository<T> where T : BaseResource
             if (rootNode["data"] is not JObject dataNode)
                 return payload;
 
-            var relationshipsNode = dataNode["relationships"] as JObject ?? new JObject();
+            var nulledRelationships = new Dictionary<string, JObject>();
 
             ForEachDeclaredProperty(resource, prop =>
             {
@@ -86,11 +86,18 @@ public class Repository<T> : ReadOnlyRepository<T> where T : BaseResource
                 if (!resource.IsFieldDirty(relName) || prop.GetValue(resource) != null)
                     return;
 
-                relationshipsNode[relName] = new JObject
+                nulledRelationships[relName] = new JObject
                 {
                     ["data"] = IsListRelationship(prop) ? (JToken)new JArray() : JValue.CreateNull()
                 };
             });
+
+            if (nulledRelationships.Count == 0)
+                return payload;
+
+            var relationshipsNode = dataNode["relationships"] as JObject ?? new JObject();
+            foreach (var (relName, relNode) in nulledRelationships)
+                relationshipsNode[relName] = relNode;
 
             dataNode["relationships"] = relationshipsNode;
             return rootNode.ToString(Formatting.None);
