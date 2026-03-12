@@ -127,26 +127,32 @@ public class ReadOnlyRepository<T> where T : BaseResource
 
         resource.EnableDirtyTracking();
 
+        ForEachDeclaredProperty(resource, prop =>
+        {
+            var value = prop.GetValue(resource);
+            if (value is BaseResource relatedResource)
+            {
+                EnableDirtyTrackingRecursive(relatedResource, visited);
+            }
+            else if (value is IEnumerable enumerable and not string)
+            {
+                foreach (var item in enumerable)
+                {
+                    if (item is BaseResource relatedItem)
+                        EnableDirtyTrackingRecursive(relatedItem, visited);
+                }
+            }
+        });
+    }
+
+    protected static void ForEachDeclaredProperty(BaseResource resource, Action<PropertyInfo> action)
+    {
         for (var type = resource.GetType();
              type != null && typeof(BaseResource).IsAssignableFrom(type);
              type = type.BaseType)
         {
             foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
-            {
-                var value = prop.GetValue(resource);
-                if (value is BaseResource relatedResource)
-                {
-                    EnableDirtyTrackingRecursive(relatedResource, visited);
-                }
-                else if (value is IEnumerable enumerable and not string)
-                {
-                    foreach (var item in enumerable)
-                    {
-                        if (item is BaseResource relatedItem)
-                            EnableDirtyTrackingRecursive(relatedItem, visited);
-                    }
-                }
-            }
+                action(prop);
         }
     }
 }

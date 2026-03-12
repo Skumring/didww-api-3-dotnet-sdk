@@ -1,4 +1,3 @@
-using System.Reflection;
 using System.Text;
 using Didww.Api3.Converter;
 using Didww.Api3.Exception;
@@ -79,46 +78,40 @@ public class Repository<T> : ReadOnlyRepository<T> where T : BaseResource
             var relationshipsNode = dataNode["relationships"] as JObject ?? new JObject();
             bool changed = false;
 
-            for (var type = resource.GetType();
-                 type != null && typeof(BaseResource).IsAssignableFrom(type);
-                 type = type.BaseType)
+            ForEachDeclaredProperty(resource, prop =>
             {
-                foreach (var prop in type.GetProperties(System.Reflection.BindingFlags.Public |
-                    System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.DeclaredOnly))
+                if (!typeof(BaseResource).IsAssignableFrom(prop.PropertyType) &&
+                    !(prop.PropertyType.IsGenericType &&
+                      prop.PropertyType.GetGenericTypeDefinition() == typeof(List<>) &&
+                      typeof(BaseResource).IsAssignableFrom(prop.PropertyType.GetGenericArguments()[0])))
+                    return;
+
+                var jsonProp = prop.GetCustomAttributes(typeof(JsonPropertyAttribute), false)
+                    .OfType<JsonPropertyAttribute>().FirstOrDefault();
+                if (jsonProp == null)
+                    return;
+
+                var relName = jsonProp.PropertyName ?? prop.Name;
+                if (!resource.IsFieldDirty(relName))
+                    return;
+
+                var value = prop.GetValue(resource);
+                if (value == null)
                 {
-                    if (!typeof(BaseResource).IsAssignableFrom(prop.PropertyType) &&
-                        !(prop.PropertyType.IsGenericType &&
-                          prop.PropertyType.GetGenericTypeDefinition() == typeof(List<>) &&
-                          typeof(BaseResource).IsAssignableFrom(prop.PropertyType.GetGenericArguments()[0])))
-                        continue;
-
-                    var jsonProp = prop.GetCustomAttributes(typeof(JsonPropertyAttribute), false)
-                        .OfType<JsonPropertyAttribute>().FirstOrDefault();
-                    if (jsonProp == null)
-                        continue;
-
-                    var relName = jsonProp.PropertyName ?? prop.Name;
-                    if (!resource.IsFieldDirty(relName))
-                        continue;
-
-                    var value = prop.GetValue(resource);
-                    if (value == null)
+                    var relNode = new JObject();
+                    if (prop.PropertyType.IsGenericType &&
+                        prop.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
                     {
-                        var relNode = new JObject();
-                        if (prop.PropertyType.IsGenericType &&
-                            prop.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
-                        {
-                            relNode["data"] = new JArray();
-                        }
-                        else
-                        {
-                            relNode["data"] = JValue.CreateNull();
-                        }
-                        relationshipsNode[relName] = relNode;
-                        changed = true;
+                        relNode["data"] = new JArray();
                     }
+                    else
+                    {
+                        relNode["data"] = JValue.CreateNull();
+                    }
+                    relationshipsNode[relName] = relNode;
+                    changed = true;
                 }
-            }
+            });
 
             if (!changed)
                 return payload;
