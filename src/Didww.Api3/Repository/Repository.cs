@@ -75,22 +75,13 @@ public class Repository<T> : ReadOnlyRepository<T> where T : BaseResource
             if (rootNode["data"] is not JObject dataNode)
                 return payload;
 
-            var nulledRelationships = new Dictionary<string, JObject>();
-
-            ForEachDeclaredProperty(resource, prop =>
-            {
-                if (!IsRelationshipProperty(prop))
-                    return;
-
-                var relName = GetJsonPropertyName(prop);
-                if (!resource.IsFieldDirty(relName) || prop.GetValue(resource) != null)
-                    return;
-
-                nulledRelationships[relName] = new JObject
+            var nulledRelationships = GetDeclaredProperties(resource)
+                .Where(IsRelationshipProperty)
+                .Where(prop => resource.IsFieldDirty(GetJsonPropertyName(prop)) && prop.GetValue(resource) == null)
+                .ToDictionary(GetJsonPropertyName, prop => new JObject
                 {
                     ["data"] = IsListRelationship(prop) ? (JToken)new JArray() : JValue.CreateNull()
-                };
-            });
+                });
 
             if (nulledRelationships.Count == 0)
                 return payload;

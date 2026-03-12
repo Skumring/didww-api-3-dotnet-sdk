@@ -146,14 +146,20 @@ public class ReadOnlyRepository<T> where T : BaseResource
         });
     }
 
-    protected static void ForEachDeclaredProperty(BaseResource resource, Action<PropertyInfo> action)
+    protected static IEnumerable<PropertyInfo> GetDeclaredProperties(BaseResource resource)
     {
         for (var type = resource.GetType();
              type != null && typeof(BaseResource).IsAssignableFrom(type);
              type = type.BaseType)
         {
             foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
-                action(prop);
+                yield return prop;
         }
+    }
+
+    protected static void ForEachDeclaredProperty(BaseResource resource, Action<PropertyInfo> action)
+    {
+        foreach (var prop in GetDeclaredProperties(resource))
+            action(prop);
     }
 }
