@@ -12,7 +12,7 @@ public class Proof : BaseResource
     public DateTimeOffset? CreatedAt { get; set; }
 
     [JsonProperty("expires_at")]
-    public string? ExpiresAt { get; set; }
+    public DateTimeOffset? ExpiresAt { get; set; }
 
     private BaseResource? _entity;
     [JsonProperty("entity")]

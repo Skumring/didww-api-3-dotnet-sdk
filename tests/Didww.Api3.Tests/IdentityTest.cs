@@ -34,7 +34,7 @@ public class IdentityTest : BaseTest
             LastName = "Doe",
             PhoneNumber = "123456789",
             IdNumber = "ABC1234",
-            BirthDate = "1970-01-01",
+            BirthDate = new DateOnly(1970, 1, 1),
             CompanyName = "Test Company Limited",
             CompanyRegNumber = "543221",
             VatId = "GB1234",

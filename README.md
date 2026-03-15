@@ -518,6 +518,25 @@ var isValid = validator.Validate(
 | Proof | `Proof` | Create, Delete |
 | RequirementValidation | `RequirementValidation` | Create |
 
+## Date and Datetime Fields
+
+The SDK distinguishes between date-only and datetime fields:
+
+- **Datetime fields** are deserialized as `DateTimeOffset?`:
+  - All `CreatedAt` properties — present on most resources
+  - Expiry fields: `Did.ExpiresAt`, `DidReservation.ExpireAt`, `Proof.ExpiresAt`, `EncryptedFile.ExpireAt`
+- **Date-only fields** (`Identity.BirthDate`) are deserialized as `DateOnly?`.
+- **Date-only fields kept as strings** (`CapacityPool.RenewDate`, `DidOrderItem.BilledFrom`, `DidOrderItem.BilledTo`) remain as `string?`.
+
+```csharp
+var did = (await client.Dids().FindAsync("uuid")).Data;
+Console.WriteLine(did.CreatedAt);   // 2024-01-15T10:00:00+00:00
+Console.WriteLine(did.ExpiresAt);   // null or 2025-01-15T10:00:00+00:00
+
+var identity = (await client.Identities().FindAsync("uuid")).Data;
+Console.WriteLine(identity.BirthDate);  // 1990-05-20
+```
+
 ## Enums
 
 The SDK provides enum types in `Didww.Api3.Resource.Enums`:
