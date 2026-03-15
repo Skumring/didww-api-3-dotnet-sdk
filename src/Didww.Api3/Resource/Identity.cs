@@ -1,3 +1,4 @@
+using Didww.Api3.Converter;
 using Didww.Api3.Resource.Enums;
 using Newtonsoft.Json;
 
@@ -27,9 +28,10 @@ public class Identity : BaseResource, IProofEntity
     [JsonProperty("id_number")]
     public string? IdNumber { get => _idNumber; set => SetProperty(ref _idNumber, value); }
 
-    private string? _birthDate;
+    private DateOnly? _birthDate;
     [JsonProperty("birth_date")]
-    public string? BirthDate { get => _birthDate; set => SetProperty(ref _birthDate, value); }
+    [JsonConverter(typeof(DateOnlyConverter))]
+    public DateOnly? BirthDate { get => _birthDate; set => SetProperty(ref _birthDate, value); }
 
     private string? _companyName;
     [JsonProperty("company_name")]

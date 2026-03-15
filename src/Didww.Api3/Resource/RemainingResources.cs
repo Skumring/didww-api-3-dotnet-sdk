@@ -107,7 +107,6 @@ public class EncryptedFile : BaseResource
 
     [JsonProperty("description")] public string? Description { get; set; }
     [JsonProperty("expire_at")] public DateTimeOffset? ExpireAt { get; set; }
-    [JsonProperty("created_at")] public DateTimeOffset? CreatedAt { get; set; }
 }
 
 public class PublicKey : BaseResource

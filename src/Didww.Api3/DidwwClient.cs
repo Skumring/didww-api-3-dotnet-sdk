@@ -29,7 +29,8 @@ public class DidwwClient
         _serializerSettings = new JsonApiSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
-            ContractResolver = new DirtyContractResolver()
+            ContractResolver = new DirtyContractResolver(),
+            DateParseHandling = DateParseHandling.None
         };
 
         var handler = new ApiKeyHandler(_credentials.ApiKey)
