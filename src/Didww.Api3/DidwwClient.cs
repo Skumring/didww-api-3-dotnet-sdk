@@ -11,7 +11,7 @@ namespace Didww.Api3;
 public class DidwwClient
 {
     public const string ApiVersionHeader = "X-DIDWW-API-Version";
-    public const string ApiVersion = "2022-05-10";
+    public const string ApiVersion = "2026-04-16";
 
     public static readonly string SdkUserAgent =
         $"didww-dotnet-sdk/{typeof(DidwwClient).Assembly.GetName().Version?.ToString(3) ?? "0.0.0"}";

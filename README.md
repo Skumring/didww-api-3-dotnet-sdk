@@ -15,7 +15,7 @@ This SDK uses [JsonApiSerializer](https://github.com/codecutout/JsonApiSerialize
 
 Read more https://doc.didww.com/api
 
-The client sends the `X-DIDWW-API-Version: 2022-05-10` header with each request.
+The client sends the `X-DIDWW-API-Version: 2026-04-16` header with each request.
 
 ## Requirements
 
