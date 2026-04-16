@@ -129,6 +129,14 @@ public enum EmergencyCallingServiceStatus
     [System.Runtime.Serialization.EnumMember(Value = "pending update")] PendingUpdate
 }
 
+[JsonConverter(typeof(StringEnumConverter))]
+public enum EmergencyVerificationStatus
+{
+    [System.Runtime.Serialization.EnumMember(Value = "pending")] Pending,
+    [System.Runtime.Serialization.EnumMember(Value = "approved")] Approved,
+    [System.Runtime.Serialization.EnumMember(Value = "rejected")] Rejected
+}
+
 // Integer-based enums
 public enum Codec
 {

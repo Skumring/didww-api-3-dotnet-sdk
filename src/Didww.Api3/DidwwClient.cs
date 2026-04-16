@@ -86,6 +86,7 @@ public class DidwwClient
     public Repository.Repository<Proof> Proofs() => new(_httpClient, _serializerSettings, _baseUrl, "proofs");
     public Repository.Repository<AddressRequirementValidation> AddressRequirementValidations() => new(_httpClient, _serializerSettings, _baseUrl, "address_requirement_validations");
     public Repository.Repository<EmergencyCallingService> EmergencyCallingServices() => new(_httpClient, _serializerSettings, _baseUrl, "emergency_calling_services");
+    public Repository.Repository<EmergencyVerification> EmergencyVerifications() => new(_httpClient, _serializerSettings, _baseUrl, "emergency_verifications");
 
     public async Task<List<string>> UploadEncryptedFileAsync(byte[] encryptedData, string fileName,
         string fingerprint, string? description = null)
