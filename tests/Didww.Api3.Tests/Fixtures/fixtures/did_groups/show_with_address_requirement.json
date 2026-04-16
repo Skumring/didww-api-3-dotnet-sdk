@@ -23,13 +23,13 @@
           "id": "dfd1a0a0-bd53-4f7a-9c8e-d2fc5dd1bf7e"
         }
       },
-      "requirement": {
+      "address_requirement": {
         "links": {
-          "self": "https://sandbox-api.didww.com/v3/did_groups/2187c36d-28fb-436f-8861-5a0f5b5a3ee1/relationships/requirement",
+          "self": "https://sandbox-api.didww.com/v3/did_groups/2187c36d-28fb-436f-8861-5a0f5b5a3ee1/relationships/address_requirement",
           "related": "https://sandbox-api.didww.com/v3/did_groups/2187c36d-28fb-436f-8861-5a0f5b5a3ee1/requirement"
         },
         "data": {
-          "type": "requirements",
+          "type": "address_requirements",
           "id": "8da1e0b2-047c-4baf-9c57-57143f09b9ce"
         }
       },
@@ -50,7 +50,7 @@
   "included": [
     {
       "id": "8da1e0b2-047c-4baf-9c57-57143f09b9ce",
-      "type": "requirements",
+      "type": "address_requirements",
       "attributes": {
         "identity_type": "Any",
         "personal_area_level": "WorldWide",
@@ -67,14 +67,14 @@
       "relationships": {
         "country": {
           "links": {
-            "self": "https://sandbox-api.didww.com/v3/requirements/8da1e0b2-047c-4baf-9c57-57143f09b9ce/relationships/country",
-            "related": "https://sandbox-api.didww.com/v3/requirements/8da1e0b2-047c-4baf-9c57-57143f09b9ce/country"
+            "self": "https://sandbox-api.didww.com/v3/address_requirements/8da1e0b2-047c-4baf-9c57-57143f09b9ce/relationships/country",
+            "related": "https://sandbox-api.didww.com/v3/address_requirements/8da1e0b2-047c-4baf-9c57-57143f09b9ce/country"
           }
         },
         "did_group_type": {
           "links": {
-            "self": "https://sandbox-api.didww.com/v3/requirements/8da1e0b2-047c-4baf-9c57-57143f09b9ce/relationships/did_group_type",
-            "related": "https://sandbox-api.didww.com/v3/requirements/8da1e0b2-047c-4baf-9c57-57143f09b9ce/did_group_type"
+            "self": "https://sandbox-api.didww.com/v3/address_requirements/8da1e0b2-047c-4baf-9c57-57143f09b9ce/relationships/did_group_type",
+            "related": "https://sandbox-api.didww.com/v3/address_requirements/8da1e0b2-047c-4baf-9c57-57143f09b9ce/did_group_type"
           }
         }
       }

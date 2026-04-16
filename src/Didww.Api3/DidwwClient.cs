@@ -61,7 +61,7 @@ public class DidwwClient
     public Repository.ReadOnlyRepository<NanpaPrefix> NanpaPrefixes() => new(_httpClient, _serializerSettings, _baseUrl, "nanpa_prefixes");
     public Repository.ReadOnlyRepository<ProofType> ProofTypes() => new(_httpClient, _serializerSettings, _baseUrl, "proof_types");
     public Repository.ReadOnlyRepository<PublicKey> PublicKeys() => new(_httpClient, _serializerSettings, _baseUrl, "public_keys");
-    public Repository.ReadOnlyRepository<Requirement> Requirements() => new(_httpClient, _serializerSettings, _baseUrl, "requirements");
+    public Repository.ReadOnlyRepository<AddressRequirement> AddressRequirements() => new(_httpClient, _serializerSettings, _baseUrl, "address_requirements");
     public Repository.ReadOnlyRepository<SupportingDocumentTemplate> SupportingDocumentTemplates() => new(_httpClient, _serializerSettings, _baseUrl, "supporting_document_templates");
 
     // Singleton
@@ -84,7 +84,7 @@ public class DidwwClient
     public Repository.Repository<EncryptedFile> EncryptedFiles() => new(_httpClient, _serializerSettings, _baseUrl, "encrypted_files");
     public Repository.Repository<PermanentSupportingDocument> PermanentSupportingDocuments() => new(_httpClient, _serializerSettings, _baseUrl, "permanent_supporting_documents");
     public Repository.Repository<Proof> Proofs() => new(_httpClient, _serializerSettings, _baseUrl, "proofs");
-    public Repository.Repository<RequirementValidation> RequirementValidations() => new(_httpClient, _serializerSettings, _baseUrl, "requirement_validations");
+    public Repository.Repository<AddressRequirementValidation> AddressRequirementValidations() => new(_httpClient, _serializerSettings, _baseUrl, "address_requirement_validations");
 
     public async Task<List<string>> UploadEncryptedFileAsync(byte[] encryptedData, string fileName,
         string fingerprint, string? description = null)

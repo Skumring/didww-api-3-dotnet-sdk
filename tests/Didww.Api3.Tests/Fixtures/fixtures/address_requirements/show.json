@@ -1,7 +1,7 @@
 {
   "data": {
     "id": "25d12afe-1ec6-4fe3-9621-b250dd1fb959",
-    "type": "requirements",
+    "type": "address_requirements",
     "attributes": {
       "identity_type": "Any",
       "personal_area_level": "WorldWide",
@@ -28,8 +28,8 @@
     "relationships": {
       "country": {
         "links": {
-          "self": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/country",
-          "related": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/country"
+          "self": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/country",
+          "related": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/country"
         },
         "data": {
           "type": "countries",
@@ -38,8 +38,8 @@
       },
       "did_group_type": {
         "links": {
-          "self": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/did_group_type",
-          "related": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/did_group_type"
+          "self": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/did_group_type",
+          "related": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/did_group_type"
         },
         "data": {
           "type": "did_group_types",
@@ -48,8 +48,8 @@
       },
       "personal_permanent_document": {
         "links": {
-          "self": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/personal_permanent_document",
-          "related": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/personal_permanent_document"
+          "self": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/personal_permanent_document",
+          "related": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/personal_permanent_document"
         },
         "data": {
           "type": "supporting_document_templates",
@@ -58,8 +58,8 @@
       },
       "business_permanent_document": {
         "links": {
-          "self": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/business_permanent_document",
-          "related": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/business_permanent_document"
+          "self": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/business_permanent_document",
+          "related": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/business_permanent_document"
         },
         "data": {
           "type": "supporting_document_templates",
@@ -68,8 +68,8 @@
       },
       "personal_onetime_document": {
         "links": {
-          "self": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/personal_onetime_document",
-          "related": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/personal_onetime_document"
+          "self": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/personal_onetime_document",
+          "related": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/personal_onetime_document"
         },
         "data": {
           "type": "supporting_document_templates",
@@ -78,8 +78,8 @@
       },
       "business_onetime_document": {
         "links": {
-          "self": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/business_onetime_document",
-          "related": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/business_onetime_document"
+          "self": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/business_onetime_document",
+          "related": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/business_onetime_document"
         },
         "data": {
           "type": "supporting_document_templates",
@@ -88,8 +88,8 @@
       },
       "personal_proof_types": {
         "links": {
-          "self": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/personal_proof_types",
-          "related": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/personal_proof_types"
+          "self": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/personal_proof_types",
+          "related": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/personal_proof_types"
         },
         "data": [
           {
@@ -100,8 +100,8 @@
       },
       "business_proof_types": {
         "links": {
-          "self": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/business_proof_types",
-          "related": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/business_proof_types"
+          "self": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/business_proof_types",
+          "related": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/business_proof_types"
         },
         "data": [
           {
@@ -136,8 +136,8 @@
       },
       "address_proof_types": {
         "links": {
-          "self": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/address_proof_types",
-          "related": "https://sandbox-api.didww.com/v3/requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/address_proof_types"
+          "self": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/relationships/address_proof_types",
+          "related": "https://sandbox-api.didww.com/v3/address_requirements/25d12afe-1ec6-4fe3-9621-b250dd1fb959/address_proof_types"
         },
         "data": [
           {

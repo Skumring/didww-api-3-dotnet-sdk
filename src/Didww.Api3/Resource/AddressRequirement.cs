@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 
 namespace Didww.Api3.Resource;
 
-public class Requirement : BaseResource
+public class AddressRequirement : BaseResource
 {
-    public override string Type => "requirements";
+    public override string Type => "address_requirements";
 
     [JsonProperty("identity_type")] public IdentityType? IdentityType { get; set; }
     [JsonProperty("personal_area_level")] public AreaLevel? PersonalAreaLevel { get; set; }

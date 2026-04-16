@@ -37,20 +37,20 @@ public class DidGroupTest : BaseTest
     }
 
     [Fact]
-    public async Task TestFindDidGroupWithRequirement()
+    public async Task TestFindDidGroupWithAddressRequirement()
     {
-        StubGet("did_groups/2187c36d-28fb-436f-8861-5a0f5b5a3ee1", "did_groups/show_with_requirement.json");
+        StubGet("did_groups/2187c36d-28fb-436f-8861-5a0f5b5a3ee1", "did_groups/show_with_address_requirement.json");
 
-        var queryParams = new QueryParams().Include("requirement");
+        var queryParams = new QueryParams().Include("address_requirement");
         var response = await Client.DidGroups().FindAsync("2187c36d-28fb-436f-8861-5a0f5b5a3ee1", queryParams);
         var group = response.Data;
 
         group.Id.Should().Be("2187c36d-28fb-436f-8861-5a0f5b5a3ee1");
         group.AreaName.Should().Be("Aachen");
         group.Prefix.Should().Be("241");
-        group.Requirement.Should().NotBeNull();
-        group.Requirement!.Id.Should().Be("8da1e0b2-047c-4baf-9c57-57143f09b9ce");
-        group.Requirement!.IdentityType.Should().Be(IdentityType.Any);
+        group.AddressRequirement.Should().NotBeNull();
+        group.AddressRequirement!.Id.Should().Be("8da1e0b2-047c-4baf-9c57-57143f09b9ce");
+        group.AddressRequirement!.IdentityType.Should().Be(IdentityType.Any);
     }
 
     [Fact]

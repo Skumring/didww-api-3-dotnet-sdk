@@ -39,6 +39,6 @@ public class DidGroup : BaseResource
     [JsonProperty("did_group_type")]
     public DidGroupType? DidGroupType { get; set; }
 
-    [JsonProperty("requirement")]
-    public Requirement? Requirement { get; set; }
+    [JsonProperty("address_requirement")]
+    public AddressRequirement? AddressRequirement { get; set; }
 }
