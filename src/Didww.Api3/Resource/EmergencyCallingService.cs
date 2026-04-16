@@ -1,0 +1,47 @@
+using Didww.Api3.Resource.Enums;
+using Newtonsoft.Json;
+
+namespace Didww.Api3.Resource;
+
+public class EmergencyCallingService : BaseResource
+{
+    public override string Type => "emergency_calling_services";
+
+    public static EmergencyCallingService Build(string id) => BaseResource.Build<EmergencyCallingService>(id);
+
+    [JsonProperty("name")]
+    public string? Name { get; set; }
+
+    [JsonProperty("reference")]
+    public string? Reference { get; set; }
+
+    [JsonProperty("status")]
+    public EmergencyCallingServiceStatus? Status { get; set; }
+
+    [JsonProperty("activated_at")]
+    public DateTimeOffset? ActivatedAt { get; set; }
+
+    [JsonProperty("canceled_at")]
+    public DateTimeOffset? CanceledAt { get; set; }
+
+    [JsonProperty("created_at")]
+    public DateTimeOffset? CreatedAt { get; set; }
+
+    [JsonProperty("renew_date")]
+    public DateTimeOffset? RenewDate { get; set; }
+
+    [JsonProperty("country")]
+    public Country? Country { get; set; }
+
+    [JsonProperty("did_group_type")]
+    public DidGroupType? DidGroupType { get; set; }
+
+    [JsonProperty("order")]
+    public Order? Order { get; set; }
+
+    [JsonProperty("address")]
+    public Address? Address { get; set; }
+
+    [JsonProperty("dids")]
+    public List<Did>? Dids { get; set; }
+}

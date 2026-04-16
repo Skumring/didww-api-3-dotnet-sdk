@@ -118,6 +118,17 @@ public enum VoiceOutTrunkStatus
     [System.Runtime.Serialization.EnumMember(Value = "blocked")] Blocked
 }
 
+[JsonConverter(typeof(StringEnumConverter))]
+public enum EmergencyCallingServiceStatus
+{
+    [System.Runtime.Serialization.EnumMember(Value = "active")] Active,
+    [System.Runtime.Serialization.EnumMember(Value = "canceled")] Canceled,
+    [System.Runtime.Serialization.EnumMember(Value = "changes required")] ChangesRequired,
+    [System.Runtime.Serialization.EnumMember(Value = "in process")] InProcess,
+    [System.Runtime.Serialization.EnumMember(Value = "new")] New,
+    [System.Runtime.Serialization.EnumMember(Value = "pending update")] PendingUpdate
+}
+
 // Integer-based enums
 public enum Codec
 {
