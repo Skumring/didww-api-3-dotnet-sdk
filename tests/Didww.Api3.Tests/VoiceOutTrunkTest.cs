@@ -1,4 +1,5 @@
 using Didww.Api3.Resource;
+using Didww.Api3.Resource.Configuration.AuthenticationMethod;
 using Didww.Api3.Resource.Enums;
 using FluentAssertions;
 
@@ -29,9 +30,13 @@ public class VoiceOutTrunkTest : BaseTest
         first.RtpPing.Should().BeTrue();
         first.ThresholdReached.Should().BeFalse();
         first.ThresholdAmount.Should().Be(200.0m);
-        first.Username.Should().Be("dpjgwbbac9");
-        first.Password.Should().Be("z0hshvbcy7");
         first.DstPrefixes.Should().ContainSingle().Which.Should().Be("370");
+
+        first.AuthenticationMethod.Should().BeOfType<CredentialsAndIpAuthenticationMethod>();
+        var cai = (CredentialsAndIpAuthenticationMethod)first.AuthenticationMethod!;
+        cai.AllowedSipIps.Should().ContainSingle().Which.Should().Be("10.11.12.13/32");
+        cai.Username.Should().Be("dpjgwbbac9");
+        cai.Password.Should().Be("z0hshvbcy7");
     }
 
     [Fact]
@@ -44,13 +49,22 @@ public class VoiceOutTrunkTest : BaseTest
 
         trunk.Id.Should().Be("425ce763-a3a9-49b4-af5b-ada1a65c8864");
         trunk.Name.Should().Be("test");
+        trunk.ExternalReferenceId.Should().Be("crm-vot-0001");
+        trunk.EmergencyEnableAll.Should().BeFalse();
+        trunk.RtpTimeout.Should().Be(30);
         trunk.Dids.Should().HaveCount(2);
         trunk.DefaultDid.Should().NotBeNull();
         trunk.DefaultDid!.Number.Should().Be("37061498222");
+
+        trunk.AuthenticationMethod.Should().BeOfType<CredentialsAndIpAuthenticationMethod>();
+        var cai = (CredentialsAndIpAuthenticationMethod)trunk.AuthenticationMethod!;
+        cai.AllowedSipIps.Should().ContainSingle().Which.Should().Be("10.11.12.13/32");
+        cai.Username.Should().Be("dpjgwbbac9");
+        cai.Password.Should().Be("z0hshvbcy7");
     }
 
     [Fact]
-    public async Task TestCreateVoiceOutTrunk()
+    public async Task TestCreateVoiceOutTrunkWithIpOnlyAuthenticationMethod()
     {
         StubPost("voice_out_trunks",
             "voice_out_trunks/create_request.json", "voice_out_trunks/create.json");
@@ -59,8 +73,12 @@ public class VoiceOutTrunkTest : BaseTest
         var trunk = new VoiceOutTrunk
         {
             Name = "java-test",
-            AllowedSipIps = new List<string> { "0.0.0.0/0" },
             OnCliMismatchAction = OnCliMismatchAction.ReplaceCli,
+            AuthenticationMethod = new IpOnlyAuthenticationMethod
+            {
+                AllowedSipIps = new List<string> { "0.0.0.0/0" },
+                TechPrefix = ""
+            },
             DefaultDid = did,
             Dids = new List<Did> { did }
         };
@@ -71,8 +89,11 @@ public class VoiceOutTrunkTest : BaseTest
         created.Id.Should().Be("b60201c1-21f0-4d9a-aafa-0e6d1e12f22e");
         created.Name.Should().Be("java-test");
         created.Status.Should().Be(VoiceOutTrunkStatus.Active);
-        created.Username.Should().NotBeNullOrEmpty();
-        created.Password.Should().NotBeNullOrEmpty();
+
+        created.AuthenticationMethod.Should().BeOfType<CredentialsAndIpAuthenticationMethod>();
+        var cai = (CredentialsAndIpAuthenticationMethod)created.AuthenticationMethod!;
+        cai.Username.Should().NotBeNullOrEmpty();
+        cai.Password.Should().NotBeNullOrEmpty();
     }
 
     [Fact]
@@ -89,7 +110,11 @@ public class VoiceOutTrunkTest : BaseTest
         trunk.DstPrefixes = new List<string> { "370" };
         trunk.ForceSymmetricRtp = true;
         trunk.RtpPing = true;
-        trunk.AllowedSipIps = new List<string> { "10.11.12.13/32" };
+        trunk.AuthenticationMethod = new IpOnlyAuthenticationMethod
+        {
+            AllowedSipIps = new List<string> { "10.11.12.13/32" },
+            TechPrefix = ""
+        };
 
         var response = await Client.VoiceOutTrunks().UpdateAsync(trunk);
         var updated = response.Data;
@@ -109,6 +134,79 @@ public class VoiceOutTrunkTest : BaseTest
         trunk.CallbackUrl = "https://example.com/callback";
         trunk.AllowAnyDidAsCli = true;
         trunk.ThresholdAmount = 500.0m;
+
+        await Client.VoiceOutTrunks().UpdateAsync(trunk);
+    }
+
+    [Fact]
+    public async Task TestUpdateVoiceOutTrunkReassignAuthenticationMethod()
+    {
+        StubPatch("voice_out_trunks/425ce763-a3a9-49b4-af5b-ada1a65c8864",
+            "voice_out_trunks/update_authentication_method_request.json",
+            "voice_out_trunks/update.json");
+
+        var trunk = VoiceOutTrunk.Build("425ce763-a3a9-49b4-af5b-ada1a65c8864");
+        trunk.AuthenticationMethod = new CredentialsAndIpAuthenticationMethod
+        {
+            AllowedSipIps = new List<string> { "192.0.2.10/32" },
+            TechPrefix = "99"
+        };
+
+        await Client.VoiceOutTrunks().UpdateAsync(trunk);
+    }
+
+    [Fact]
+    public async Task TestUpdateVoiceOutTrunkToggleEmergencyEnableAll()
+    {
+        StubPatch("voice_out_trunks/425ce763-a3a9-49b4-af5b-ada1a65c8864",
+            "voice_out_trunks/update_emergency_enable_all_request.json",
+            "voice_out_trunks/update.json");
+
+        var trunk = VoiceOutTrunk.Build("425ce763-a3a9-49b4-af5b-ada1a65c8864");
+        trunk.EmergencyEnableAll = true;
+
+        await Client.VoiceOutTrunks().UpdateAsync(trunk);
+    }
+
+    [Fact]
+    public async Task TestUpdateVoiceOutTrunkReplaceEmergencyDids()
+    {
+        StubPatch("voice_out_trunks/425ce763-a3a9-49b4-af5b-ada1a65c8864",
+            "voice_out_trunks/update_emergency_dids_request.json",
+            "voice_out_trunks/update_emergency_dids.json");
+
+        var trunk = VoiceOutTrunk.Build("425ce763-a3a9-49b4-af5b-ada1a65c8864");
+        trunk.EmergencyDids = new List<Did>
+        {
+            Did.Build("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+            Did.Build("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb")
+        };
+
+        await Client.VoiceOutTrunks().UpdateAsync(trunk);
+    }
+
+    [Fact]
+    public async Task TestUpdateVoiceOutTrunkClearEmergencyDids()
+    {
+        StubPatch("voice_out_trunks/425ce763-a3a9-49b4-af5b-ada1a65c8864",
+            "voice_out_trunks/update_clear_emergency_dids_request.json",
+            "voice_out_trunks/update_emergency_dids.json");
+
+        var trunk = VoiceOutTrunk.Build("425ce763-a3a9-49b4-af5b-ada1a65c8864");
+        trunk.EmergencyDids = new List<Did>();
+
+        await Client.VoiceOutTrunks().UpdateAsync(trunk);
+    }
+
+    [Fact]
+    public async Task TestUpdateVoiceOutTrunkExternalReferenceId()
+    {
+        StubPatch("voice_out_trunks/425ce763-a3a9-49b4-af5b-ada1a65c8864",
+            "voice_out_trunks/update_external_reference_id_request.json",
+            "voice_out_trunks/update.json");
+
+        var trunk = VoiceOutTrunk.Build("425ce763-a3a9-49b4-af5b-ada1a65c8864");
+        trunk.ExternalReferenceId = "crm-vot-0002";
 
         await Client.VoiceOutTrunks().UpdateAsync(trunk);
     }

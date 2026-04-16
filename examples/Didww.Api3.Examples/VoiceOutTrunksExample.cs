@@ -1,4 +1,5 @@
 using Didww.Api3.Resource;
+using Didww.Api3.Resource.Configuration.AuthenticationMethod;
 using Didww.Api3.Resource.Enums;
 
 namespace Didww.Api3.Examples;
@@ -13,17 +14,24 @@ public static class VoiceOutTrunksExample
         var trunk = new VoiceOutTrunk
         {
             Name = "My Outbound Trunk " + suffix,
-            AllowedSipIps = new List<string> { "0.0.0.0/0" },
             DefaultDstAction = DefaultDstAction.AllowAll,
-            OnCliMismatchAction = OnCliMismatchAction.RejectCall
+            OnCliMismatchAction = OnCliMismatchAction.RejectCall,
+            AuthenticationMethod = new IpOnlyAuthenticationMethod
+            {
+                AllowedSipIps = new List<string> { "0.0.0.0/0" },
+                TechPrefix = ""
+            }
         };
 
         var response = await client.VoiceOutTrunks().CreateAsync(trunk);
         var created = response.Data;
         Console.WriteLine($"  Created: {created.Id}");
         Console.WriteLine($"    Name: {created.Name}");
-        Console.WriteLine($"    Username: {created.Username}");
-        Console.WriteLine($"    Password: {created.Password}");
+        if (created.AuthenticationMethod is CredentialsAndIpAuthenticationMethod cai)
+        {
+            Console.WriteLine($"    Username: {cai.Username}");
+            Console.WriteLine($"    Password: {cai.Password}");
+        }
         Console.WriteLine($"    Status: {created.Status}");
 
         Console.WriteLine("\n--- List Voice Out Trunks ---");
@@ -36,7 +44,11 @@ public static class VoiceOutTrunksExample
 
         Console.WriteLine("\n--- Update Voice Out Trunk ---");
         created.Name = "Updated Outbound Trunk " + suffix;
-        created.AllowedSipIps = new List<string> { "10.0.0.0/8" };
+        created.AuthenticationMethod = new IpOnlyAuthenticationMethod
+        {
+            AllowedSipIps = new List<string> { "10.0.0.0/8" },
+            TechPrefix = ""
+        };
         var updated = (await client.VoiceOutTrunks().UpdateAsync(created)).Data;
         Console.WriteLine($"  Updated name: {updated.Name}");
 

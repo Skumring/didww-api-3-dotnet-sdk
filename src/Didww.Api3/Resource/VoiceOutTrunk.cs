@@ -1,3 +1,5 @@
+using Didww.Api3.Converter;
+using Didww.Api3.Resource.Configuration.AuthenticationMethod;
 using Didww.Api3.Resource.Enums;
 using Newtonsoft.Json;
 
@@ -12,10 +14,6 @@ public class VoiceOutTrunk : BaseResource
     private string? _name;
     [JsonProperty("name")]
     public string? Name { get => _name; set => SetProperty(ref _name, value); }
-
-    private List<string>? _allowedSipIps;
-    [JsonProperty("allowed_sip_ips")]
-    public List<string>? AllowedSipIps { get => _allowedSipIps; set => SetProperty(ref _allowedSipIps, value); }
 
     private OnCliMismatchAction? _onCliMismatchAction;
     [JsonProperty("on_cli_mismatch_action")]
@@ -64,21 +62,57 @@ public class VoiceOutTrunk : BaseResource
     [JsonProperty("callback_url")]
     public string? CallbackUrl { get => _callbackUrl; set => SetProperty(ref _callbackUrl, value); }
 
-    [JsonProperty("username")]
-    public string? Username { get; set; }
-
-    [JsonProperty("password")]
-    public string? Password { get; set; }
-
     [JsonProperty("threshold_reached")]
     public bool? ThresholdReached { get; set; }
 
     [JsonProperty("created_at")]
     public DateTimeOffset? CreatedAt { get; set; }
 
+    /// <summary>
+    /// Customer-supplied reference. Max 100 characters. (API 2026-04-16)
+    /// </summary>
+    private string? _externalReferenceId;
+    [JsonProperty("external_reference_id")]
+    public string? ExternalReferenceId { get => _externalReferenceId; set => SetProperty(ref _externalReferenceId, value); }
+
+    /// <summary>
+    /// When true, all customer DIDs assigned to this trunk are considered
+    /// emergency-enabled. Cannot be combined with <see cref="EmergencyDids"/>.
+    /// (API 2026-04-16)
+    /// </summary>
+    private bool? _emergencyEnableAll;
+    [JsonProperty("emergency_enable_all")]
+    public bool? EmergencyEnableAll { get => _emergencyEnableAll; set => SetProperty(ref _emergencyEnableAll, value); }
+
+    /// <summary>
+    /// Seconds of RTP inactivity before the trunk tears down the call.
+    /// (API 2026-04-16)
+    /// </summary>
+    private int? _rtpTimeout;
+    [JsonProperty("rtp_timeout")]
+    public int? RtpTimeout { get => _rtpTimeout; set => SetProperty(ref _rtpTimeout, value); }
+
+    /// <summary>
+    /// Polymorphic authentication method (API 2026-04-16). One of:
+    ///   - <see cref="IpOnlyAuthenticationMethod"/>: allowed_sip_ips, tech_prefix
+    ///   - <see cref="CredentialsAndIpAuthenticationMethod"/>: adds server-generated username, password
+    ///   - <see cref="TwilioAuthenticationMethod"/>: twilio_account_sid
+    /// Unknown wire types are preserved via <see cref="GenericAuthenticationMethod"/>.
+    /// Replaces the flat allowed_sip_ips / username / password attributes that
+    /// existed prior to API 2026-04-16.
+    /// </summary>
+    private AuthenticationMethodBase? _authenticationMethod;
+    [JsonProperty("authentication_method")]
+    [JsonConverter(typeof(AuthenticationMethodConverter))]
+    public AuthenticationMethodBase? AuthenticationMethod { get => _authenticationMethod; set => SetProperty(ref _authenticationMethod, value); }
+
     private List<Did>? _dids;
     [JsonProperty("dids")]
     public List<Did>? Dids { get => _dids; set => SetProperty(ref _dids, value); }
+
+    private List<Did>? _emergencyDids;
+    [JsonProperty("emergency_dids")]
+    public List<Did>? EmergencyDids { get => _emergencyDids; set => SetProperty(ref _emergencyDids, value); }
 
     private Did? _defaultDid;
     [JsonProperty("default_did")]
