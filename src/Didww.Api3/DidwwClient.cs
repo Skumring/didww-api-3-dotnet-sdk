@@ -62,6 +62,7 @@ public class DidwwClient
     public Repository.ReadOnlyRepository<ProofType> ProofTypes() => new(_httpClient, _serializerSettings, _baseUrl, "proof_types");
     public Repository.ReadOnlyRepository<PublicKey> PublicKeys() => new(_httpClient, _serializerSettings, _baseUrl, "public_keys");
     public Repository.ReadOnlyRepository<AddressRequirement> AddressRequirements() => new(_httpClient, _serializerSettings, _baseUrl, "address_requirements");
+    public Repository.ReadOnlyRepository<EmergencyRequirement> EmergencyRequirements() => new(_httpClient, _serializerSettings, _baseUrl, "emergency_requirements");
     public Repository.ReadOnlyRepository<SupportingDocumentTemplate> SupportingDocumentTemplates() => new(_httpClient, _serializerSettings, _baseUrl, "supporting_document_templates");
 
     // Singleton
@@ -87,6 +88,7 @@ public class DidwwClient
     public Repository.Repository<AddressRequirementValidation> AddressRequirementValidations() => new(_httpClient, _serializerSettings, _baseUrl, "address_requirement_validations");
     public Repository.Repository<EmergencyCallingService> EmergencyCallingServices() => new(_httpClient, _serializerSettings, _baseUrl, "emergency_calling_services");
     public Repository.Repository<EmergencyVerification> EmergencyVerifications() => new(_httpClient, _serializerSettings, _baseUrl, "emergency_verifications");
+    public Repository.Repository<EmergencyRequirementValidation> EmergencyRequirementValidations() => new(_httpClient, _serializerSettings, _baseUrl, "emergency_requirement_validations");
 
     public async Task<List<string>> UploadEncryptedFileAsync(byte[] encryptedData, string fileName,
         string fingerprint, string? description = null)
