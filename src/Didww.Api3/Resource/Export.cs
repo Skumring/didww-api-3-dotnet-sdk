@@ -29,4 +29,8 @@ public class Export : BaseResource
     public Dictionary<string, object>? Filters { get => _filters; set => _filters = MarkDirty("filters", value); }
 
     [JsonProperty("created_at")] public DateTimeOffset? CreatedAt { get; set; }
+
+    private string? _externalReferenceId;
+    [JsonProperty("external_reference_id")]
+    public string? ExternalReferenceId { get => _externalReferenceId; set => _externalReferenceId = MarkDirty("externalReferenceId", value); }
 }

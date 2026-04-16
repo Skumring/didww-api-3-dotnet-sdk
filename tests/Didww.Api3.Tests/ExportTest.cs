@@ -87,6 +87,23 @@ public class ExportTest : BaseTest
     }
 
     [Fact]
+    public async Task TestUpdateExportExternalReferenceId()
+    {
+        StubPatch("exports/21e02b15-806d-44b3-b67f-434ea6c44f61",
+            "exports/update_external_reference_id_request.json",
+            "exports/update_external_reference_id.json");
+
+        var export = Export.Build("21e02b15-806d-44b3-b67f-434ea6c44f61");
+        export.ExternalReferenceId = "renamed-ref-99";
+
+        var response = await Client.Exports().UpdateAsync(export);
+        var updated = response.Data;
+
+        updated.Id.Should().Be("21e02b15-806d-44b3-b67f-434ea6c44f61");
+        updated.ExternalReferenceId.Should().Be("renamed-ref-99");
+    }
+
+    [Fact]
     public async Task TestDownloadExport()
     {
         var csvContent = "Date/Time Start (UTC),DID,Duration\n2018-12-06,972397239159652,0\n";
