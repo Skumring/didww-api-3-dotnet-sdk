@@ -32,6 +32,13 @@ public class AddressVerification : BaseResource
     [JsonProperty("reference")]
     public string? Reference { get; set; }
 
+    [JsonProperty("reject_comment")]
+    public string? RejectComment { get; set; }
+
+    private string? _externalReferenceId;
+    [JsonProperty("external_reference_id")]
+    public string? ExternalReferenceId { get => _externalReferenceId; set => _externalReferenceId = MarkDirty("externalReferenceId", value); }
+
     [JsonProperty("created_at")]
     public DateTimeOffset? CreatedAt { get; set; }
 

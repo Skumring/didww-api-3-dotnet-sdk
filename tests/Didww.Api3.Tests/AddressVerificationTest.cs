@@ -49,6 +49,23 @@ public class AddressVerificationTest : BaseTest
     }
 
     [Fact]
+    public async Task TestUpdateAddressVerificationExternalReferenceId()
+    {
+        StubPatch("address_verifications/429e6d4e-2ee9-4953-aa98-0b3ac07f0f96",
+            "address_verifications/update_external_reference_id_request.json",
+            "address_verifications/update_external_reference_id.json");
+
+        var verification = AddressVerification.Build("429e6d4e-2ee9-4953-aa98-0b3ac07f0f96");
+        verification.ExternalReferenceId = "updated-ref-42";
+
+        var response = await Client.AddressVerifications().UpdateAsync(verification);
+        var updated = response.Data;
+
+        updated.Id.Should().Be("429e6d4e-2ee9-4953-aa98-0b3ac07f0f96");
+        updated.ExternalReferenceId.Should().Be("updated-ref-42");
+    }
+
+    [Fact]
     public async Task TestCreateAddressVerification()
     {
         StubPost("address_verifications", "address_verifications/create_request.json", "address_verifications/create.json");
