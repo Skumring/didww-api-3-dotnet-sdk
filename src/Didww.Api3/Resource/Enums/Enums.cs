@@ -137,6 +137,27 @@ public enum EmergencyVerificationStatus
     [System.Runtime.Serialization.EnumMember(Value = "rejected")] Rejected
 }
 
+[JsonConverter(typeof(StringEnumConverter))]
+public enum DidHistoryAction
+{
+    [System.Runtime.Serialization.EnumMember(Value = "assigned")] Assigned,
+    [System.Runtime.Serialization.EnumMember(Value = "renewed")] Renewed,
+    [System.Runtime.Serialization.EnumMember(Value = "canceled")] Canceled,
+    [System.Runtime.Serialization.EnumMember(Value = "removed")] Removed,
+    [System.Runtime.Serialization.EnumMember(Value = "billing_cycles_count_changed")] BillingCyclesCountChanged,
+    [System.Runtime.Serialization.EnumMember(Value = "restored")] Restored
+}
+
+[JsonConverter(typeof(StringEnumConverter))]
+public enum DidHistoryMethod
+{
+    [System.Runtime.Serialization.EnumMember(Value = "system")] System,
+    [System.Runtime.Serialization.EnumMember(Value = "api2")] Api2,
+    [System.Runtime.Serialization.EnumMember(Value = "api3")] Api3,
+    [System.Runtime.Serialization.EnumMember(Value = "staff")] Staff,
+    [System.Runtime.Serialization.EnumMember(Value = "user_panel")] UserPanel
+}
+
 // Integer-based enums
 public enum Codec
 {

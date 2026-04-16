@@ -63,6 +63,7 @@ public class DidwwClient
     public Repository.ReadOnlyRepository<PublicKey> PublicKeys() => new(_httpClient, _serializerSettings, _baseUrl, "public_keys");
     public Repository.ReadOnlyRepository<AddressRequirement> AddressRequirements() => new(_httpClient, _serializerSettings, _baseUrl, "address_requirements");
     public Repository.ReadOnlyRepository<EmergencyRequirement> EmergencyRequirements() => new(_httpClient, _serializerSettings, _baseUrl, "emergency_requirements");
+    public Repository.ReadOnlyRepository<DidHistory> DidHistory() => new(_httpClient, _serializerSettings, _baseUrl, "did_history");
     public Repository.ReadOnlyRepository<SupportingDocumentTemplate> SupportingDocumentTemplates() => new(_httpClient, _serializerSettings, _baseUrl, "supporting_document_templates");
 
     // Singleton
