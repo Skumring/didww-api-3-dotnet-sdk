@@ -213,7 +213,7 @@ await client.VoiceInTrunkGroups().CreateAsync(group);
 var trunk = new VoiceOutTrunk
 {
     Name = "My Outbound Trunk",
-    AllowedSipIps = new List<string> { "0.0.0.0/0" },
+    AllowedSipIps = new List<string> { "203.0.113.0/24" }, // Replace with your real infrastructure CIDR
     OnCliMismatchAction = OnCliMismatchAction.ReplaceCli,
     DefaultDid = Did.Build("did-uuid")
 };
@@ -524,7 +524,7 @@ The SDK distinguishes between date-only and datetime fields:
 
 - **Datetime fields** are deserialized as `DateTimeOffset?`:
   - All `CreatedAt` properties — present on most resources
-  - Expiry fields: `Did.ExpiresAt`, `DidReservation.ExpireAt`, `Proof.ExpiresAt`, `EncryptedFile.ExpireAt`
+  - Expiry fields: `Did.ExpiresAt`, `DidReservation.ExpiresAt`, `Proof.ExpiresAt`, `EncryptedFile.ExpiresAt`
 - **Date-only fields** (`Identity.BirthDate`) are deserialized as `DateOnly?`.
 - **Date-only fields kept as strings** (`CapacityPool.RenewDate`, `DidOrderItem.BilledFrom`, `DidOrderItem.BilledTo`) remain as `string?`.
 
