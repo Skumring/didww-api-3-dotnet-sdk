@@ -3,6 +3,12 @@ using Newtonsoft.Json;
 
 namespace Didww.Api3.Resource;
 
+/// <summary>
+/// Emergency calling service resource (API 2026-04-16).
+/// Represents an E911/E112 calling service provisioned for a specific
+/// address, country and DID group type. Status transitions through:
+/// new, in process, active, pending update, changes required, canceled.
+/// </summary>
 public class EmergencyCallingService : BaseResource
 {
     public override string Type => "emergency_calling_services";

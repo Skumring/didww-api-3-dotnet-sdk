@@ -3,6 +3,14 @@ using Newtonsoft.Json;
 
 namespace Didww.Api3.Resource;
 
+/// <summary>
+/// Emergency verification resource (API 2026-04-16).
+/// Submits an address for emergency-service validation. The server
+/// transitions through pending/approved/rejected statuses.
+/// When rejected, <see cref="RejectReasons"/> lists the individual
+/// failure reasons and <see cref="RejectComment"/> provides an
+/// optional operator comment.
+/// </summary>
 public class EmergencyVerification : BaseResource
 {
     public override string Type => "emergency_verifications";
