@@ -18,6 +18,9 @@ public static class DidGroupsExample
         {
             var skuCount = group.StockKeepingUnits?.Count ?? 0;
             Console.WriteLine($"  {group.Id} - {group.AreaName} prefix={group.Prefix} features={string.Join(",", group.Features ?? [])} metered={group.IsMetered} ({skuCount} SKUs)");
+            Console.WriteLine($"    Allow additional channels: {group.AllowAdditionalChannels}"); // 2026-04-16
+            if (group.ServiceRestrictions != null)
+                Console.WriteLine($"    Service restrictions: {group.ServiceRestrictions}"); // 2026-04-16
         }
 
         if (response.Data.Count > 0)
