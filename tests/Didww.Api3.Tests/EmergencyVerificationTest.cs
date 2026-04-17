@@ -75,6 +75,33 @@ public class EmergencyVerificationTest : BaseTest
     }
 
     [Fact]
+    public void TestStatusHelperPending()
+    {
+        var v = new EmergencyVerification { Status = EmergencyVerificationStatus.Pending };
+        v.IsPending.Should().BeTrue();
+        v.IsApproved.Should().BeFalse();
+        v.IsRejected.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestStatusHelperApproved()
+    {
+        var v = new EmergencyVerification { Status = EmergencyVerificationStatus.Approved };
+        v.IsApproved.Should().BeTrue();
+        v.IsPending.Should().BeFalse();
+        v.IsRejected.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestStatusHelperRejected()
+    {
+        var v = new EmergencyVerification { Status = EmergencyVerificationStatus.Rejected };
+        v.IsRejected.Should().BeTrue();
+        v.IsPending.Should().BeFalse();
+        v.IsApproved.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task TestUpdateEmergencyVerificationExternalReferenceId()
     {
         StubPatch("emergency_verifications/01234567-89ab-cdef-0123-456789abcdef",

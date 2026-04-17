@@ -23,6 +23,13 @@ public class EmergencyVerification : BaseResource
     [JsonProperty("status")]
     public EmergencyVerificationStatus? Status { get; set; }
 
+    [JsonIgnore]
+    public bool IsPending => Status == EmergencyVerificationStatus.Pending;
+    [JsonIgnore]
+    public bool IsApproved => Status == EmergencyVerificationStatus.Approved;
+    [JsonIgnore]
+    public bool IsRejected => Status == EmergencyVerificationStatus.Rejected;
+
     [JsonProperty("reject_reasons")]
     public List<string>? RejectReasons { get; set; }
 
