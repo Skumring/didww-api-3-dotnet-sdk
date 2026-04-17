@@ -53,16 +53,14 @@ public class EncryptedFileTest : BaseTest
             Response.Create()
                 .WithStatusCode(201)
                 .WithHeader("Content-Type", "application/json")
-                .WithBody("""{"ids":["file-id-1","file-id-2"]}""")
+                .WithBody("""{"data":{"id":"f6a7b890-1234-5678-9abc-def123456789","type":"encrypted_files","attributes":{"description":"Test description","expires_at":"2026-04-22T10:00:00.000Z"}}}""")
         );
 
         var fileData = "test file data"u8.ToArray();
         var result = await Client.UploadEncryptedFileAsync(
             fileData, "test.pdf", "fingerprint123", "Test description");
 
-        result.Should().HaveCount(2);
-        result[0].Should().Be("file-id-1");
-        result[1].Should().Be("file-id-2");
+        result.Should().Be("f6a7b890-1234-5678-9abc-def123456789");
     }
 
     [Fact]
@@ -74,13 +72,13 @@ public class EncryptedFileTest : BaseTest
             Response.Create()
                 .WithStatusCode(201)
                 .WithHeader("Content-Type", "application/json")
-                .WithBody("""{"ids":["file-id-1"]}""")
+                .WithBody("""{"data":{"id":"f6a7b890-1234-5678-9abc-def123456789","type":"encrypted_files","attributes":{"description":"test.pdf","expires_at":"2026-04-22T10:00:00.000Z"}}}""")
         );
 
         var fileData = "test"u8.ToArray();
         var result = await Client.UploadEncryptedFileAsync(fileData, "test.pdf", "fp123");
 
-        result.Should().HaveCount(1);
+        result.Should().Be("f6a7b890-1234-5678-9abc-def123456789");
     }
 
     [Fact]
@@ -110,7 +108,7 @@ public class EncryptedFileTest : BaseTest
             Response.Create()
                 .WithStatusCode(201)
                 .WithHeader("Content-Type", "application/json")
-                .WithBody("""{"ids":["file-id-1"]}""")
+                .WithBody("""{"data":{"id":"file-id-1","type":"encrypted_files","attributes":{"description":"test.pdf","expires_at":"2026-04-22T10:00:00.000Z"}}}""")
         );
 
         var fileData = "test"u8.ToArray();

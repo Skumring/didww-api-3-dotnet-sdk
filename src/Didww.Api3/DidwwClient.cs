@@ -91,7 +91,7 @@ public class DidwwClient
     public Repository.Repository<EmergencyVerification> EmergencyVerifications() => new(_httpClient, _serializerSettings, _baseUrl, "emergency_verifications");
     public Repository.Repository<EmergencyRequirementValidation> EmergencyRequirementValidations() => new(_httpClient, _serializerSettings, _baseUrl, "emergency_requirement_validations");
 
-    public async Task<List<string>> UploadEncryptedFileAsync(byte[] encryptedData, string fileName,
+    public async Task<string> UploadEncryptedFileAsync(byte[] encryptedData, string fileName,
         string fingerprint, string? description = null)
     {
         ArgumentNullException.ThrowIfNull(encryptedData);
@@ -101,8 +101,8 @@ public class DidwwClient
         var content = new MultipartFormDataContent
         {
             { new StringContent(fingerprint), "encrypted_files[encryption_fingerprint]" },
-            { new StringContent(description ?? ""), "encrypted_files[items][][description]" },
-            { new ByteArrayContent(encryptedData), "encrypted_files[items][][file]", fileName }
+            { new StringContent(description ?? fileName), "encrypted_files[description]" },
+            { new ByteArrayContent(encryptedData), "encrypted_files[file]", fileName }
         };
 
         var request = new HttpRequestMessage(HttpMethod.Post, _baseUrl + "/encrypted_files")
@@ -118,11 +118,11 @@ public class DidwwClient
             throw new DidwwClientException($"Failed to upload encrypted file: HTTP {(int)response.StatusCode} {responseBody}");
 
         var root = JObject.Parse(responseBody);
-        var idsNode = root["ids"] as JArray;
-        if (idsNode == null)
+        var idNode = root.SelectToken("data.id");
+        if (idNode == null)
             throw new DidwwClientException($"Unexpected encrypted_files upload response: {responseBody}");
 
-        return idsNode.Select(n => n.ToString()).ToList();
+        return idNode.ToString();
     }
 
     public async Task DownloadExportAsync(Export export, string filePath)
