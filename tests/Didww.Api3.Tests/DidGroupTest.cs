@@ -14,6 +14,16 @@ public class DidGroupTest : BaseTest
     }
 
     [Fact]
+    public void TestFeatureEnumIncludesNewFeatures()
+    {
+        var featureNames = Enum.GetNames(typeof(Feature));
+        featureNames.Should().Contain("P2p");
+        featureNames.Should().Contain("A2p");
+        featureNames.Should().Contain("Emergency");
+        featureNames.Should().Contain("CnamOut");
+    }
+
+    [Fact]
     public async Task TestListDidGroups()
     {
         StubGet("did_groups", "did_groups/index.json");

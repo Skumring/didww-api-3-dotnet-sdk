@@ -71,7 +71,11 @@ public enum Feature
     [System.Runtime.Serialization.EnumMember(Value = "voice_in")] VoiceIn,
     [System.Runtime.Serialization.EnumMember(Value = "voice_out")] VoiceOut,
     [System.Runtime.Serialization.EnumMember(Value = "t38")] T38,
-    [System.Runtime.Serialization.EnumMember(Value = "sms_in")] SmsIn
+    [System.Runtime.Serialization.EnumMember(Value = "sms_in")] SmsIn,
+    [System.Runtime.Serialization.EnumMember(Value = "p2p")] P2p,
+    [System.Runtime.Serialization.EnumMember(Value = "a2p")] A2p,
+    [System.Runtime.Serialization.EnumMember(Value = "emergency")] Emergency,
+    [System.Runtime.Serialization.EnumMember(Value = "cnam_out")] CnamOut
 }
 
 [JsonConverter(typeof(StringEnumConverter))]
