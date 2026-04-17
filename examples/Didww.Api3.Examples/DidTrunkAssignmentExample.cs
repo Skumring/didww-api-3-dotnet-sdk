@@ -13,7 +13,7 @@ public static class DidTrunkAssignmentExample
         var sipConfig = new SipConfiguration
         {
             Username = "example-user",
-            Host = "192.168.1.100",
+            Host = "203.0.113.10",
             Port = 5060,
             CodecIds = new List<Codec> { Codec.PCMU, Codec.PCMA }
         };

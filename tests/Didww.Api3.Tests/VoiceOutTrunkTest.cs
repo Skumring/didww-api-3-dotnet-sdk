@@ -34,7 +34,7 @@ public class VoiceOutTrunkTest : BaseTest
 
         first.AuthenticationMethod.Should().BeOfType<CredentialsAndIpAuthenticationMethod>();
         var cai = (CredentialsAndIpAuthenticationMethod)first.AuthenticationMethod!;
-        cai.AllowedSipIps.Should().ContainSingle().Which.Should().Be("10.11.12.13/32");
+        cai.AllowedSipIps.Should().ContainSingle().Which.Should().Be("203.0.113.1/32");
         cai.Username.Should().Be("dpjgwbbac9");
         cai.Password.Should().Be("z0hshvbcy7");
     }
@@ -58,7 +58,7 @@ public class VoiceOutTrunkTest : BaseTest
 
         trunk.AuthenticationMethod.Should().BeOfType<CredentialsAndIpAuthenticationMethod>();
         var cai = (CredentialsAndIpAuthenticationMethod)trunk.AuthenticationMethod!;
-        cai.AllowedSipIps.Should().ContainSingle().Which.Should().Be("10.11.12.13/32");
+        cai.AllowedSipIps.Should().ContainSingle().Which.Should().Be("203.0.113.1/32");
         cai.Username.Should().Be("dpjgwbbac9");
         cai.Password.Should().Be("z0hshvbcy7");
     }
@@ -112,7 +112,7 @@ public class VoiceOutTrunkTest : BaseTest
         trunk.RtpPing = true;
         trunk.AuthenticationMethod = new IpOnlyAuthenticationMethod
         {
-            AllowedSipIps = new List<string> { "10.11.12.13/32" },
+            AllowedSipIps = new List<string> { "203.0.113.1/32" },
             TechPrefix = ""
         };
 

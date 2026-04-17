@@ -42,7 +42,7 @@ public class VoiceInTrunkTest : BaseTest
 
         var config = (SipConfiguration)sipTrunk!.Configuration!;
         config.Username.Should().Be("username");
-        config.Host.Should().Be("216.58.215.78");
+        config.Host.Should().Be("203.0.113.78");
         config.Port.Should().Be(8060);
         config.CodecIds.Should().ContainInOrder(Codec.PCMU, Codec.PCMA, Codec.G729);
         config.TransportProtocolId.Should().Be(TransportProtocol.UDP);
@@ -119,13 +119,13 @@ public class VoiceInTrunkTest : BaseTest
         var sipConfig = new SipConfiguration
         {
             Username = "new-username",
-            Host = "216.58.215.110",
+            Host = "203.0.113.110",
             Port = 5060,
             CodecIds = new List<Codec> { Codec.PCMU, Codec.PCMA, Codec.G729, Codec.G723, Codec.TELEPHONE_EVENT },
             SstRefreshMethodId = SstRefreshMethod.INVITE,
             MediaEncryptionMode = MediaEncryptionMode.Zrtp,
             StirShakenMode = StirShakenMode.Pai,
-            AllowedRtpIps = new List<string> { "127.0.0.1" }
+            AllowedRtpIps = new List<string> { "203.0.113.1" }
         };
 
         var trunk = VoiceInTrunk.Build("a80006b6-4183-4865-8b99-7ebbd359a762");
@@ -163,7 +163,7 @@ public class VoiceInTrunkTest : BaseTest
         var sipConfig = new SipConfiguration
         {
             Username = "username",
-            Host = "216.58.215.110",
+            Host = "203.0.113.110",
             SstRefreshMethodId = SstRefreshMethod.INVITE,
             Port = 5060,
             CodecIds = new List<Codec> { Codec.PCMU, Codec.PCMA, Codec.G729, Codec.G723, Codec.TELEPHONE_EVENT },
@@ -217,7 +217,7 @@ public class VoiceInTrunkTest : BaseTest
             },
             MediaEncryptionMode = MediaEncryptionMode.Zrtp,
             StirShakenMode = StirShakenMode.Pai,
-            AllowedRtpIps = new List<string> { "127.0.0.1" }
+            AllowedRtpIps = new List<string> { "203.0.113.1" }
         };
 
         var trunk = new VoiceInTrunk

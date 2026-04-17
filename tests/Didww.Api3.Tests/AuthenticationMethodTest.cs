@@ -16,13 +16,13 @@ public class AuthenticationMethodTest
     [Fact]
     public void Deserializes_IpOnly_Wire_To_IpOnly_Subtype()
     {
-        var json = @"{""type"":""ip_only"",""attributes"":{""allowed_sip_ips"":[""10.0.0.1/32""],""tech_prefix"":""""}}";
+        var json = @"{""type"":""ip_only"",""attributes"":{""allowed_sip_ips"":[""203.0.113.1/32""],""tech_prefix"":""""}}";
 
         var obj = JsonConvert.DeserializeObject<AuthenticationMethodBase>(json, Settings);
 
         obj.Should().BeOfType<IpOnlyAuthenticationMethod>();
         var ipOnly = (IpOnlyAuthenticationMethod)obj!;
-        ipOnly.AllowedSipIps.Should().ContainSingle().Which.Should().Be("10.0.0.1/32");
+        ipOnly.AllowedSipIps.Should().ContainSingle().Which.Should().Be("203.0.113.1/32");
         ipOnly.TechPrefix.Should().Be("");
         ipOnly.AuthenticationType.Should().Be("ip_only");
     }
@@ -30,7 +30,7 @@ public class AuthenticationMethodTest
     [Fact]
     public void Deserializes_CredentialsAndIp_Wire_To_CredentialsAndIp_Subtype()
     {
-        var json = @"{""type"":""credentials_and_ip"",""attributes"":{""allowed_sip_ips"":[""10.0.0.1/32""],""username"":""u"",""password"":""p"",""tech_prefix"":""9""}}";
+        var json = @"{""type"":""credentials_and_ip"",""attributes"":{""allowed_sip_ips"":[""203.0.113.1/32""],""username"":""u"",""password"":""p"",""tech_prefix"":""9""}}";
 
         var obj = JsonConvert.DeserializeObject<AuthenticationMethodBase>(json, Settings);
 
@@ -38,7 +38,7 @@ public class AuthenticationMethodTest
         var cai = (CredentialsAndIpAuthenticationMethod)obj!;
         cai.Username.Should().Be("u");
         cai.Password.Should().Be("p");
-        cai.AllowedSipIps.Should().ContainSingle().Which.Should().Be("10.0.0.1/32");
+        cai.AllowedSipIps.Should().ContainSingle().Which.Should().Be("203.0.113.1/32");
         cai.TechPrefix.Should().Be("9");
         cai.AuthenticationType.Should().Be("credentials_and_ip");
     }
@@ -77,13 +77,13 @@ public class AuthenticationMethodTest
     {
         var ipOnly = new IpOnlyAuthenticationMethod
         {
-            AllowedSipIps = new List<string> { "10.0.0.1/32" },
+            AllowedSipIps = new List<string> { "203.0.113.1/32" },
             TechPrefix = ""
         };
 
         var json = JsonConvert.SerializeObject(ipOnly, Settings);
 
-        json.Should().Be(@"{""type"":""ip_only"",""attributes"":{""allowed_sip_ips"":[""10.0.0.1/32""],""tech_prefix"":""""}}");
+        json.Should().Be(@"{""type"":""ip_only"",""attributes"":{""allowed_sip_ips"":[""203.0.113.1/32""],""tech_prefix"":""""}}");
     }
 
     [Fact]
