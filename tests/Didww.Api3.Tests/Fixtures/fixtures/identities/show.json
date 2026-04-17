@@ -13,7 +13,7 @@
       "vat_id": "GB1234",
       "description": "test identity",
       "personal_tax_id": "987654321",
-      "identity_type": "Business",
+      "identity_type": "business",
       "created_at": "2021-04-01T14:56:34.637Z",
       "external_reference_id": "111",
       "verified": false
@@ -36,7 +36,7 @@
         },
         "data": {
           "type": "countries",
-          "id": "1f6fc2bd-f081-4202-9b1a-d9cb88d942b9"
+          "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
         }
       },
       "proofs": {
@@ -76,9 +76,26 @@
           }
         }
       }
+    },
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "type": "countries",
+      "attributes": {
+        "name": "Germany",
+        "prefix": "49",
+        "iso": "DE"
+      },
+      "relationships": {
+        "regions": {
+          "links": {
+            "self": "https://sandbox-api.didww.com/v3/countries/a1b2c3d4-e5f6-7890-abcd-ef1234567890/relationships/regions",
+            "related": "https://sandbox-api.didww.com/v3/countries/a1b2c3d4-e5f6-7890-abcd-ef1234567890/regions"
+          }
+        }
+      }
     }
   ],
   "meta": {
-    "api_version": "2021-04-19"
+    "api_version": "2026-04-16"
   }
 }
