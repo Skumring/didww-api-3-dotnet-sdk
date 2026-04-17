@@ -240,6 +240,33 @@ public class OrderTest : BaseTest
     }
 
     [Fact]
+    public void TestStatusHelperPending()
+    {
+        var order = new Order { Status = OrderStatus.Pending };
+        order.IsPending.Should().BeTrue();
+        order.IsCompleted.Should().BeFalse();
+        order.IsCancelled.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestStatusHelperCompleted()
+    {
+        var order = new Order { Status = OrderStatus.Completed };
+        order.IsCompleted.Should().BeTrue();
+        order.IsPending.Should().BeFalse();
+        order.IsCancelled.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestStatusHelperCancelled()
+    {
+        var order = new Order { Status = OrderStatus.Canceled };
+        order.IsCancelled.Should().BeTrue();
+        order.IsPending.Should().BeFalse();
+        order.IsCompleted.Should().BeFalse();
+    }
+
+    [Fact]
     public void TestSerializeNullItems()
     {
         var order = new Order

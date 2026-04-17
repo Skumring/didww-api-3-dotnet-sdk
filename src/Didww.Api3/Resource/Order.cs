@@ -17,6 +17,13 @@ public class Order : BaseResource
     [JsonProperty("status")]
     public OrderStatus? Status { get; set; }
 
+    [JsonIgnore]
+    public bool IsPending => Status == OrderStatus.Pending;
+    [JsonIgnore]
+    public bool IsCompleted => Status == OrderStatus.Completed;
+    [JsonIgnore]
+    public bool IsCancelled => Status == OrderStatus.Canceled;
+
     [JsonProperty("description")]
     public string? Description { get; set; }
 
