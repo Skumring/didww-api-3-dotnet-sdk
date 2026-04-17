@@ -18,7 +18,8 @@ public static class VoiceOutTrunksExample
             OnCliMismatchAction = OnCliMismatchAction.RejectCall,
             AuthenticationMethod = new IpOnlyAuthenticationMethod
             {
-                AllowedSipIps = new List<string> { "0.0.0.0/0" },
+                // Replace with your real infrastructure CIDR
+                AllowedSipIps = new List<string> { "203.0.113.0/24" },
                 TechPrefix = ""
             }
         };
