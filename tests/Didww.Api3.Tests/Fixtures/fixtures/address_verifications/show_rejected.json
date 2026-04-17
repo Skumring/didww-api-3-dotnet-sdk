@@ -6,7 +6,7 @@
       "service_description": null,
       "callback_url": null,
       "callback_method": null,
-      "status": "Rejected",
+      "status": "rejected",
       "reject_reasons": ["Address cannot be validated", "Proof of address should be not older than of 6 months"],
       "reject_comment": "Please provide a valid address",
       "reference": "ODW-879912",

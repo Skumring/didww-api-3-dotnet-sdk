@@ -6,33 +6,33 @@ namespace Didww.Api3.Resource.Enums;
 [JsonConverter(typeof(StringEnumConverter))]
 public enum OrderStatus
 {
-    [System.Runtime.Serialization.EnumMember(Value = "Pending")] Pending,
-    [System.Runtime.Serialization.EnumMember(Value = "Canceled")] Canceled,
-    [System.Runtime.Serialization.EnumMember(Value = "Completed")] Completed
+    [System.Runtime.Serialization.EnumMember(Value = "pending")] Pending,
+    [System.Runtime.Serialization.EnumMember(Value = "canceled")] Canceled,
+    [System.Runtime.Serialization.EnumMember(Value = "completed")] Completed
 }
 
 [JsonConverter(typeof(StringEnumConverter))]
 public enum AddressVerificationStatus
 {
-    [System.Runtime.Serialization.EnumMember(Value = "Pending")] Pending,
-    [System.Runtime.Serialization.EnumMember(Value = "Approved")] Approved,
-    [System.Runtime.Serialization.EnumMember(Value = "Rejected")] Rejected
+    [System.Runtime.Serialization.EnumMember(Value = "pending")] Pending,
+    [System.Runtime.Serialization.EnumMember(Value = "approved")] Approved,
+    [System.Runtime.Serialization.EnumMember(Value = "rejected")] Rejected
 }
 
 [JsonConverter(typeof(StringEnumConverter))]
 public enum AreaLevel
 {
-    [System.Runtime.Serialization.EnumMember(Value = "WorldWide")] WorldWide,
-    [System.Runtime.Serialization.EnumMember(Value = "Country")] Country,
-    [System.Runtime.Serialization.EnumMember(Value = "Area")] Area,
-    [System.Runtime.Serialization.EnumMember(Value = "City")] City
+    [System.Runtime.Serialization.EnumMember(Value = "world_wide")] WorldWide,
+    [System.Runtime.Serialization.EnumMember(Value = "country")] Country,
+    [System.Runtime.Serialization.EnumMember(Value = "area")] Area,
+    [System.Runtime.Serialization.EnumMember(Value = "city")] City
 }
 
 [JsonConverter(typeof(StringEnumConverter))]
 public enum CallbackMethod
 {
-    [System.Runtime.Serialization.EnumMember(Value = "POST")] Post,
-    [System.Runtime.Serialization.EnumMember(Value = "GET")] Get
+    [System.Runtime.Serialization.EnumMember(Value = "post")] Post,
+    [System.Runtime.Serialization.EnumMember(Value = "get")] Get
 }
 
 [JsonConverter(typeof(StringEnumConverter))]
@@ -53,9 +53,9 @@ public enum DefaultDstAction
 [JsonConverter(typeof(StringEnumConverter))]
 public enum ExportStatus
 {
-    [System.Runtime.Serialization.EnumMember(Value = "Pending")] Pending,
-    [System.Runtime.Serialization.EnumMember(Value = "Processing")] Processing,
-    [System.Runtime.Serialization.EnumMember(Value = "Completed")] Completed
+    [System.Runtime.Serialization.EnumMember(Value = "pending")] Pending,
+    [System.Runtime.Serialization.EnumMember(Value = "processing")] Processing,
+    [System.Runtime.Serialization.EnumMember(Value = "completed")] Completed
 }
 
 [JsonConverter(typeof(StringEnumConverter))]
@@ -81,9 +81,9 @@ public enum Feature
 [JsonConverter(typeof(StringEnumConverter))]
 public enum IdentityType
 {
-    [System.Runtime.Serialization.EnumMember(Value = "Personal")] Personal,
-    [System.Runtime.Serialization.EnumMember(Value = "Business")] Business,
-    [System.Runtime.Serialization.EnumMember(Value = "Any")] Any
+    [System.Runtime.Serialization.EnumMember(Value = "personal")] Personal,
+    [System.Runtime.Serialization.EnumMember(Value = "business")] Business,
+    [System.Runtime.Serialization.EnumMember(Value = "any")] Any
 }
 
 [JsonConverter(typeof(StringEnumConverter))]
@@ -135,10 +135,10 @@ public enum EmergencyCallingServiceStatus
 {
     [System.Runtime.Serialization.EnumMember(Value = "active")] Active,
     [System.Runtime.Serialization.EnumMember(Value = "canceled")] Canceled,
-    [System.Runtime.Serialization.EnumMember(Value = "changes required")] ChangesRequired,
-    [System.Runtime.Serialization.EnumMember(Value = "in process")] InProcess,
+    [System.Runtime.Serialization.EnumMember(Value = "changes_required")] ChangesRequired,
+    [System.Runtime.Serialization.EnumMember(Value = "in_process")] InProcess,
     [System.Runtime.Serialization.EnumMember(Value = "new")] New,
-    [System.Runtime.Serialization.EnumMember(Value = "pending update")] PendingUpdate
+    [System.Runtime.Serialization.EnumMember(Value = "pending_update")] PendingUpdate
 }
 
 [JsonConverter(typeof(StringEnumConverter))]
