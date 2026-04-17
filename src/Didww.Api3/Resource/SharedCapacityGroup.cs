@@ -21,6 +21,10 @@ public class SharedCapacityGroup : BaseResource
 
     [JsonProperty("created_at")] public DateTimeOffset? CreatedAt { get; set; }
 
+    private string? _externalReferenceId;
+    [JsonProperty("external_reference_id")]
+    public string? ExternalReferenceId { get => _externalReferenceId; set => _externalReferenceId = MarkDirty("externalReferenceId", value); }
+
     private CapacityPool? _capacityPool;
     [JsonProperty("capacity_pool")]
     public CapacityPool? CapacityPool { get => _capacityPool; set => _capacityPool = MarkDirty("capacityPool", value); }
