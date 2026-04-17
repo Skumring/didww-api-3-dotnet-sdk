@@ -24,6 +24,9 @@ public class DidGroup : BaseResource
     [JsonProperty("allow_additional_channels")]
     public bool? AllowAdditionalChannels { get; set; }
 
+    [JsonProperty("service_restrictions")]
+    public string? ServiceRestrictions { get; set; }
+
     [JsonProperty("stock_keeping_units")]
     public List<StockKeepingUnit>? StockKeepingUnits { get; set; }
 
