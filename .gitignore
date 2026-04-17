@@ -40,6 +40,9 @@ coverage/
 *.coverage
 *.coveragexml
 
+# Claude settings (local-only, per-developer)
+.claude/
+
 # OS
 .DS_Store
 Thumbs.db
