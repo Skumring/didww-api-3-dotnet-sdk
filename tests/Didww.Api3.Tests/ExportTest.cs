@@ -50,8 +50,8 @@ public class ExportTest : BaseTest
             Filters = new Dictionary<string, object>
             {
                 { "did_number", "1234556789" },
-                { "year", "2019" },
-                { "month", "01" }
+                { "from", "2026-04-01 00:00:00" },
+                { "to", "2026-04-15 23:59:59" }
             }
         };
 
@@ -73,8 +73,8 @@ public class ExportTest : BaseTest
             ExportType = ExportType.CdrOut,
             Filters = new Dictionary<string, object>
             {
-                { "year", 2024 },
-                { "month", 1 }
+                { "from", "2026-04-01 00:00:00" },
+                { "to", "2026-04-15 23:59:59" }
             }
         };
 
