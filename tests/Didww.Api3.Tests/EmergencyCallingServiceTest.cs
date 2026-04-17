@@ -62,6 +62,23 @@ public class EmergencyCallingServiceTest : BaseTest
     }
 
     [Fact]
+    public void TestStatusHelperActive()
+    {
+        var svc = new Didww.Api3.Resource.EmergencyCallingService { Status = EmergencyCallingServiceStatus.Active };
+        svc.IsActive.Should().BeTrue();
+        svc.IsCanceled.Should().BeFalse();
+        svc.IsNew.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestStatusHelperPendingUpdate()
+    {
+        var svc = new Didww.Api3.Resource.EmergencyCallingService { Status = EmergencyCallingServiceStatus.PendingUpdate };
+        svc.IsPendingUpdate.Should().BeTrue();
+        svc.IsActive.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task TestDeleteEmergencyCallingService()
     {
         var id = "01234567-89ab-cdef-0123-456789abcdef";

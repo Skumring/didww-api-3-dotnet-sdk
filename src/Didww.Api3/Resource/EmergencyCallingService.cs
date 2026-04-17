@@ -18,6 +18,19 @@ public class EmergencyCallingService : BaseResource
     [JsonProperty("status")]
     public EmergencyCallingServiceStatus? Status { get; set; }
 
+    [JsonIgnore]
+    public bool IsActive => Status == EmergencyCallingServiceStatus.Active;
+    [JsonIgnore]
+    public bool IsCanceled => Status == EmergencyCallingServiceStatus.Canceled;
+    [JsonIgnore]
+    public bool IsChangesRequired => Status == EmergencyCallingServiceStatus.ChangesRequired;
+    [JsonIgnore]
+    public bool IsInProcess => Status == EmergencyCallingServiceStatus.InProcess;
+    [JsonIgnore]
+    public bool IsNew => Status == EmergencyCallingServiceStatus.New;
+    [JsonIgnore]
+    public bool IsPendingUpdate => Status == EmergencyCallingServiceStatus.PendingUpdate;
+
     [JsonProperty("activated_at")]
     public DateTimeOffset? ActivatedAt { get; set; }
 
