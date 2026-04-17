@@ -21,6 +21,7 @@ public class OrderTest : BaseTest
         order.Status.Should().Be(OrderStatus.Completed);
         order.Description.Should().Be("Payment processing fee");
         order.Reference.Should().Be("SPT-474057");
+        order.ExternalReferenceId.Should().Be("order-ext-001");
         order.Items.Should().NotBeEmpty();
     }
 

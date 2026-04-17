@@ -50,6 +50,10 @@ public class Order : BaseResource
         set => SetProperty(ref _allowBackOrdering, value);
     }
 
+    private string? _externalReferenceId;
+    [JsonProperty("external_reference_id")]
+    public string? ExternalReferenceId { get => _externalReferenceId; set => SetProperty(ref _externalReferenceId, value); }
+
     private List<OrderItemBase>? _items;
     [JsonProperty("items")]
     [JsonConverter(typeof(OrderItemConverter))]
