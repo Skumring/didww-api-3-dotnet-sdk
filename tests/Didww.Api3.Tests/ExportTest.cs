@@ -11,6 +11,33 @@ namespace Didww.Api3.Tests;
 public class ExportTest : BaseTest
 {
     [Fact]
+    public void TestStatusHelperPending()
+    {
+        var export = new Export { Status = ExportStatus.Pending };
+        export.IsPending.Should().BeTrue();
+        export.IsProcessing.Should().BeFalse();
+        export.IsCompleted.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestStatusHelperProcessing()
+    {
+        var export = new Export { Status = ExportStatus.Processing };
+        export.IsProcessing.Should().BeTrue();
+        export.IsPending.Should().BeFalse();
+        export.IsCompleted.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestStatusHelperCompleted()
+    {
+        var export = new Export { Status = ExportStatus.Completed };
+        export.IsCompleted.Should().BeTrue();
+        export.IsPending.Should().BeFalse();
+        export.IsProcessing.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task TestListExports()
     {
         StubGet("exports", "exports/index.json");
