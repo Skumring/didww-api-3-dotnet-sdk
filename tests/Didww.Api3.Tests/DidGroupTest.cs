@@ -7,6 +7,13 @@ namespace Didww.Api3.Tests;
 public class DidGroupTest : BaseTest
 {
     [Fact]
+    public void TestFeatureEnumDoesNotIncludeSmsOut()
+    {
+        var featureNames = Enum.GetNames(typeof(Feature));
+        featureNames.Should().NotContain("SmsOut");
+    }
+
+    [Fact]
     public async Task TestListDidGroups()
     {
         StubGet("did_groups", "did_groups/index.json");
