@@ -14,6 +14,10 @@ public class Proof : BaseResource
     [JsonProperty("expires_at")]
     public DateTimeOffset? ExpiresAt { get; set; }
 
+    private string? _externalReferenceId;
+    [JsonProperty("external_reference_id")]
+    public string? ExternalReferenceId { get => _externalReferenceId; set => _externalReferenceId = MarkDirty("externalReferenceId", value); }
+
     private BaseResource? _entity;
     [JsonProperty("entity")]
     public BaseResource? Entity { get => _entity; set => _entity = MarkDirty("entity", value); }
