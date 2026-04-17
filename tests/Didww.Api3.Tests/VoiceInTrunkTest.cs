@@ -66,6 +66,7 @@ public class VoiceInTrunkTest : BaseTest
         config.MediaEncryptionMode.Should().Be(MediaEncryptionMode.Disabled);
         config.StirShakenMode.Should().Be(StirShakenMode.Disabled);
         config.AllowedRtpIps.Should().BeNull();
+        config.DiversionRelayPolicy.Should().Be(DiversionRelayPolicy.AsIs);
         config.ReroutingDisconnectCodeIds.Should().BeNull();
     }
 

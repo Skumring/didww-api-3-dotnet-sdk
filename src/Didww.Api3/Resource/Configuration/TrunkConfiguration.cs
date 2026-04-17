@@ -100,6 +100,9 @@ public class SipConfiguration : TrunkConfiguration
 
     [JsonProperty("allowed_rtp_ips")]
     public List<string>? AllowedRtpIps { get; set; }
+
+    [JsonProperty("diversion_relay_policy")]
+    public DiversionRelayPolicy? DiversionRelayPolicy { get; set; }
 }
 
 public class PstnConfiguration : TrunkConfiguration

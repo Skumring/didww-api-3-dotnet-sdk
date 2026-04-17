@@ -83,6 +83,15 @@ public enum IdentityType
 }
 
 [JsonConverter(typeof(StringEnumConverter))]
+public enum DiversionRelayPolicy
+{
+    [System.Runtime.Serialization.EnumMember(Value = "none")] None,
+    [System.Runtime.Serialization.EnumMember(Value = "as_is")] AsIs,
+    [System.Runtime.Serialization.EnumMember(Value = "sip")] Sip,
+    [System.Runtime.Serialization.EnumMember(Value = "tel")] Tel
+}
+
+[JsonConverter(typeof(StringEnumConverter))]
 public enum MediaEncryptionMode
 {
     [System.Runtime.Serialization.EnumMember(Value = "disabled")] Disabled,
