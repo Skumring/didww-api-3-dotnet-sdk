@@ -10,7 +10,7 @@ using Didww.Api3.Examples;
 //   exports, encryption, webhook,
 //   did-history, emergency-requirements, emergency-calling-services,
 //   emergency-verifications, emergency-requirement-validations,
-//   address-verifications, orders-emergency
+//   address-verifications, orders-emergency, voice-in-trunk-groups
 
 var exampleName = args.Length > 0 ? args[0].ToLower() : "all";
 var client = exampleName != "webhook" ? ExampleClientFactory.Create() : null;
@@ -106,6 +106,9 @@ try
         case "orders-emergency":
             await OrdersEmergencyExample.RunAsync(client!);
             break;
+        case "voice-in-trunk-groups":
+            await VoiceInTrunkGroupsExample.RunAsync(client!);
+            break;
         case "all":
             await BalanceExample.RunAsync(client!);
             Console.WriteLine();
@@ -143,7 +146,8 @@ try
             Console.WriteLine("  exports, encryption, webhook,");
             Console.WriteLine("  did-history, emergency-requirements, emergency-calling-services,");
             Console.WriteLine("  emergency-verifications, emergency-requirement-validations,");
-            Console.WriteLine("  address-verifications, orders-emergency, all");
+            Console.WriteLine("  address-verifications, orders-emergency,");
+            Console.WriteLine("  voice-in-trunk-groups, all");
             break;
     }
 }
