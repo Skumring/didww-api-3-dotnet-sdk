@@ -11,6 +11,7 @@ public class OrderItemConverter : JsonConverter<List<OrderItemBase>>
         ["did_order_items"] = typeof(DidOrderItem),
         ["capacity_order_items"] = typeof(CapacityOrderItem),
         ["generic_order_items"] = typeof(GenericOrderItem),
+        ["emergency_order_items"] = typeof(EmergencyOrderItem),
     };
 
     public override List<OrderItemBase>? ReadJson(JsonReader reader, Type objectType, List<OrderItemBase>? existingValue,

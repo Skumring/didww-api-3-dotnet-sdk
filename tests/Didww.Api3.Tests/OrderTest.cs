@@ -26,6 +26,26 @@ public class OrderTest : BaseTest
     }
 
     [Fact]
+    public async Task TestFindOrderWithEmergencyItem()
+    {
+        StubGet("orders/e0c1a2b3-d4e5-6789-abcd-ef0123456789", "orders/show_emergency.json");
+
+        var response = await Client.Orders().FindAsync("e0c1a2b3-d4e5-6789-abcd-ef0123456789");
+        var order = response.Data;
+
+        order.Id.Should().Be("e0c1a2b3-d4e5-6789-abcd-ef0123456789");
+        order.Items.Should().HaveCount(1);
+        var item = order.Items![0].Should().BeOfType<EmergencyOrderItem>().Subject;
+        item.Qty.Should().Be(1);
+        item.EmergencyCallingServiceId.Should().Be("b6d9d793-578d-42d3-bc33-73dd8155e615");
+        item.Nrc.Should().Be("5.0");
+        item.Mrc.Should().Be("25.0");
+        item.ProratedMrc.Should().BeFalse();
+        item.BilledFrom.Should().Be("2026-04-16");
+        item.BilledTo.Should().Be("2026-05-15");
+    }
+
+    [Fact]
     public async Task TestCreateOrder()
     {
         StubPost("orders", "orders/create_request.json", "orders/create.json");
