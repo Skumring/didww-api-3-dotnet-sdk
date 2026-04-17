@@ -210,12 +210,18 @@ await client.VoiceInTrunkGroups().CreateAsync(group);
 ### Voice Out Trunks
 
 ```csharp
+using Didww.Api3.Resource.Configuration.AuthenticationMethod;
+
 var trunk = new VoiceOutTrunk
 {
     Name = "My Outbound Trunk",
-    AllowedSipIps = new List<string> { "203.0.113.0/24" }, // Replace with your real infrastructure CIDR
     OnCliMismatchAction = OnCliMismatchAction.ReplaceCli,
-    DefaultDid = Did.Build("did-uuid")
+    DefaultDid = Did.Build("did-uuid"),
+    AuthenticationMethod = new IpOnlyAuthenticationMethod
+    {
+        AllowedSipIps = new List<string> { "203.0.113.0/24" },
+        TechPrefix = ""
+    }
 };
 await client.VoiceOutTrunks().CreateAsync(trunk);
 ```
