@@ -9,6 +9,10 @@ public class PermanentSupportingDocument : BaseResource
 
     [JsonProperty("created_at")] public DateTimeOffset? CreatedAt { get; set; }
 
+    private string? _externalReferenceId;
+    [JsonProperty("external_reference_id")]
+    public string? ExternalReferenceId { get => _externalReferenceId; set => _externalReferenceId = MarkDirty("externalReferenceId", value); }
+
     private Identity? _identity;
     [JsonProperty("identity")]
     public Identity? Identity { get => _identity; set => _identity = MarkDirty("identity", value); }
