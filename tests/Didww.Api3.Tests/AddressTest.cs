@@ -22,6 +22,7 @@ public class AddressTest : BaseTest
         first.AddressLine.Should().Be("literurna 12");
         first.Description.Should().Be("1");
         first.Verified.Should().BeFalse();
+        first.ExternalReferenceId.Should().Be("crm-addr-0001");
     }
 
     [Fact]

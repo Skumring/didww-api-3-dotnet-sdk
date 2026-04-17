@@ -30,6 +30,10 @@ public class Address : BaseResource, IProofEntity
     [JsonProperty("verified")]
     public bool? Verified { get; set; }
 
+    private string? _externalReferenceId;
+    [JsonProperty("external_reference_id")]
+    public string? ExternalReferenceId { get => _externalReferenceId; set => SetProperty(ref _externalReferenceId, value); }
+
     private Country? _country;
     [JsonProperty("country")]
     public Country? Country { get => _country; set => SetProperty(ref _country, value); }
