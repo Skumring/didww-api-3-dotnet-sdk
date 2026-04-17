@@ -39,6 +39,8 @@ public static class SharedCapacityGroupsExample
         foreach (var g in listResponse.Data)
         {
             Console.WriteLine($"  {g.Name} (shared: {g.SharedChannelsCount}, metered: {g.MeteredChannelsCount})");
+            if (g.ExternalReferenceId != null)
+                Console.WriteLine($"    External reference: {g.ExternalReferenceId}");
         }
 
         Console.WriteLine("\n--- Update Shared Capacity Group ---");
