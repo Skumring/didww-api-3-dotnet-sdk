@@ -327,8 +327,8 @@ var export = new Export
     ExportType = ExportType.CdrIn,
     Filters = new Dictionary<string, object>
     {
-        { "year", 2025 },
-        { "month", 1 }
+        { "from", "2026-04-01 00:00:00" },
+        { "to", "2026-04-15 23:59:59" }
     }
 };
 var response = await client.Exports().CreateAsync(export);
