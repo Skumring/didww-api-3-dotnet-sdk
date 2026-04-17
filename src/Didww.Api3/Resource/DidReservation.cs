@@ -11,7 +11,7 @@ public class DidReservation : BaseResource
     [JsonProperty("description")]
     public string? Description { get => _description; set => _description = MarkDirty("description", value); }
 
-    [JsonProperty("expire_at")] public DateTimeOffset? ExpireAt { get; set; }
+    [JsonProperty("expires_at")] public DateTimeOffset? ExpiresAt { get; set; }
     [JsonProperty("created_at")] public DateTimeOffset? CreatedAt { get; set; }
 
     private AvailableDid? _availableDid;
