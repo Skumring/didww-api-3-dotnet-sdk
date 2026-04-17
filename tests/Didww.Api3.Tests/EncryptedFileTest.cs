@@ -20,7 +20,7 @@ public class EncryptedFileTest : BaseTest
         var first = files[0];
         first.Id.Should().Be("7f2fbdca-8008-44ce-bcb6-3537ea5efaac");
         first.Description.Should().Be("file.enc");
-        first.ExpireAt.Should().NotBeNull();
+        first.ExpiresAt.Should().NotBeNull();
     }
 
     [Fact]
