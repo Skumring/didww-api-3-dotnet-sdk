@@ -27,6 +27,10 @@ public class VoiceInTrunkGroup : BaseResource
     [JsonProperty("created_at")]
     public DateTimeOffset? CreatedAt { get; set; }
 
+    private string? _externalReferenceId;
+    [JsonProperty("external_reference_id")]
+    public string? ExternalReferenceId { get => _externalReferenceId; set => SetProperty(ref _externalReferenceId, value); }
+
     private List<VoiceInTrunk>? _voiceInTrunks;
     [JsonProperty("voice_in_trunks")]
     public List<VoiceInTrunk>? VoiceInTrunks
