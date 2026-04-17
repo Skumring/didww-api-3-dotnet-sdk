@@ -50,6 +50,33 @@ public class AddressVerificationTest : BaseTest
     }
 
     [Fact]
+    public void TestStatusHelperPending()
+    {
+        var v = new AddressVerification { Status = AddressVerificationStatus.Pending };
+        v.IsPending.Should().BeTrue();
+        v.IsApproved.Should().BeFalse();
+        v.IsRejected.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestStatusHelperApproved()
+    {
+        var v = new AddressVerification { Status = AddressVerificationStatus.Approved };
+        v.IsApproved.Should().BeTrue();
+        v.IsPending.Should().BeFalse();
+        v.IsRejected.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestStatusHelperRejected()
+    {
+        var v = new AddressVerification { Status = AddressVerificationStatus.Rejected };
+        v.IsRejected.Should().BeTrue();
+        v.IsPending.Should().BeFalse();
+        v.IsApproved.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task TestUpdateAddressVerificationExternalReferenceId()
     {
         StubPatch("address_verifications/429e6d4e-2ee9-4953-aa98-0b3ac07f0f96",

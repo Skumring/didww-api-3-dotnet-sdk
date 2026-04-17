@@ -24,6 +24,13 @@ public class AddressVerification : BaseResource
     [JsonProperty("status")]
     public AddressVerificationStatus? Status { get; set; }
 
+    [JsonIgnore]
+    public bool IsPending => Status == AddressVerificationStatus.Pending;
+    [JsonIgnore]
+    public bool IsApproved => Status == AddressVerificationStatus.Approved;
+    [JsonIgnore]
+    public bool IsRejected => Status == AddressVerificationStatus.Rejected;
+
     [JsonProperty("reject_reasons")]
     public string[]? RejectReasons { get; set; }
 
