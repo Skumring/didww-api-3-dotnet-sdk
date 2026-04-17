@@ -62,6 +62,22 @@ public class EmergencyCallingServiceTest : BaseTest
     }
 
     [Fact]
+    public async Task TestFindEmergencyCallingServiceIncludesEmergencyRequirementAndVerification()
+    {
+        StubGet("emergency_calling_services/01234567-89ab-cdef-0123-456789abcdef",
+            "emergency_calling_services/show.json");
+
+        var response = await Client.EmergencyCallingServices()
+            .FindAsync("01234567-89ab-cdef-0123-456789abcdef");
+        var service = response.Data;
+
+        service.EmergencyRequirement.Should().NotBeNull();
+        service.EmergencyRequirement!.Id.Should().Be("44444444-3333-2222-1111-000000000000");
+        service.EmergencyVerification.Should().NotBeNull();
+        service.EmergencyVerification!.Id.Should().Be("77777777-6666-5555-4444-333333333333");
+    }
+
+    [Fact]
     public void TestStatusHelperActive()
     {
         var svc = new Didww.Api3.Resource.EmergencyCallingService { Status = EmergencyCallingServiceStatus.Active };

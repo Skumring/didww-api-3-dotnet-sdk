@@ -61,6 +61,12 @@ public class EmergencyCallingService : BaseResource
     [JsonProperty("address")]
     public Address? Address { get; set; }
 
+    [JsonProperty("emergency_requirement")]
+    public EmergencyRequirement? EmergencyRequirement { get; set; }
+
+    [JsonProperty("emergency_verification")]
+    public EmergencyVerification? EmergencyVerification { get; set; }
+
     [JsonProperty("dids")]
     public List<Did>? Dids { get; set; }
 }
