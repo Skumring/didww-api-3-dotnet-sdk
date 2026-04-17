@@ -131,8 +131,8 @@ var proofTypes = await client.ProofTypes().ListAsync();
 // Public Keys
 var publicKeys = await client.PublicKeys().ListAsync();
 
-// Requirements
-var requirements = await client.Requirements().ListAsync();
+// Address Requirements
+var requirements = await client.AddressRequirements().ListAsync();
 
 // Balance (singleton)
 var balance = (await client.Balance().FindAsync()).Data;
@@ -486,6 +486,7 @@ var isValid = validator.Validate(
 |---|---|
 | DID | `DidOrderItem` |
 | Capacity | `CapacityOrderItem` |
+| Emergency | `EmergencyOrderItem` |
 | Generic | `GenericOrderItem` |
 
 ## All Supported Resources
@@ -503,7 +504,7 @@ var isValid = validator.Validate(
 | AvailableDid | `AvailableDid` | List, Find |
 | ProofType | `ProofType` | List, Find |
 | PublicKey | `PublicKey` | List, Find |
-| Requirement | `Requirement` | List, Find |
+| AddressRequirement | `AddressRequirement` | List, Find |
 | SupportingDocumentTemplate | `SupportingDocumentTemplate` | List, Find |
 | Balance | `Balance` | Find |
 | Did | `Did` | List, Find, Update, Delete |
@@ -515,14 +516,19 @@ var isValid = validator.Validate(
 | CapacityPool | `CapacityPool` | List, Find |
 | SharedCapacityGroup | `SharedCapacityGroup` | List, Find, Create, Update, Delete |
 | Order | `Order` | List, Find, Create |
-| Export | `Export` | List, Find, Create |
+| Export | `Export` | List, Find, Create, Update |
 | Address | `Address` | List, Find, Create, Delete |
-| AddressVerification | `AddressVerification` | List, Create |
+| AddressVerification | `AddressVerification` | List, Create, Update |
 | Identity | `Identity` | List, Find, Create, Delete |
 | EncryptedFile | `EncryptedFile` | List, Find, Delete |
 | PermanentSupportingDocument | `PermanentSupportingDocument` | Create, Delete |
 | Proof | `Proof` | Create, Delete |
-| RequirementValidation | `RequirementValidation` | Create |
+| AddressRequirementValidation | `AddressRequirementValidation` | Create |
+| DidHistory | `DidHistory` | List |
+| EmergencyRequirement | `EmergencyRequirement` | List, Find |
+| EmergencyRequirementValidation | `EmergencyRequirementValidation` | Create |
+| EmergencyCallingService | `EmergencyCallingService` | List, Find, Delete |
+| EmergencyVerification | `EmergencyVerification` | List, Find, Create, Update |
 
 ## Date and Datetime Fields
 
@@ -550,7 +556,9 @@ The SDK provides enum types in `Didww.Api3.Resource.Enums`:
 `CallbackMethod`, `IdentityType`, `OrderStatus`, `ExportType`, `ExportStatus`, `CliFormat`,
 `OnCliMismatchAction`, `MediaEncryptionMode`, `DefaultDstAction`, `VoiceOutTrunkStatus`,
 `TransportProtocol`, `Codec`, `RxDtmfFormat`, `TxDtmfFormat`, `SstRefreshMethod`,
-`ReroutingDisconnectCode`, `Feature`, `AreaLevel`, `AddressVerificationStatus`, `StirShakenMode`
+`ReroutingDisconnectCode`, `Feature`, `AreaLevel`, `AddressVerificationStatus`, `StirShakenMode`,
+`DiversionRelayPolicy`, `EmergencyCallingServiceStatus`, `EmergencyVerificationStatus`,
+`DidHistoryAction`, `DidHistoryMethod`
 
 ## Development
 
