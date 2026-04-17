@@ -45,6 +45,7 @@ public class AddressVerificationTest : BaseTest
         verification.Id.Should().Be("429e6d4e-2ee9-4953-aa98-0b3ac07f0f96");
         verification.Status.Should().Be(AddressVerificationStatus.Rejected);
         verification.RejectReasons.Should().BeEquivalentTo(new[] { "Address cannot be validated", "Proof of address should be not older than of 6 months" });
+        verification.RejectComment.Should().Be("Please provide a valid address");
         verification.Reference.Should().Be("ODW-879912");
     }
 
