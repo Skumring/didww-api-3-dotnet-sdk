@@ -9,7 +9,7 @@ public static class TrunkGroupsExample
 {
     public static async Task RunAsync(DidwwClient client)
     {
-        var suffix = Guid.NewGuid().ToString()[..8];
+        var suffix = Guid.NewGuid().ToString("N")[..8];
 
         Console.WriteLine("--- Create Two Trunks ---");
         var sipA = new SipConfiguration

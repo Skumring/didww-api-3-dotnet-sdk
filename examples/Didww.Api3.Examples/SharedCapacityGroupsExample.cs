@@ -19,7 +19,7 @@ public static class SharedCapacityGroupsExample
         Console.WriteLine($"  Using pool: {pool.Name} (ID: {pool.Id})");
 
         Console.WriteLine("\n--- Create Shared Capacity Group ---");
-        var suffix = Guid.NewGuid().ToString()[..8];
+        var suffix = Guid.NewGuid().ToString("N")[..8];
         var group = new SharedCapacityGroup
         {
             Name = "SDK Example Group " + suffix,
