@@ -1,9 +1,9 @@
+using Didww.Api3.Converter;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace Didww.Api3.Resource.Enums;
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum OrderStatus
 {
     [System.Runtime.Serialization.EnumMember(Value = "pending")] Pending,
@@ -11,7 +11,7 @@ public enum OrderStatus
     [System.Runtime.Serialization.EnumMember(Value = "completed")] Completed
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum AddressVerificationStatus
 {
     [System.Runtime.Serialization.EnumMember(Value = "pending")] Pending,
@@ -19,7 +19,7 @@ public enum AddressVerificationStatus
     [System.Runtime.Serialization.EnumMember(Value = "rejected")] Rejected
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum AreaLevel
 {
     [System.Runtime.Serialization.EnumMember(Value = "world_wide")] WorldWide,
@@ -28,14 +28,14 @@ public enum AreaLevel
     [System.Runtime.Serialization.EnumMember(Value = "city")] City
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum CallbackMethod
 {
     [System.Runtime.Serialization.EnumMember(Value = "post")] Post,
     [System.Runtime.Serialization.EnumMember(Value = "get")] Get
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum CliFormat
 {
     [System.Runtime.Serialization.EnumMember(Value = "raw")] Raw,
@@ -43,14 +43,14 @@ public enum CliFormat
     [System.Runtime.Serialization.EnumMember(Value = "local")] Local
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum DefaultDstAction
 {
     [System.Runtime.Serialization.EnumMember(Value = "allow_all")] AllowAll,
     [System.Runtime.Serialization.EnumMember(Value = "reject_all")] RejectAll
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum ExportStatus
 {
     [System.Runtime.Serialization.EnumMember(Value = "pending")] Pending,
@@ -58,14 +58,14 @@ public enum ExportStatus
     [System.Runtime.Serialization.EnumMember(Value = "completed")] Completed
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum ExportType
 {
     [System.Runtime.Serialization.EnumMember(Value = "cdr_in")] CdrIn,
     [System.Runtime.Serialization.EnumMember(Value = "cdr_out")] CdrOut
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum Feature
 {
     [System.Runtime.Serialization.EnumMember(Value = "voice_in")] VoiceIn,
@@ -78,7 +78,7 @@ public enum Feature
     [System.Runtime.Serialization.EnumMember(Value = "cnam_out")] CnamOut
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum IdentityType
 {
     [System.Runtime.Serialization.EnumMember(Value = "personal")] Personal,
@@ -86,7 +86,7 @@ public enum IdentityType
     [System.Runtime.Serialization.EnumMember(Value = "any")] Any
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum DiversionRelayPolicy
 {
     [System.Runtime.Serialization.EnumMember(Value = "none")] None,
@@ -95,7 +95,7 @@ public enum DiversionRelayPolicy
     [System.Runtime.Serialization.EnumMember(Value = "tel")] Tel
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum MediaEncryptionMode
 {
     [System.Runtime.Serialization.EnumMember(Value = "disabled")] Disabled,
@@ -104,7 +104,7 @@ public enum MediaEncryptionMode
     [System.Runtime.Serialization.EnumMember(Value = "zrtp")] Zrtp
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum OnCliMismatchAction
 {
     [System.Runtime.Serialization.EnumMember(Value = "send_original_cli")] SendOriginalCli,
@@ -113,7 +113,7 @@ public enum OnCliMismatchAction
     [System.Runtime.Serialization.EnumMember(Value = "randomize_cli")] RandomizeCli
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum StirShakenMode
 {
     [System.Runtime.Serialization.EnumMember(Value = "disabled")] Disabled,
@@ -123,14 +123,14 @@ public enum StirShakenMode
     [System.Runtime.Serialization.EnumMember(Value = "verstat")] Verstat
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum VoiceOutTrunkStatus
 {
     [System.Runtime.Serialization.EnumMember(Value = "active")] Active,
     [System.Runtime.Serialization.EnumMember(Value = "blocked")] Blocked
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum EmergencyCallingServiceStatus
 {
     [System.Runtime.Serialization.EnumMember(Value = "active")] Active,
@@ -141,7 +141,7 @@ public enum EmergencyCallingServiceStatus
     [System.Runtime.Serialization.EnumMember(Value = "pending_update")] PendingUpdate
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum EmergencyVerificationStatus
 {
     [System.Runtime.Serialization.EnumMember(Value = "pending")] Pending,
@@ -149,7 +149,7 @@ public enum EmergencyVerificationStatus
     [System.Runtime.Serialization.EnumMember(Value = "rejected")] Rejected
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum DidHistoryAction
 {
     [System.Runtime.Serialization.EnumMember(Value = "assigned")] Assigned,
@@ -160,7 +160,7 @@ public enum DidHistoryAction
     [System.Runtime.Serialization.EnumMember(Value = "restored")] Restored
 }
 
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum DidHistoryMethod
 {
     [System.Runtime.Serialization.EnumMember(Value = "system")] System,

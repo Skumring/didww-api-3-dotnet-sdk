@@ -29,7 +29,8 @@ public class AuthenticationMethodConverter : JsonConverter
 
     public override bool CanConvert(Type objectType)
     {
-        if (_reentrant) return false;
+        if (_reentrant)
+            return false;
         return typeof(AuthenticationMethodBase).IsAssignableFrom(objectType);
     }
 
