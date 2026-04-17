@@ -30,6 +30,12 @@ public class VoiceOutTrunk : BaseResource
     [JsonProperty("status")]
     public VoiceOutTrunkStatus? Status { get; set; }
 
+    [JsonIgnore]
+    public bool IsActive => Status == VoiceOutTrunkStatus.Active;
+
+    [JsonIgnore]
+    public bool IsBlocked => Status == VoiceOutTrunkStatus.Blocked;
+
     private int? _capacityLimit;
     [JsonProperty("capacity_limit")]
     public int? CapacityLimit { get => _capacityLimit; set => SetProperty(ref _capacityLimit, value); }

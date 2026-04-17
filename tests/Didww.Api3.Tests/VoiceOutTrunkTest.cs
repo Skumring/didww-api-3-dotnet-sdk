@@ -212,6 +212,22 @@ public class VoiceOutTrunkTest : BaseTest
     }
 
     [Fact]
+    public void TestStatusHelperActive()
+    {
+        var trunk = new VoiceOutTrunk { Status = VoiceOutTrunkStatus.Active };
+        trunk.IsActive.Should().BeTrue();
+        trunk.IsBlocked.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestStatusHelperBlocked()
+    {
+        var trunk = new VoiceOutTrunk { Status = VoiceOutTrunkStatus.Blocked };
+        trunk.IsBlocked.Should().BeTrue();
+        trunk.IsActive.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task TestDeleteVoiceOutTrunk()
     {
         var id = "425ce763-a3a9-49b4-af5b-ada1a65c8864";
