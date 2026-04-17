@@ -71,6 +71,31 @@ public class DidGroupTest : BaseTest
     }
 
     [Fact]
+    public async Task TestFindDidGroupServiceRestrictionsNull()
+    {
+        StubGet("did_groups/2187c36d-28fb-436f-8861-5a0f5b5a3ee1", "did_groups/show.json");
+
+        var response = await Client.DidGroups().FindAsync("2187c36d-28fb-436f-8861-5a0f5b5a3ee1");
+        var group = response.Data;
+
+        group.ServiceRestrictions.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task TestFindDidGroupServiceRestrictionsPresent()
+    {
+        StubGet("did_groups/aaa11111-bbbb-cccc-dddd-eeeeeeeeeeee",
+            "did_groups/show_with_service_restrictions.json");
+
+        var response = await Client.DidGroups().FindAsync("aaa11111-bbbb-cccc-dddd-eeeeeeeeeeee");
+        var group = response.Data;
+
+        group.ServiceRestrictions.Should().Be("Emergency services only. Voice-out not available.");
+        group.AllowAdditionalChannels.Should().BeFalse();
+        group.Features.Should().Contain(Feature.Emergency);
+    }
+
+    [Fact]
     public async Task TestFindDidGroupWithStockKeepingUnits()
     {
         StubGet("did_groups/2187c36d-28fb-436f-8861-5a0f5b5a3ee1",
