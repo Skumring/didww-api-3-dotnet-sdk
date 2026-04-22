@@ -31,7 +31,7 @@ public static class EmergencyCallingServicesExample
             Console.WriteLine($"  Activated: {svc.ActivatedAt}");
             if (svc.CanceledAt.HasValue)
                 Console.WriteLine($"  Canceled: {svc.CanceledAt}");
-            if (svc.RenewDate.HasValue)
+            if (svc.RenewDate != null)
                 Console.WriteLine($"  Renews: {svc.RenewDate}");
             if (svc.Dids != null && svc.Dids.Count > 0)
                 Console.WriteLine($"  Attached DIDs: {string.Join(", ", svc.Dids.Select(d => d.Number))}");

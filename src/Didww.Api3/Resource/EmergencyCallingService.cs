@@ -47,7 +47,7 @@ public class EmergencyCallingService : BaseResource
     public DateTimeOffset? CreatedAt { get; set; }
 
     [JsonProperty("renew_date")]
-    public DateTimeOffset? RenewDate { get; set; }
+    public string? RenewDate { get; set; }
 
     [JsonProperty("country")]
     public Country? Country { get; set; }
