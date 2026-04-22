@@ -341,6 +341,54 @@ if (completed.Url != null)
 }
 ```
 
+### Address Verifications
+
+```csharp
+// List address verifications
+var verifications = await client.AddressVerifications().ListAsync();
+
+// Create address verification
+var verification = new AddressVerification
+{
+    CallbackUrl = "https://example.com/callback",
+    CallbackMethod = CallbackMethod.Post,
+    Address = Address.Build("address-uuid"),
+    Dids = new List<Did> { Did.Build("did-uuid") }
+};
+var result = await client.AddressVerifications().CreateAsync(verification);
+```
+
+### Emergency Services (2026-04-16)
+
+```csharp
+// List emergency requirements
+var emergReqs = await client.EmergencyRequirements().ListAsync();
+
+// Create emergency verification
+var emergVerification = new EmergencyVerification
+{
+    CallbackUrl = "https://example.com/callback",
+    CallbackMethod = CallbackMethod.Post,
+    Address = Address.Build("address-uuid"),
+    Dids = new List<Did> { Did.Build("did-uuid") }
+};
+var emergResult = await client.EmergencyVerifications().CreateAsync(emergVerification);
+
+// List emergency calling services
+var emergServices = await client.EmergencyCallingServices().ListAsync();
+```
+
+### DID History (2026-04-16)
+
+```csharp
+// List DID history
+var history = await client.DidHistory().ListAsync();
+foreach (var entry in history.Data)
+{
+    Console.WriteLine($"{entry.Action} {entry.CreatedAt}");
+}
+```
+
 ## Filtering, Sorting, and Pagination
 
 ```csharp
