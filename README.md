@@ -535,10 +535,22 @@ var isValid = validator.Validate(
 The SDK distinguishes between date-only and datetime fields:
 
 - **Datetime fields** are deserialized as `DateTimeOffset?`:
-  - All `CreatedAt` properties — present on most resources
-  - Expiry fields: `Did.ExpiresAt`, `DidReservation.ExpiresAt`, `Proof.ExpiresAt`, `EncryptedFile.ExpiresAt`
+  - `CreatedAt` — present on most resources
+  - `ExpiresAt` — `Did`, `DidReservation`, `Proof`, `EncryptedFile` (nullable)
+  - `ActivatedAt` — `EmergencyCallingService` (nullable)
+  - `CanceledAt` — `EmergencyCallingService` (nullable)
 - **Date-only fields** (`Identity.BirthDate`) are deserialized as `DateOnly?`.
-- **Date-only fields kept as strings** (`CapacityPool.RenewDate`, `DidOrderItem.BilledFrom`, `DidOrderItem.BilledTo`) remain as `string?`.
+- **Date-only fields kept as strings** remain as `string?`:
+  - `CapacityPool.RenewDate`, `EmergencyCallingService.RenewDate` — `"YYYY-MM-DD"` (nullable)
+  - `DidOrderItem.BilledFrom`, `DidOrderItem.BilledTo`
+- **String fields** (not numeric):
+  - `EmergencyRequirement.EstimateSetupTime` — e.g. `"7-14 days"`, `"1"`
+  - `EmergencyRequirement.RequirementRestrictionMessage` — nullable
+
+**Important changes from previous API versions:**
+- `ExpireAt` renamed to `ExpiresAt` on `DidReservation` and `EncryptedFile`
+- `RenewDate` is a date-only string, NOT a `DateTimeOffset`
+- `EstimateSetupTime` is a string, NOT an integer
 
 ```csharp
 var did = (await client.Dids().FindAsync("uuid")).Data;
