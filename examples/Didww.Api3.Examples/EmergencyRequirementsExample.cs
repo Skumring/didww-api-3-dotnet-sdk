@@ -27,7 +27,7 @@ public static class EmergencyRequirementsExample
             Console.WriteLine($"  Address area level: {req.AddressAreaLevel}");
             if (req.AddressMandatoryFields != null)
                 Console.WriteLine($"  Address mandatory fields: {string.Join(", ", req.AddressMandatoryFields)}");
-            Console.WriteLine($"  Estimated setup time (days): {req.EstimateSetupTime}");
+            Console.WriteLine($"  Estimated setup time: {req.EstimateSetupTime}");
             if (req.RequirementRestrictionMessage != null)
                 Console.WriteLine($"  Restriction: {req.RequirementRestrictionMessage}");
         }

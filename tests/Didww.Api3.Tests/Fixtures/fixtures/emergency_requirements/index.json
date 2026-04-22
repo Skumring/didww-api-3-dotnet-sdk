@@ -11,7 +11,7 @@
         "address_mandatory_fields": ["street", "city", "postal_code"],
         "personal_mandatory_fields": ["first_name", "last_name"],
         "business_mandatory_fields": ["company_name", "tax_number"],
-        "estimate_setup_time": "7-14 days",
+        "estimate_setup_time": "3",
         "requirement_restriction_message": null
       },
       "relationships": {

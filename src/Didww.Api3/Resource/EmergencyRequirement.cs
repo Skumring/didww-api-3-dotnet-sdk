@@ -30,7 +30,7 @@ public class EmergencyRequirement : BaseResource
     public List<string>? BusinessMandatoryFields { get; set; }
 
     [JsonProperty("estimate_setup_time")]
-    public int? EstimateSetupTime { get; set; }
+    public string? EstimateSetupTime { get; set; }
 
     [JsonProperty("requirement_restriction_message")]
     public string? RequirementRestrictionMessage { get; set; }
