@@ -10,7 +10,7 @@
       "address_mandatory_fields": ["street", "city", "region", "postal_code"],
       "personal_mandatory_fields": ["first_name", "last_name", "date_of_birth"],
       "business_mandatory_fields": ["company_name", "tax_number", "registration_number"],
-      "estimate_setup_time": "5",
+      "estimate_setup_time": "7-14 days",
       "requirement_restriction_message": "Additional compliance review is required for this country."
     },
     "relationships": {
