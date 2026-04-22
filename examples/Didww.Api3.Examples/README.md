@@ -62,6 +62,7 @@ You can also use `--framework net9.0` if you have .NET 9 installed.
 | [`EmergencyCallingServicesExample.cs`](EmergencyCallingServicesExample.cs) | `emergency-calling-services` | Lists and cancels customer emergency calling services. |
 | [`EmergencyVerificationsExample.cs`](EmergencyVerificationsExample.cs) | `emergency-verifications` | Lists and creates emergency verifications. |
 | [`EmergencyRequirementValidationsExample.cs`](EmergencyRequirementValidationsExample.cs) | `emergency-requirement-validations` | Pre-validates an emergency order triple (requirement + address + identity). |
+| [`EmergencyScenarioExample.cs`](EmergencyScenarioExample.cs) | `emergency-scenario` | End-to-end: find DID → check requirements → validate → create verification → get service. |
 | [`OrdersEmergencyExample.cs`](OrdersEmergencyExample.cs) | `orders-emergency` | Inspects server-created Emergency orders and `emergency_order_items`. |
 
 ## Troubleshooting
