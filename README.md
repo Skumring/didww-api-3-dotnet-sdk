@@ -566,11 +566,13 @@ Console.WriteLine(identity.BirthDate);  // 1990-05-20
 The SDK provides enum types in `Didww.Api3.Resource.Enums`:
 
 `CallbackMethod`, `IdentityType`, `OrderStatus`, `ExportType`, `ExportStatus`, `CliFormat`,
-`OnCliMismatchAction`, `MediaEncryptionMode`, `DefaultDstAction`, `VoiceOutTrunkStatus`,
+`OnCliMismatchAction`\*, `MediaEncryptionMode`, `DefaultDstAction`, `VoiceOutTrunkStatus`,
+`EmergencyCallingServiceStatus`, `EmergencyVerificationStatus`, `DiversionRelayPolicy`,
 `TransportProtocol`, `Codec`, `RxDtmfFormat`, `TxDtmfFormat`, `SstRefreshMethod`,
 `ReroutingDisconnectCode`, `Feature`, `AreaLevel`, `AddressVerificationStatus`, `StirShakenMode`,
-`DiversionRelayPolicy`, `EmergencyCallingServiceStatus`, `EmergencyVerificationStatus`,
 `DidHistoryAction`, `DidHistoryMethod`
+
+\* `ReplaceCli` and `RandomizeCli` require additional account configuration. Contact DIDWW support to enable these values.
 
 ## Development
 
