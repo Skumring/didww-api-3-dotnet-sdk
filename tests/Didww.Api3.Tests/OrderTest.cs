@@ -245,7 +245,7 @@ public class OrderTest : BaseTest
         var order = new Order { Status = OrderStatus.Pending };
         order.IsPending.Should().BeTrue();
         order.IsCompleted.Should().BeFalse();
-        order.IsCancelled.Should().BeFalse();
+        order.IsCanceled.Should().BeFalse();
     }
 
     [Fact]
@@ -254,14 +254,14 @@ public class OrderTest : BaseTest
         var order = new Order { Status = OrderStatus.Completed };
         order.IsCompleted.Should().BeTrue();
         order.IsPending.Should().BeFalse();
-        order.IsCancelled.Should().BeFalse();
+        order.IsCanceled.Should().BeFalse();
     }
 
     [Fact]
-    public void TestStatusHelperCancelled()
+    public void TestStatusHelperCanceled()
     {
         var order = new Order { Status = OrderStatus.Canceled };
-        order.IsCancelled.Should().BeTrue();
+        order.IsCanceled.Should().BeTrue();
         order.IsPending.Should().BeFalse();
         order.IsCompleted.Should().BeFalse();
     }

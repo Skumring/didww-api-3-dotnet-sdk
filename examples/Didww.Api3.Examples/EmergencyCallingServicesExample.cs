@@ -53,9 +53,9 @@ public static class EmergencyCallingServicesExample
         // var toCancel = services.FirstOrDefault(s => s.IsActive);
         // if (toCancel != null)
         // {
-        //     Console.WriteLine($"\nCancelling service {toCancel.Id}...");
+        //     Console.WriteLine($"\nCanceling service {toCancel.Id}...");
         //     await client.EmergencyCallingServices().DeleteAsync(toCancel.Id!);
-        //     Console.WriteLine("Service cancelled");
+        //     Console.WriteLine("Service canceled");
         // }
 
         Console.WriteLine("\nAvailable statuses: " +
