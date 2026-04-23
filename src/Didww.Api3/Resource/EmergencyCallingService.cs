@@ -69,4 +69,8 @@ public class EmergencyCallingService : BaseResource
 
     [JsonProperty("dids")]
     public List<Did>? Dids { get; set; }
+
+    /// <summary>Resource-level meta. Contains setup_price and monthly_price.</summary>
+    [JsonProperty("meta")]
+    public Dictionary<string, object>? Meta { get; set; }
 }

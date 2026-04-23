@@ -26,6 +26,9 @@ public class EmergencyCallingServiceTest : BaseTest
         first.CanceledAt.Should().BeNull();
         first.CreatedAt.Should().NotBeNull();
         first.RenewDate.Should().NotBeNull();
+        first.Meta.Should().NotBeNull();
+        first.Meta!["setup_price"]!.ToString().Should().Be("0.0");
+        first.Meta!["monthly_price"]!.ToString().Should().Be("2.5");
     }
 
     [Fact]
@@ -42,6 +45,9 @@ public class EmergencyCallingServiceTest : BaseTest
         service.Name.Should().Be("Berlin Office ECS");
         service.Reference.Should().Be("ECS-0042");
         service.Status.Should().Be(EmergencyCallingServiceStatus.PendingUpdate);
+        service.Meta.Should().NotBeNull();
+        service.Meta!["setup_price"]!.ToString().Should().Be("5.0");
+        service.Meta!["monthly_price"]!.ToString().Should().Be("3.75");
     }
 
     [Fact]

@@ -26,6 +26,9 @@ public class EmergencyRequirementTest : BaseTest
         first.BusinessMandatoryFields.Should().BeEquivalentTo(new[] { "company_name", "tax_number" });
         first.EstimateSetupTime.Should().Be("7-14 days");
         first.RequirementRestrictionMessage.Should().BeNull();
+        first.Meta.Should().NotBeNull();
+        first.Meta!["setup_price"]!.ToString().Should().Be("0.0");
+        first.Meta!["monthly_price"]!.ToString().Should().Be("0.0");
     }
 
     [Fact]
@@ -43,5 +46,8 @@ public class EmergencyRequirementTest : BaseTest
         requirement.EstimateSetupTime.Should().Be("7-14 days");
         requirement.RequirementRestrictionMessage.Should()
             .Be("Additional compliance review is required for this country.");
+        requirement.Meta.Should().NotBeNull();
+        requirement.Meta!["setup_price"]!.ToString().Should().Be("10.0");
+        requirement.Meta!["monthly_price"]!.ToString().Should().Be("2.5");
     }
 }

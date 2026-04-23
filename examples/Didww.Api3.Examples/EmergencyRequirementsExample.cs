@@ -30,6 +30,11 @@ public static class EmergencyRequirementsExample
             Console.WriteLine($"  Estimated setup time: {req.EstimateSetupTime}");
             if (req.RequirementRestrictionMessage != null)
                 Console.WriteLine($"  Restriction: {req.RequirementRestrictionMessage}");
+            if (req.Meta != null)
+            {
+                Console.WriteLine($"  Setup price: {req.Meta.GetValueOrDefault("setup_price")}");
+                Console.WriteLine($"  Monthly price: {req.Meta.GetValueOrDefault("monthly_price")}");
+            }
         }
 
         // Filter by country

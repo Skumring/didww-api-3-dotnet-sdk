@@ -40,4 +40,8 @@ public class EmergencyRequirement : BaseResource
 
     [JsonProperty("did_group_type")]
     public DidGroupType? DidGroupType { get; set; }
+
+    /// <summary>Resource-level meta. Contains setup_price and monthly_price.</summary>
+    [JsonProperty("meta")]
+    public Dictionary<string, object>? Meta { get; set; }
 }

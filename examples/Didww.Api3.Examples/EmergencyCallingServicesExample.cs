@@ -35,6 +35,11 @@ public static class EmergencyCallingServicesExample
                 Console.WriteLine($"  Renews: {svc.RenewDate}");
             if (svc.Dids != null && svc.Dids.Count > 0)
                 Console.WriteLine($"  Attached DIDs: {string.Join(", ", svc.Dids.Select(d => d.Number))}");
+            if (svc.Meta != null)
+            {
+                Console.WriteLine($"  Setup price: {svc.Meta.GetValueOrDefault("setup_price")}");
+                Console.WriteLine($"  Monthly price: {svc.Meta.GetValueOrDefault("monthly_price")}");
+            }
         }
 
         // Filter by status
