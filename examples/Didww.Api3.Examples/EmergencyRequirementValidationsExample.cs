@@ -6,9 +6,9 @@ namespace Didww.Api3.Examples;
 //
 // EmergencyRequirementValidation is a write-only endpoint: POST the
 // intended (emergency_requirement, address, identity) triple and the server
-// either returns 204 No Content (OK to order) or JSONAPI errors describing
-// what the customer must fix (missing address fields, wrong identity type,
-// unsupported area level, etc.).
+// either returns 201 Created with the validation resource (OK to order)
+// or JSONAPI errors describing what the customer must fix (missing address
+// fields, wrong identity type, unsupported area level, etc.).
 public static class EmergencyRequirementValidationsExample
 {
     public static async Task RunAsync(DidwwClient client)
