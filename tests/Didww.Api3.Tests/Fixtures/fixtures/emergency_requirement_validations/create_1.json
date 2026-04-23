@@ -1,0 +1,10 @@
+{
+  "errors": [
+    {
+      "status": "422",
+      "title": "Invalid emergency requirement validation",
+      "detail": "Address does not satisfy emergency requirement",
+      "source": { "pointer": "/data/relationships/address" }
+    }
+  ]
+}

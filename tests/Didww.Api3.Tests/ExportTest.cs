@@ -11,6 +11,33 @@ namespace Didww.Api3.Tests;
 public class ExportTest : BaseTest
 {
     [Fact]
+    public void TestStatusHelperPending()
+    {
+        var export = new Export { Status = ExportStatus.Pending };
+        export.IsPending.Should().BeTrue();
+        export.IsProcessing.Should().BeFalse();
+        export.IsCompleted.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestStatusHelperProcessing()
+    {
+        var export = new Export { Status = ExportStatus.Processing };
+        export.IsProcessing.Should().BeTrue();
+        export.IsPending.Should().BeFalse();
+        export.IsCompleted.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestStatusHelperCompleted()
+    {
+        var export = new Export { Status = ExportStatus.Completed };
+        export.IsCompleted.Should().BeTrue();
+        export.IsPending.Should().BeFalse();
+        export.IsProcessing.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task TestListExports()
     {
         StubGet("exports", "exports/index.json");
@@ -50,8 +77,8 @@ public class ExportTest : BaseTest
             Filters = new Dictionary<string, object>
             {
                 { "did_number", "1234556789" },
-                { "year", "2019" },
-                { "month", "01" }
+                { "from", "2026-04-01 00:00:00" },
+                { "to", "2026-04-15 23:59:59" }
             }
         };
 
@@ -73,8 +100,8 @@ public class ExportTest : BaseTest
             ExportType = ExportType.CdrOut,
             Filters = new Dictionary<string, object>
             {
-                { "year", 2024 },
-                { "month", 1 }
+                { "from", "2026-04-01 00:00:00" },
+                { "to", "2026-04-15 23:59:59" }
             }
         };
 
@@ -84,6 +111,23 @@ public class ExportTest : BaseTest
         created.Id.Should().Be("da15f006-5da4-45ca-b0df-735baeadf423");
         created.ExportType.Should().Be(ExportType.CdrOut);
         created.Status.Should().Be(ExportStatus.Pending);
+    }
+
+    [Fact]
+    public async Task TestUpdateExportExternalReferenceId()
+    {
+        StubPatch("exports/21e02b15-806d-44b3-b67f-434ea6c44f61",
+            "exports/update_external_reference_id_request.json",
+            "exports/update_external_reference_id.json");
+
+        var export = Export.Build("21e02b15-806d-44b3-b67f-434ea6c44f61");
+        export.ExternalReferenceId = "renamed-ref-99";
+
+        var response = await Client.Exports().UpdateAsync(export);
+        var updated = response.Data;
+
+        updated.Id.Should().Be("21e02b15-806d-44b3-b67f-434ea6c44f61");
+        updated.ExternalReferenceId.Should().Be("renamed-ref-99");
     }
 
     [Fact]

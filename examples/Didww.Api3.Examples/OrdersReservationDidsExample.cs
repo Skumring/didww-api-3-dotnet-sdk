@@ -43,7 +43,7 @@ public static class OrdersReservationDidsExample
         var reservationResponse = await client.DidReservations().CreateAsync(reservation);
         var createdReservation = reservationResponse.Data;
         Console.WriteLine($"  Reservation: {createdReservation.Id}");
-        Console.WriteLine($"    Expires at: {createdReservation.ExpireAt}");
+        Console.WriteLine($"    Expires at: {createdReservation.ExpiresAt}");
 
         // 3. Order the reserved DID using ReservationDidOrderItem
         Console.WriteLine("\n--- Order Reserved DID ---");

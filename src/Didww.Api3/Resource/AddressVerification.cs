@@ -1,4 +1,3 @@
-using Didww.Api3.Converter;
 using Didww.Api3.Resource.Enums;
 using Newtonsoft.Json;
 
@@ -25,12 +24,25 @@ public class AddressVerification : BaseResource
     [JsonProperty("status")]
     public AddressVerificationStatus? Status { get; set; }
 
+    [JsonIgnore]
+    public bool IsPending => Status == AddressVerificationStatus.Pending;
+    [JsonIgnore]
+    public bool IsApproved => Status == AddressVerificationStatus.Approved;
+    [JsonIgnore]
+    public bool IsRejected => Status == AddressVerificationStatus.Rejected;
+
     [JsonProperty("reject_reasons")]
-    [JsonConverter(typeof(SemicolonSplitConverter))]
     public string[]? RejectReasons { get; set; }
 
     [JsonProperty("reference")]
     public string? Reference { get; set; }
+
+    [JsonProperty("reject_comment")]
+    public string? RejectComment { get; set; }
+
+    private string? _externalReferenceId;
+    [JsonProperty("external_reference_id")]
+    public string? ExternalReferenceId { get => _externalReferenceId; set => _externalReferenceId = MarkDirty("externalReferenceId", value); }
 
     [JsonProperty("created_at")]
     public DateTimeOffset? CreatedAt { get; set; }

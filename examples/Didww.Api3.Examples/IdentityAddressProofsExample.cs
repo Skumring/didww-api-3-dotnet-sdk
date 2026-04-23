@@ -8,7 +8,22 @@ public static class IdentityAddressProofsExample
 {
     public static async Task RunAsync(DidwwClient client)
     {
-        Console.WriteLine("--- Create Identity ---");
+        // List identities (include country + birth_country, 2026-04-16 adds birth_country)
+        Console.WriteLine("--- List Identities ---");
+        var existingIdentities = await client.Identities().ListAsync(
+            new QueryParams().Include("country", "birth_country").Page(1, 5));
+        Console.WriteLine($"  Found {existingIdentities.Data.Count} identities");
+        foreach (var id in existingIdentities.Data)
+        {
+            Console.WriteLine($"    {id.Id}: {id.FirstName} {id.LastName}");
+            Console.WriteLine($"      Type: {id.IdentityType}");
+            Console.WriteLine($"      Country: {id.Country?.Name}");
+            Console.WriteLine($"      Birth Country: {id.BirthCountry?.Name}"); // 2026-04-16
+            Console.WriteLine($"      Birth Date: {id.BirthDate}");
+            Console.WriteLine($"      Verified: {id.Verified}");
+        }
+
+        Console.WriteLine("\n--- Create Identity ---");
 
         // Get a country for the identity
         var countries = await client.Countries().ListAsync(new QueryParams().Page(1, 1));
@@ -27,7 +42,8 @@ public static class IdentityAddressProofsExample
             LastName = "Smith",
             PhoneNumber = "5551234567",
             IdentityType = IdentityType.Personal,
-            Country = Country.Build(country.Id!)
+            Country = Country.Build(country.Id!),
+            BirthCountry = Country.Build(country.Id!) // 2026-04-16: birth_country
         };
 
         var identityResponse = await client.Identities().CreateAsync(identity);

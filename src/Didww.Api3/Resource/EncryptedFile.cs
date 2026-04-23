@@ -8,5 +8,5 @@ public class EncryptedFile : BaseResource
     public static EncryptedFile Build(string id) => BaseResource.Build<EncryptedFile>(id);
 
     [JsonProperty("description")] public string? Description { get; set; }
-    [JsonProperty("expire_at")] public DateTimeOffset? ExpireAt { get; set; }
+    [JsonProperty("expires_at")] public DateTimeOffset? ExpiresAt { get; set; }
 }

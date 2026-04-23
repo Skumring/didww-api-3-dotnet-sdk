@@ -19,7 +19,7 @@ public static class SharedCapacityGroupsExample
         Console.WriteLine($"  Using pool: {pool.Name} (ID: {pool.Id})");
 
         Console.WriteLine("\n--- Create Shared Capacity Group ---");
-        var suffix = Guid.NewGuid().ToString()[..8];
+        var suffix = Guid.NewGuid().ToString("N")[..8];
         var group = new SharedCapacityGroup
         {
             Name = "SDK Example Group " + suffix,
@@ -39,6 +39,8 @@ public static class SharedCapacityGroupsExample
         foreach (var g in listResponse.Data)
         {
             Console.WriteLine($"  {g.Name} (shared: {g.SharedChannelsCount}, metered: {g.MeteredChannelsCount})");
+            if (g.ExternalReferenceId != null)
+                Console.WriteLine($"    External reference: {g.ExternalReferenceId}");
         }
 
         Console.WriteLine("\n--- Update Shared Capacity Group ---");

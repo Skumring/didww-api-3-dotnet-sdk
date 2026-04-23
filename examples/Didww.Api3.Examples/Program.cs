@@ -7,7 +7,10 @@ using Didww.Api3.Examples;
 //   trunk-groups, voice-out-trunks, orders, orders-nanpa, orders-available, orders-capacity,
 //   orders-all-items, orders-reservation, capacity-pools, shared-capacity-groups,
 //   did-reservations, did-trunk-assignment, identity-address-proofs,
-//   exports, encryption, webhook
+//   exports, encryption, webhook,
+//   did-history, emergency-requirements, emergency-calling-services,
+//   emergency-verifications, emergency-requirement-validations,
+//   address-verifications, orders-emergency, emergency-scenario, voice-in-trunk-groups
 
 var exampleName = args.Length > 0 ? args[0].ToLower() : "all";
 var client = exampleName != "webhook" ? ExampleClientFactory.Create() : null;
@@ -82,6 +85,33 @@ try
         case "webhook":
             WebhookExample.Run();
             break;
+        case "did-history":
+            await DidHistoryExample.RunAsync(client!);
+            break;
+        case "emergency-requirements":
+            await EmergencyRequirementsExample.RunAsync(client!);
+            break;
+        case "emergency-calling-services":
+            await EmergencyCallingServicesExample.RunAsync(client!);
+            break;
+        case "emergency-verifications":
+            await EmergencyVerificationsExample.RunAsync(client!);
+            break;
+        case "emergency-requirement-validations":
+            await EmergencyRequirementValidationsExample.RunAsync(client!);
+            break;
+        case "address-verifications":
+            await AddressVerificationsExample.RunAsync(client!);
+            break;
+        case "orders-emergency":
+            await OrdersEmergencyExample.RunAsync(client!);
+            break;
+        case "emergency-scenario":
+            await EmergencyScenarioExample.RunAsync(client!);
+            break;
+        case "voice-in-trunk-groups":
+            await VoiceInTrunkGroupsExample.RunAsync(client!);
+            break;
         case "all":
             await BalanceExample.RunAsync(client!);
             Console.WriteLine();
@@ -116,7 +146,11 @@ try
             Console.WriteLine("  orders-capacity, orders-all-items, orders-reservation,");
             Console.WriteLine("  capacity-pools, shared-capacity-groups, did-reservations,");
             Console.WriteLine("  did-trunk-assignment, identity-address-proofs,");
-            Console.WriteLine("  exports, encryption, webhook, all");
+            Console.WriteLine("  exports, encryption, webhook,");
+            Console.WriteLine("  did-history, emergency-requirements, emergency-calling-services,");
+            Console.WriteLine("  emergency-verifications, emergency-requirement-validations,");
+            Console.WriteLine("  address-verifications, orders-emergency, emergency-scenario,");
+            Console.WriteLine("  voice-in-trunk-groups, all");
             break;
     }
 }

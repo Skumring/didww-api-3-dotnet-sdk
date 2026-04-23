@@ -55,6 +55,31 @@ public class IdentityTest : BaseTest
         created.CompanyName.Should().Be("Test Company Limited");
         created.ExternalReferenceId.Should().Be("111");
         created.Verified.Should().BeFalse();
+        created.BirthCountry.Should().NotBeNull();
+        created.BirthCountry!.Id.Should().Be("1f6fc2bd-f081-4202-9b1a-d9cb88d942b9");
+    }
+
+    [Fact]
+    public async Task TestFindIdentityWithBirthCountry()
+    {
+        StubGet("identities/e96ae7d1-11d5-42bc-a5c5-211f3c3788ae", "identities/show.json");
+
+        var response = await Client.Identities().FindAsync("e96ae7d1-11d5-42bc-a5c5-211f3c3788ae");
+        var identity = response.Data;
+
+        identity.Id.Should().Be("e96ae7d1-11d5-42bc-a5c5-211f3c3788ae");
+        identity.FirstName.Should().Be("John");
+        identity.IdentityType.Should().Be(IdentityType.Business);
+
+        // country and birth_country should resolve to different Country objects
+        identity.Country.Should().NotBeNull();
+        identity.Country!.Id.Should().Be("1f6fc2bd-f081-4202-9b1a-d9cb88d942b9");
+        identity.Country!.Name.Should().Be("United States");
+
+        identity.BirthCountry.Should().NotBeNull();
+        identity.BirthCountry!.Id.Should().Be("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
+        identity.BirthCountry!.Name.Should().Be("Germany");
+        identity.BirthCountry!.Iso.Should().Be("DE");
     }
 
     [Fact]

@@ -45,7 +45,52 @@ public class AddressVerificationTest : BaseTest
         verification.Id.Should().Be("429e6d4e-2ee9-4953-aa98-0b3ac07f0f96");
         verification.Status.Should().Be(AddressVerificationStatus.Rejected);
         verification.RejectReasons.Should().BeEquivalentTo(new[] { "Address cannot be validated", "Proof of address should be not older than of 6 months" });
+        verification.RejectComment.Should().Be("Please provide a valid address");
         verification.Reference.Should().Be("ODW-879912");
+    }
+
+    [Fact]
+    public void TestStatusHelperPending()
+    {
+        var v = new AddressVerification { Status = AddressVerificationStatus.Pending };
+        v.IsPending.Should().BeTrue();
+        v.IsApproved.Should().BeFalse();
+        v.IsRejected.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestStatusHelperApproved()
+    {
+        var v = new AddressVerification { Status = AddressVerificationStatus.Approved };
+        v.IsApproved.Should().BeTrue();
+        v.IsPending.Should().BeFalse();
+        v.IsRejected.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestStatusHelperRejected()
+    {
+        var v = new AddressVerification { Status = AddressVerificationStatus.Rejected };
+        v.IsRejected.Should().BeTrue();
+        v.IsPending.Should().BeFalse();
+        v.IsApproved.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task TestUpdateAddressVerificationExternalReferenceId()
+    {
+        StubPatch("address_verifications/429e6d4e-2ee9-4953-aa98-0b3ac07f0f96",
+            "address_verifications/update_external_reference_id_request.json",
+            "address_verifications/update_external_reference_id.json");
+
+        var verification = AddressVerification.Build("429e6d4e-2ee9-4953-aa98-0b3ac07f0f96");
+        verification.ExternalReferenceId = "updated-ref-42";
+
+        var response = await Client.AddressVerifications().UpdateAsync(verification);
+        var updated = response.Data;
+
+        updated.Id.Should().Be("429e6d4e-2ee9-4953-aa98-0b3ac07f0f96");
+        updated.ExternalReferenceId.Should().Be("updated-ref-42");
     }
 
     [Fact]

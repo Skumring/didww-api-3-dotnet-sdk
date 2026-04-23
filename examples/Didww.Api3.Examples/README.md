@@ -33,7 +33,8 @@ You can also use `--framework net9.0` if you have .NET 9 installed.
 | [`CountriesExample.cs`](CountriesExample.cs) | `countries` | Lists countries and fetches one with included regions. |
 | [`RegionsExample.cs`](RegionsExample.cs) | `regions` | Lists regions with filtering, sorting, and includes. |
 | [`DidGroupsExample.cs`](DidGroupsExample.cs) | `did-groups` | Lists DID groups with included SKUs and pricing details. |
-| [`DidsExample.cs`](DidsExample.cs) | `dids` | Lists DIDs and demonstrates DID updates. |
+| [`DidHistoryExample.cs`](DidHistoryExample.cs) | `did-history` | Lists DID ownership history (last 90 days, 2026-04-16). |
+| [`DidsExample.cs`](DidsExample.cs) | `dids` | Lists DIDs and demonstrates DID updates (2026-04-16 emergency fields and identity). |
 | [`TrunksExample.cs`](TrunksExample.cs) | `trunks` | Creates SIP and PSTN trunks, lists and deletes. |
 | [`TrunkGroupsExample.cs`](TrunkGroupsExample.cs) | `trunk-groups` | Creates trunk group with two trunks, lists, updates, deletes. |
 | [`VoiceOutTrunksExample.cs`](VoiceOutTrunksExample.cs) | `voice-out-trunks` | CRUD operations on outbound trunks. |
@@ -45,12 +46,24 @@ You can also use `--framework net9.0` if you have .NET 9 installed.
 | [`SharedCapacityGroupsExample.cs`](SharedCapacityGroupsExample.cs) | `shared-capacity-groups` | CRUD shared capacity group from pool. |
 | [`DidReservationsExample.cs`](DidReservationsExample.cs) | `did-reservations` | Reserves an available DID, lists and deletes. |
 | [`DidTrunkAssignmentExample.cs`](DidTrunkAssignmentExample.cs) | `did-trunk-assignment` | Creates trunk, assigns to DID, shows exclusivity. |
-| [`IdentityAddressProofsExample.cs`](IdentityAddressProofsExample.cs) | `identity-address-proofs` | Creates identity, address, lists proof types. |
+| [`IdentityAddressProofsExample.cs`](IdentityAddressProofsExample.cs) | `identity-address-proofs` | Creates identity, address, lists proof types (2026-04-16 birth_country). |
+| [`AddressVerificationsExample.cs`](AddressVerificationsExample.cs) | `address-verifications` | Lists address verifications with 2026-04-16 reject_comment / external_reference_id. |
 | [`OrdersAllItemTypesExample.cs`](OrdersAllItemTypesExample.cs) | `orders-all-items` | Demonstrates all 3 order item types in one example. |
 | [`OrdersReservationDidsExample.cs`](OrdersReservationDidsExample.cs) | `orders-reservation` | Reserves DID then orders via ReservationDidOrderItem. |
-| [`ExportsExample.cs`](ExportsExample.cs) | `exports` | Creates a CDR export and downloads when ready. |
+| [`ExportsExample.cs`](ExportsExample.cs) | `exports` | Creates and lists CDR exports, with 2026-04-16 external_reference_id. |
 | [`EncryptionExample.cs`](EncryptionExample.cs) | `encryption` | Encrypts a file and uploads to `encrypted_files`. |
 | [`WebhookExample.cs`](WebhookExample.cs) | `webhook` | Demonstrates webhook callback signature validation. |
+
+### Emergency Services (2026-04-16)
+
+| Example | Command | Description |
+|---|---|---|
+| [`EmergencyRequirementsExample.cs`](EmergencyRequirementsExample.cs) | `emergency-requirements` | Lists emergency service requirements per country/did_group_type. |
+| [`EmergencyCallingServicesExample.cs`](EmergencyCallingServicesExample.cs) | `emergency-calling-services` | Lists and cancels customer emergency calling services. |
+| [`EmergencyVerificationsExample.cs`](EmergencyVerificationsExample.cs) | `emergency-verifications` | Lists and creates emergency verifications. |
+| [`EmergencyRequirementValidationsExample.cs`](EmergencyRequirementValidationsExample.cs) | `emergency-requirement-validations` | Pre-validates an emergency order triple (requirement + address + identity). |
+| [`EmergencyScenarioExample.cs`](EmergencyScenarioExample.cs) | `emergency-scenario` | End-to-end: find DID → check requirements → validate → create verification → get service. |
+| [`OrdersEmergencyExample.cs`](OrdersEmergencyExample.cs) | `orders-emergency` | Inspects server-created Emergency orders and `emergency_order_items`. |
 
 ## Troubleshooting
 

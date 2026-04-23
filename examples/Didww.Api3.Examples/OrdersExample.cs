@@ -32,20 +32,26 @@ public static class OrdersExample
             Qty = 1
         };
 
+        // 2026-04-16 external_reference_id — customer-supplied tag (max 100 chars)
+        var suffix = Guid.NewGuid().ToString("N")[..8];
         var order = new Order
         {
             AllowBackOrdering = true,
-            Items = new List<OrderItemBase> { orderItem }
+            Items = new List<OrderItemBase> { orderItem },
+            ExternalReferenceId = "dotnet-order-" + suffix
         };
 
         var response = await client.Orders().CreateAsync(order);
         Console.WriteLine($"  Order created: {response.Data.Id} (Status: {response.Data.Status}, Amount: {response.Data.Amount})");
+        Console.WriteLine($"  External reference: {response.Data.ExternalReferenceId}");
 
         Console.WriteLine("\n--- List Orders ---");
         var listResponse = await client.Orders().ListAsync(new QueryParams().Page(1, 5));
         foreach (var o in listResponse.Data)
         {
             Console.WriteLine($"  Order: {o.Id} (Status: {o.Status}, Amount: {o.Amount})");
+            if (o.ExternalReferenceId != null)
+                Console.WriteLine($"    External reference: {o.ExternalReferenceId}");
         }
     }
 }

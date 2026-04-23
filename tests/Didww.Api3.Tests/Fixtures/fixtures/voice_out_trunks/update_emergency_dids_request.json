@@ -1,0 +1,14 @@
+{
+  "data": {
+    "id": "425ce763-a3a9-49b4-af5b-ada1a65c8864",
+    "type": "voice_out_trunks",
+    "relationships": {
+      "emergency_dids": {
+        "data": [
+          { "type": "dids", "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa" },
+          { "type": "dids", "id": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb" }
+        ]
+      }
+    }
+  }
+}

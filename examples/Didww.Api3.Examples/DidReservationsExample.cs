@@ -30,13 +30,13 @@ public static class DidReservationsExample
         var response = await client.DidReservations().CreateAsync(reservation);
         var created = response.Data;
         Console.WriteLine($"  Reservation created: {created.Id}");
-        Console.WriteLine($"    Expires at: {created.ExpireAt}");
+        Console.WriteLine($"    Expires at: {created.ExpiresAt}");
 
         Console.WriteLine("\n--- List DID Reservations ---");
         var listResponse = await client.DidReservations().ListAsync();
         foreach (var r in listResponse.Data)
         {
-            Console.WriteLine($"  Reservation: {r.Id} (expires: {r.ExpireAt})");
+            Console.WriteLine($"  Reservation: {r.Id} (expires: {r.ExpiresAt})");
         }
 
         Console.WriteLine("\n--- Delete DID Reservation ---");

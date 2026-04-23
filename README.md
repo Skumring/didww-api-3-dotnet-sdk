@@ -15,7 +15,7 @@ This SDK uses [JsonApiSerializer](https://github.com/codecutout/JsonApiSerialize
 
 Read more https://doc.didww.com/api
 
-The client sends the `X-DIDWW-API-Version: 2022-05-10` header with each request.
+The client sends the `X-DIDWW-API-Version: 2026-04-16` header with each request.
 
 ## Requirements
 
@@ -131,8 +131,8 @@ var proofTypes = await client.ProofTypes().ListAsync();
 // Public Keys
 var publicKeys = await client.PublicKeys().ListAsync();
 
-// Requirements
-var requirements = await client.Requirements().ListAsync();
+// Address Requirements
+var requirements = await client.AddressRequirements().ListAsync();
 
 // Balance (singleton)
 var balance = (await client.Balance().FindAsync()).Data;
@@ -209,15 +209,29 @@ await client.VoiceInTrunkGroups().CreateAsync(group);
 
 ### Voice Out Trunks
 
+Voice Out Trunks use a polymorphic `AuthenticationMethod` (2026-04-16). Three types are supported:
+
+- **`CredentialsAndIpAuthenticationMethod`** -- default method; `Username` and `Password` are server-generated and returned in the response.
+- **`TwilioAuthenticationMethod`** -- requires a `TwilioAccountSid`.
+- **`IpOnlyAuthenticationMethod`** -- read-only; can only be configured by DIDWW staff upon request. Cannot be set via the API.
+
 ```csharp
+using Didww.Api3.Resource.Configuration.AuthenticationMethod;
+
+// NOTE: 203.0.113.0/24 is RFC 5737 TEST-NET-3 documentation space.
+// Replace with the real CIDR of your SIP infrastructure.
 var trunk = new VoiceOutTrunk
 {
     Name = "My Outbound Trunk",
-    AllowedSipIps = new List<string> { "0.0.0.0/0" },
     OnCliMismatchAction = OnCliMismatchAction.ReplaceCli,
-    DefaultDid = Did.Build("did-uuid")
+    DefaultDid = Did.Build("did-uuid"),
+    AuthenticationMethod = new CredentialsAndIpAuthenticationMethod
+    {
+        AllowedSipIps = new List<string> { "203.0.113.0/24" },
+    }
 };
-await client.VoiceOutTrunks().CreateAsync(trunk);
+var response = await client.VoiceOutTrunks().CreateAsync(trunk);
+// response.Data.AuthenticationMethod as CredentialsAndIpAuthenticationMethod -- Username/Password server-generated
 ```
 
 ### Orders
@@ -321,8 +335,8 @@ var export = new Export
     ExportType = ExportType.CdrIn,
     Filters = new Dictionary<string, object>
     {
-        { "year", 2025 },
-        { "month", 1 }
+        { "from", "2026-04-01 00:00:00" },
+        { "to", "2026-04-15 23:59:59" }
     }
 };
 var response = await client.Exports().CreateAsync(export);
@@ -332,6 +346,54 @@ var completed = (await client.Exports().FindAsync(response.Data.Id)).Data;
 if (completed.Url != null)
 {
     await client.DownloadExportAsync(completed, "/tmp/export.csv");
+}
+```
+
+### Address Verifications
+
+```csharp
+// List address verifications
+var verifications = await client.AddressVerifications().ListAsync();
+
+// Create address verification
+var verification = new AddressVerification
+{
+    CallbackUrl = "https://example.com/callback",
+    CallbackMethod = CallbackMethod.Post,
+    Address = Address.Build("address-uuid"),
+    Dids = new List<Did> { Did.Build("did-uuid") }
+};
+var result = await client.AddressVerifications().CreateAsync(verification);
+```
+
+### Emergency Services (2026-04-16)
+
+```csharp
+// List emergency requirements
+var emergReqs = await client.EmergencyRequirements().ListAsync();
+
+// Create emergency verification
+var emergVerification = new EmergencyVerification
+{
+    CallbackUrl = "https://example.com/callback",
+    CallbackMethod = CallbackMethod.Post,
+    Address = Address.Build("address-uuid"),
+    Dids = new List<Did> { Did.Build("did-uuid") }
+};
+var emergResult = await client.EmergencyVerifications().CreateAsync(emergVerification);
+
+// List emergency calling services
+var emergServices = await client.EmergencyCallingServices().ListAsync();
+```
+
+### DID History (2026-04-16)
+
+```csharp
+// List DID history
+var history = await client.DidHistory().ListAsync();
+foreach (var entry in history.Data)
+{
+    Console.WriteLine($"{entry.Action} {entry.CreatedAt}");
 }
 ```
 
@@ -480,6 +542,7 @@ var isValid = validator.Validate(
 |---|---|
 | DID | `DidOrderItem` |
 | Capacity | `CapacityOrderItem` |
+| Emergency | `EmergencyOrderItem` |
 | Generic | `GenericOrderItem` |
 
 ## All Supported Resources
@@ -497,7 +560,7 @@ var isValid = validator.Validate(
 | AvailableDid | `AvailableDid` | List, Find |
 | ProofType | `ProofType` | List, Find |
 | PublicKey | `PublicKey` | List, Find |
-| Requirement | `Requirement` | List, Find |
+| AddressRequirement | `AddressRequirement` | List, Find |
 | SupportingDocumentTemplate | `SupportingDocumentTemplate` | List, Find |
 | Balance | `Balance` | Find |
 | Did | `Did` | List, Find, Update, Delete |
@@ -509,24 +572,41 @@ var isValid = validator.Validate(
 | CapacityPool | `CapacityPool` | List, Find |
 | SharedCapacityGroup | `SharedCapacityGroup` | List, Find, Create, Update, Delete |
 | Order | `Order` | List, Find, Create |
-| Export | `Export` | List, Find, Create |
+| Export | `Export` | List, Find, Create, Update |
 | Address | `Address` | List, Find, Create, Delete |
-| AddressVerification | `AddressVerification` | List, Create |
+| AddressVerification | `AddressVerification` | List, Create, Update |
 | Identity | `Identity` | List, Find, Create, Delete |
 | EncryptedFile | `EncryptedFile` | List, Find, Delete |
 | PermanentSupportingDocument | `PermanentSupportingDocument` | Create, Delete |
 | Proof | `Proof` | Create, Delete |
-| RequirementValidation | `RequirementValidation` | Create |
+| AddressRequirementValidation | `AddressRequirementValidation` | Create |
+| DidHistory | `DidHistory` | List |
+| EmergencyRequirement | `EmergencyRequirement` | List, Find |
+| EmergencyRequirementValidation | `EmergencyRequirementValidation` | Create |
+| EmergencyCallingService | `EmergencyCallingService` | List, Find, Delete |
+| EmergencyVerification | `EmergencyVerification` | List, Find, Create, Update |
 
 ## Date and Datetime Fields
 
 The SDK distinguishes between date-only and datetime fields:
 
 - **Datetime fields** are deserialized as `DateTimeOffset?`:
-  - All `CreatedAt` properties — present on most resources
-  - Expiry fields: `Did.ExpiresAt`, `DidReservation.ExpireAt`, `Proof.ExpiresAt`, `EncryptedFile.ExpireAt`
+  - `CreatedAt` — present on most resources
+  - `ExpiresAt` — `Did`, `DidReservation`, `Proof`, `EncryptedFile` (nullable)
+  - `ActivatedAt` — `EmergencyCallingService` (nullable)
+  - `CanceledAt` — `EmergencyCallingService` (nullable)
 - **Date-only fields** (`Identity.BirthDate`) are deserialized as `DateOnly?`.
-- **Date-only fields kept as strings** (`CapacityPool.RenewDate`, `DidOrderItem.BilledFrom`, `DidOrderItem.BilledTo`) remain as `string?`.
+- **Date-only fields kept as strings** remain as `string?`:
+  - `CapacityPool.RenewDate`, `EmergencyCallingService.RenewDate` — `"YYYY-MM-DD"` (nullable)
+  - `DidOrderItem.BilledFrom`, `DidOrderItem.BilledTo`
+- **String fields** (not numeric):
+  - `EmergencyRequirement.EstimateSetupTime` — e.g. `"7-14 days"`, `"1"`
+  - `EmergencyRequirement.RequirementRestrictionMessage` — nullable
+
+**Important changes from previous API versions:**
+- `ExpireAt` renamed to `ExpiresAt` on `DidReservation` and `EncryptedFile`
+- `RenewDate` is a date-only string, NOT a `DateTimeOffset`
+- `EstimateSetupTime` is a string, NOT an integer
 
 ```csharp
 var did = (await client.Dids().FindAsync("uuid")).Data;
@@ -542,9 +622,13 @@ Console.WriteLine(identity.BirthDate);  // 1990-05-20
 The SDK provides enum types in `Didww.Api3.Resource.Enums`:
 
 `CallbackMethod`, `IdentityType`, `OrderStatus`, `ExportType`, `ExportStatus`, `CliFormat`,
-`OnCliMismatchAction`, `MediaEncryptionMode`, `DefaultDstAction`, `VoiceOutTrunkStatus`,
+`OnCliMismatchAction`\*, `MediaEncryptionMode`, `DefaultDstAction`, `VoiceOutTrunkStatus`,
+`EmergencyCallingServiceStatus`, `EmergencyVerificationStatus`, `DiversionRelayPolicy`,
 `TransportProtocol`, `Codec`, `RxDtmfFormat`, `TxDtmfFormat`, `SstRefreshMethod`,
-`ReroutingDisconnectCode`, `Feature`, `AreaLevel`, `AddressVerificationStatus`, `StirShakenMode`
+`ReroutingDisconnectCode`, `Feature`, `AreaLevel`, `AddressVerificationStatus`, `StirShakenMode`,
+`DidHistoryAction`, `DidHistoryMethod`
+
+\* `ReplaceCli` and `RandomizeCli` require additional account configuration. Contact DIDWW support to enable these values.
 
 ## Development
 

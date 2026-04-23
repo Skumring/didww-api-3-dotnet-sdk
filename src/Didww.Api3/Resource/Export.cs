@@ -24,9 +24,22 @@ public class Export : BaseResource
 
     [JsonProperty("status")] public ExportStatus? Status { get; set; }
 
+    [JsonIgnore]
+    public bool IsPending => Status == ExportStatus.Pending;
+
+    [JsonIgnore]
+    public bool IsProcessing => Status == ExportStatus.Processing;
+
+    [JsonIgnore]
+    public bool IsCompleted => Status == ExportStatus.Completed;
+
     private Dictionary<string, object>? _filters;
     [JsonProperty("filters")]
     public Dictionary<string, object>? Filters { get => _filters; set => _filters = MarkDirty("filters", value); }
 
     [JsonProperty("created_at")] public DateTimeOffset? CreatedAt { get; set; }
+
+    private string? _externalReferenceId;
+    [JsonProperty("external_reference_id")]
+    public string? ExternalReferenceId { get => _externalReferenceId; set => _externalReferenceId = MarkDirty("externalReferenceId", value); }
 }

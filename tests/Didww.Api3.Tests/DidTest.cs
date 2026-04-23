@@ -231,6 +231,21 @@ public class DidTest : BaseTest
     }
 
     [Fact]
+    public async Task TestUnassignEmergencyCallingServiceFromDid()
+    {
+        StubPatch("dids/44957076-778a-4802-b60c-d22db0cda284",
+            "dids/unassign_emergency_calling_service_request.json",
+            "dids/unassign_emergency_calling_service.json");
+
+        var did = Did.Build("44957076-778a-4802-b60c-d22db0cda284");
+        did.EmergencyCallingService = null;
+
+        var response = await Client.Dids().UpdateAsync(did);
+        response.Data.Id.Should().Be("44957076-778a-4802-b60c-d22db0cda284");
+        response.Data.EmergencyEnabled.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task TestFindDidWithAddressVerificationAndDidGroup()
     {
         StubGet("dids/21d0b02c-b556-4d3e-acbf-504b78295dbe", "dids/show_with_address_verification_and_did_group.json");

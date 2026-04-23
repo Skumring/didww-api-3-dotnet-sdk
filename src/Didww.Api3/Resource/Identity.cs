@@ -75,6 +75,10 @@ public class Identity : BaseResource, IProofEntity
     [JsonProperty("country")]
     public Country? Country { get => _country; set => SetProperty(ref _country, value); }
 
+    private Country? _birthCountry;
+    [JsonProperty("birth_country")]
+    public Country? BirthCountry { get => _birthCountry; set => SetProperty(ref _birthCountry, value); }
+
     [JsonProperty("proofs")]
     public List<Proof>? Proofs { get; set; }
 

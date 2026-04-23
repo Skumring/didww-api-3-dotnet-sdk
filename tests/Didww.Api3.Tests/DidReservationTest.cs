@@ -17,7 +17,7 @@ public class DidReservationTest : BaseTest
 
         var first = reservations[0];
         first.Id.Should().Be("fd38d3ff-80cf-4e67-a605-609a2884a5c4");
-        first.ExpireAt.Should().NotBeNull();
+        first.ExpiresAt.Should().NotBeNull();
         first.CreatedAt.Should().NotBeNull();
     }
 

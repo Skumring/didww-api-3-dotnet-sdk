@@ -9,7 +9,7 @@ public static class TrunkGroupsExample
 {
     public static async Task RunAsync(DidwwClient client)
     {
-        var suffix = Guid.NewGuid().ToString()[..8];
+        var suffix = Guid.NewGuid().ToString("N")[..8];
 
         Console.WriteLine("--- Create Two Trunks ---");
         var sipA = new SipConfiguration
@@ -34,11 +34,13 @@ public static class TrunkGroupsExample
         trunkB = (await client.VoiceInTrunks().CreateAsync(trunkB)).Data;
         Console.WriteLine($"  Created trunk B: {trunkB.Id}");
 
+        // Create a new trunk group (2026-04-16 external_reference_id for customer tagging)
         Console.WriteLine("\n--- Create Trunk Group ---");
         var group = new VoiceInTrunkGroup
         {
             Name = "My Trunk Group " + suffix,
             CapacityLimit = 10,
+            ExternalReferenceId = "dotnet-tg-" + suffix,
             VoiceInTrunks = new List<VoiceInTrunk>
             {
                 VoiceInTrunk.Build(trunkA.Id!),
@@ -47,6 +49,7 @@ public static class TrunkGroupsExample
         };
         group = (await client.VoiceInTrunkGroups().CreateAsync(group)).Data;
         Console.WriteLine($"  Created group: {group.Id} - {group.Name}");
+        Console.WriteLine($"    External reference: {group.ExternalReferenceId}");
 
         Console.WriteLine("\n--- List Trunk Groups ---");
         var queryParams = new QueryParams().Include("voice_in_trunks");

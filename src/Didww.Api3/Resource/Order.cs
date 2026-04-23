@@ -17,6 +17,13 @@ public class Order : BaseResource
     [JsonProperty("status")]
     public OrderStatus? Status { get; set; }
 
+    [JsonIgnore]
+    public bool IsPending => Status == OrderStatus.Pending;
+    [JsonIgnore]
+    public bool IsCompleted => Status == OrderStatus.Completed;
+    [JsonIgnore]
+    public bool IsCancelled => Status == OrderStatus.Canceled;
+
     [JsonProperty("description")]
     public string? Description { get; set; }
 
@@ -49,6 +56,10 @@ public class Order : BaseResource
         get => _allowBackOrdering;
         set => SetProperty(ref _allowBackOrdering, value);
     }
+
+    private string? _externalReferenceId;
+    [JsonProperty("external_reference_id")]
+    public string? ExternalReferenceId { get => _externalReferenceId; set => SetProperty(ref _externalReferenceId, value); }
 
     private List<OrderItemBase>? _items;
     [JsonProperty("items")]

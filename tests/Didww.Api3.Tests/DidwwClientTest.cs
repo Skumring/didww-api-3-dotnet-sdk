@@ -56,6 +56,36 @@ public class DidwwClientTest
     }
 
     [Fact]
+    public void TestApiVersionConstantIsCurrentDate()
+    {
+        DidwwClient.ApiVersion.Should().Be("2026-04-16");
+    }
+
+    [Fact]
+    public async Task TestRequestIncludesApiVersionHeader()
+    {
+        using var wireMock = WireMockServer.Start();
+        var client = DidwwClient.NewBuilder()
+            .SetCredentials(new DidwwCredentials("test-key", DidwwEnvironment.Sandbox))
+            .SetBaseUrl(wireMock.Url + "/v3")
+            .Build();
+
+        wireMock.Given(
+            Request.Create().WithPath("/v3/countries").UsingGet()
+        ).RespondWith(
+            Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/vnd.api+json")
+                .WithBody("{\"data\":[]}")
+        );
+
+        await client.Countries().ListAsync();
+
+        var request = wireMock.LogEntries.First().RequestMessage;
+        request.Headers![DidwwClient.ApiVersionHeader].First().Should().Be("2026-04-16");
+    }
+
+    [Fact]
     public async Task TestRequestIncludesUserAgentHeader()
     {
         using var wireMock = WireMockServer.Start();

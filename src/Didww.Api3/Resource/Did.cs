@@ -58,6 +58,12 @@ public class Did : BaseResource
     [JsonProperty("expires_at")]
     public DateTimeOffset? ExpiresAt { get; set; }
 
+    /// <summary>
+    /// Indicates whether the DID is emergency-enabled. (API 2026-04-16)
+    /// </summary>
+    [JsonProperty("emergency_enabled")]
+    public bool? EmergencyEnabled { get; set; }
+
     private int? _billingCyclesCount;
     [JsonProperty("billing_cycles_count")]
     public int? BillingCyclesCount
@@ -108,4 +114,39 @@ public class Did : BaseResource
 
     [JsonProperty("address_verification")]
     public AddressVerification? AddressVerification { get; set; }
+
+    /// <summary>
+    /// EmergencyCallingService assigned to this DID. To unassign, set to null
+    /// on a built resource: the PATCH will send <c>emergency_calling_service: {data: null}</c>.
+    /// (API 2026-04-16)
+    /// </summary>
+    private EmergencyCallingService? _emergencyCallingService;
+    [JsonProperty("emergency_calling_service")]
+    public EmergencyCallingService? EmergencyCallingService
+    {
+        get => _emergencyCallingService;
+        set => SetProperty(ref _emergencyCallingService, value);
+    }
+
+    /// <summary>
+    /// EmergencyVerification associated with this DID. (API 2026-04-16)
+    /// </summary>
+    private EmergencyVerification? _emergencyVerification;
+    [JsonProperty("emergency_verification")]
+    public EmergencyVerification? EmergencyVerification
+    {
+        get => _emergencyVerification;
+        set => SetProperty(ref _emergencyVerification, value);
+    }
+
+    /// <summary>
+    /// Identity associated with this DID. (API 2026-04-16)
+    /// </summary>
+    private Identity? _identity;
+    [JsonProperty("identity")]
+    public Identity? Identity
+    {
+        get => _identity;
+        set => SetProperty(ref _identity, value);
+    }
 }

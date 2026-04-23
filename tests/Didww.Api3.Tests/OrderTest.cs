@@ -21,7 +21,28 @@ public class OrderTest : BaseTest
         order.Status.Should().Be(OrderStatus.Completed);
         order.Description.Should().Be("Payment processing fee");
         order.Reference.Should().Be("SPT-474057");
+        order.ExternalReferenceId.Should().Be("order-ext-001");
         order.Items.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public async Task TestFindOrderWithEmergencyItem()
+    {
+        StubGet("orders/e0c1a2b3-d4e5-6789-abcd-ef0123456789", "orders/show_emergency.json");
+
+        var response = await Client.Orders().FindAsync("e0c1a2b3-d4e5-6789-abcd-ef0123456789");
+        var order = response.Data;
+
+        order.Id.Should().Be("e0c1a2b3-d4e5-6789-abcd-ef0123456789");
+        order.Items.Should().HaveCount(1);
+        var item = order.Items![0].Should().BeOfType<EmergencyOrderItem>().Subject;
+        item.Qty.Should().Be(1);
+        item.EmergencyCallingServiceId.Should().Be("b6d9d793-578d-42d3-bc33-73dd8155e615");
+        item.Nrc.Should().Be("5.0");
+        item.Mrc.Should().Be("25.0");
+        item.ProratedMrc.Should().BeFalse();
+        item.BilledFrom.Should().Be("2026-04-16");
+        item.BilledTo.Should().Be("2026-05-15");
     }
 
     [Fact]
@@ -216,6 +237,33 @@ public class OrderTest : BaseTest
         created.CallbackUrl.Should().Be("https://example.com/callback");
         created.CallbackMethod.Should().Be(CallbackMethod.Post);
         created.Items.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void TestStatusHelperPending()
+    {
+        var order = new Order { Status = OrderStatus.Pending };
+        order.IsPending.Should().BeTrue();
+        order.IsCompleted.Should().BeFalse();
+        order.IsCancelled.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestStatusHelperCompleted()
+    {
+        var order = new Order { Status = OrderStatus.Completed };
+        order.IsCompleted.Should().BeTrue();
+        order.IsPending.Should().BeFalse();
+        order.IsCancelled.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestStatusHelperCancelled()
+    {
+        var order = new Order { Status = OrderStatus.Canceled };
+        order.IsCancelled.Should().BeTrue();
+        order.IsPending.Should().BeFalse();
+        order.IsCompleted.Should().BeFalse();
     }
 
     [Fact]

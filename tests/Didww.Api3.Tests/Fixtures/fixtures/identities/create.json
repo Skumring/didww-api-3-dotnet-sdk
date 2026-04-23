@@ -13,7 +13,7 @@
       "vat_id": "GB1234",
       "description": "test identity",
       "personal_tax_id": "987654321",
-      "identity_type": "Business",
+      "identity_type": "business",
       "created_at": "2021-04-01T14:56:34.637Z",
       "external_reference_id": "111",
       "verified": false
@@ -23,6 +23,16 @@
         "links": {
           "self": "https://sandbox-api.didww.com/v3/identities/e96ae7d1-11d5-42bc-a5c5-211f3c3788ae/relationships/country",
           "related": "https://sandbox-api.didww.com/v3/identities/e96ae7d1-11d5-42bc-a5c5-211f3c3788ae/country"
+        },
+        "data": {
+          "type": "countries",
+          "id": "1f6fc2bd-f081-4202-9b1a-d9cb88d942b9"
+        }
+      },
+      "birth_country": {
+        "links": {
+          "self": "https://sandbox-api.didww.com/v3/identities/e96ae7d1-11d5-42bc-a5c5-211f3c3788ae/relationships/birth_country",
+          "related": "https://sandbox-api.didww.com/v3/identities/e96ae7d1-11d5-42bc-a5c5-211f3c3788ae/birth_country"
         },
         "data": {
           "type": "countries",
