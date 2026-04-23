@@ -64,6 +64,26 @@ public class VoiceOutTrunkTest : BaseTest
     }
 
     [Fact]
+    public async Task TestFindVoiceOutTrunkWithIpOnlyAuth()
+    {
+        StubGet("voice_out_trunks/23fd58f9-9094-406c-bfd9-f4d25bda13c6", "voice_out_trunks/show_ip_only.json");
+
+        var response = await Client.VoiceOutTrunks().FindAsync("23fd58f9-9094-406c-bfd9-f4d25bda13c6");
+        var trunk = response.Data;
+
+        trunk.Id.Should().Be("23fd58f9-9094-406c-bfd9-f4d25bda13c6");
+        trunk.Name.Should().Be("SDK Test credentials_and_ip");
+        trunk.Status.Should().Be(VoiceOutTrunkStatus.Active);
+
+        // authentication_method must be IpOnly, not CredentialsAndIp
+        trunk.AuthenticationMethod.Should().BeOfType<IpOnlyAuthenticationMethod>();
+        trunk.AuthenticationMethod.Should().NotBeOfType<CredentialsAndIpAuthenticationMethod>();
+
+        var ipOnly = (IpOnlyAuthenticationMethod)trunk.AuthenticationMethod!;
+        ipOnly.AllowedSipIps.Should().ContainSingle().Which.Should().Be("203.0.113.1/32");
+    }
+
+    [Fact]
     public async Task TestCreateVoiceOutTrunkWithIpOnlyAuthenticationMethod()
     {
         StubPost("voice_out_trunks",
