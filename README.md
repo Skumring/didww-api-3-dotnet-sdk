@@ -209,21 +209,29 @@ await client.VoiceInTrunkGroups().CreateAsync(group);
 
 ### Voice Out Trunks
 
+Voice Out Trunks use a polymorphic `AuthenticationMethod` (2026-04-16). Three types are supported:
+
+- **`CredentialsAndIpAuthenticationMethod`** -- default method; `Username` and `Password` are server-generated and returned in the response.
+- **`TwilioAuthenticationMethod`** -- requires a `TwilioAccountSid`.
+- **`IpOnlyAuthenticationMethod`** -- read-only; can only be configured by DIDWW staff upon request. Cannot be set via the API.
+
 ```csharp
 using Didww.Api3.Resource.Configuration.AuthenticationMethod;
 
+// NOTE: 203.0.113.0/24 is RFC 5737 TEST-NET-3 documentation space.
+// Replace with the real CIDR of your SIP infrastructure.
 var trunk = new VoiceOutTrunk
 {
     Name = "My Outbound Trunk",
     OnCliMismatchAction = OnCliMismatchAction.ReplaceCli,
     DefaultDid = Did.Build("did-uuid"),
-    AuthenticationMethod = new IpOnlyAuthenticationMethod
+    AuthenticationMethod = new CredentialsAndIpAuthenticationMethod
     {
         AllowedSipIps = new List<string> { "203.0.113.0/24" },
-        TechPrefix = ""
     }
 };
-await client.VoiceOutTrunks().CreateAsync(trunk);
+var response = await client.VoiceOutTrunks().CreateAsync(trunk);
+// response.Data.AuthenticationMethod as CredentialsAndIpAuthenticationMethod -- Username/Password server-generated
 ```
 
 ### Orders

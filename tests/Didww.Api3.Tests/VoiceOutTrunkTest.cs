@@ -84,6 +84,53 @@ public class VoiceOutTrunkTest : BaseTest
     }
 
     [Fact]
+    public async Task TestFindVoiceOutTrunkWithTwilioAuth()
+    {
+        StubGet("voice_out_trunks/b5e701f4-ea15-4f9d-8f35-6a0bdce04385", "voice_out_trunks/show_twilio.json");
+
+        var response = await Client.VoiceOutTrunks().FindAsync("b5e701f4-ea15-4f9d-8f35-6a0bdce04385");
+        var trunk = response.Data;
+
+        trunk.Id.Should().Be("b5e701f4-ea15-4f9d-8f35-6a0bdce04385");
+        trunk.Name.Should().Be("SDK Test twilio");
+        trunk.Status.Should().Be(VoiceOutTrunkStatus.Active);
+
+        // authentication_method must be Twilio
+        trunk.AuthenticationMethod.Should().BeOfType<TwilioAuthenticationMethod>();
+
+        var twilio = (TwilioAuthenticationMethod)trunk.AuthenticationMethod!;
+        twilio.TwilioAccountSid.Should().Be("AC22222222222222222222222222222222");
+    }
+
+    [Fact]
+    public async Task TestCreateVoiceOutTrunkWithTwilioAuth()
+    {
+        StubPost("voice_out_trunks",
+            "voice_out_trunks/create_twilio_request.json", "voice_out_trunks/create_twilio.json");
+
+        var trunk = new VoiceOutTrunk
+        {
+            Name = "SDK Test twilio create",
+            OnCliMismatchAction = OnCliMismatchAction.RejectCall,
+            AuthenticationMethod = new TwilioAuthenticationMethod
+            {
+                TwilioAccountSid = "AC33333333333333333333333333333333"
+            }
+        };
+
+        var response = await Client.VoiceOutTrunks().CreateAsync(trunk);
+        var created = response.Data;
+
+        created.Id.Should().Be("507fa5a2-fd58-4c4d-a231-efba27f67c3a");
+        created.Name.Should().Be("SDK Test twilio create");
+        created.Status.Should().Be(VoiceOutTrunkStatus.Active);
+
+        created.AuthenticationMethod.Should().BeOfType<TwilioAuthenticationMethod>();
+        var twilio = (TwilioAuthenticationMethod)created.AuthenticationMethod!;
+        twilio.TwilioAccountSid.Should().Be("AC33333333333333333333333333333333");
+    }
+
+    [Fact]
     public async Task TestCreateVoiceOutTrunkWithIpOnlyAuthenticationMethod()
     {
         StubPost("voice_out_trunks",
