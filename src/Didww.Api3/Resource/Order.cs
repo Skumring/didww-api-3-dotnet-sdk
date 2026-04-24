@@ -22,7 +22,7 @@ public class Order : BaseResource
     [JsonIgnore]
     public bool IsCompleted => Status == OrderStatus.Completed;
     [JsonIgnore]
-    public bool IsCancelled => Status == OrderStatus.Canceled;
+    public bool IsCanceled => Status == OrderStatus.Canceled;
 
     [JsonProperty("description")]
     public string? Description { get; set; }

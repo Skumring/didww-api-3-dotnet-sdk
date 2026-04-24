@@ -15,7 +15,14 @@ This SDK uses [JsonApiSerializer](https://github.com/codecutout/JsonApiSerialize
 
 Read more https://doc.didww.com/api
 
-The client sends the `X-DIDWW-API-Version: 2026-04-16` header with each request.
+## API Version
+
+This SDK sends the `X-DIDWW-API-Version: 2026-04-16` header with every request by default.
+
+| NuGet Version | Branch | DIDWW API Version |
+|---------------|--------|-------------------|
+| **3.x** | [`main`](https://github.com/didww/didww-api-3-dotnet-sdk) | [`2026-04-16`](https://doc.didww.com/api3/2026-04-16/index.html) |
+| **2.x** | [`2022-05-10`](https://github.com/didww/didww-api-3-dotnet-sdk/tree/2022-05-10) | [`2022-05-10`](https://doc.didww.com/api3/2022-05-10/index.html) |
 
 ## Requirements
 
