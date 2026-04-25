@@ -169,7 +169,7 @@ using Didww.Api3.Resource.Enums;
 var sipConfig = new SipConfiguration
 {
     Username = "myuser",
-    Host = "192.168.1.1",
+    Host = "203.0.113.1",
     Port = 5060,
     CodecIds = new List<Codec> { Codec.PCMU, Codec.PCMA, Codec.G729 },
     TransportProtocolId = TransportProtocol.UDP,
