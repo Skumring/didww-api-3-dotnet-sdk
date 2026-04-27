@@ -13,7 +13,12 @@
     <PackageProjectUrl>https://github.com/didww/didww-api-3-dotnet-sdk</PackageProjectUrl>
     <RepositoryUrl>https://github.com/didww/didww-api-3-dotnet-sdk</RepositoryUrl>
     <PackageTags>didww;api;voip;did;telephony</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <InternalsVisibleTo Include="Didww.Api3.Tests" />
