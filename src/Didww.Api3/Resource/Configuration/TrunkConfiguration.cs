@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using Didww.Api3.Internal;
 using Didww.Api3.Resource.Enums;
 using Newtonsoft.Json;
 
@@ -259,10 +260,9 @@ public class SipConfiguration : TrunkConfiguration
     // ShouldSerialize* hooks above).
     public override string ToString()
     {
-        static string Mask(string? v) => string.IsNullOrEmpty(v) ? "null" : "[FILTERED]";
         return $"SipConfiguration(Username={Username ?? "null"}, Host={Host ?? "null"}, Port={Port?.ToString() ?? "null"}, " +
-               $"AuthPassword={Mask(AuthPassword)}, EnabledSipRegistration={EnabledSipRegistration?.ToString() ?? "null"}, " +
-               $"IncomingAuthUsername={Mask(IncomingAuthUsername)}, IncomingAuthPassword={Mask(IncomingAuthPassword)})";
+               $"AuthPassword={Redact.Mask(AuthPassword)}, EnabledSipRegistration={EnabledSipRegistration?.ToString() ?? "null"}, " +
+               $"IncomingAuthUsername={Redact.Mask(IncomingAuthUsername)}, IncomingAuthPassword={Redact.Mask(IncomingAuthPassword)})";
     }
 }
 

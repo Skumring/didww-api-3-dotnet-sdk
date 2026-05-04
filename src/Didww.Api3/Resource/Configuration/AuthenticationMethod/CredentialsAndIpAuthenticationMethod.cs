@@ -1,3 +1,4 @@
+using Didww.Api3.Internal;
 using Newtonsoft.Json;
 
 namespace Didww.Api3.Resource.Configuration.AuthenticationMethod;
@@ -28,9 +29,8 @@ public class CredentialsAndIpAuthenticationMethod : AuthenticationMethodBase
     // leak the server-generated credentials.
     public override string ToString()
     {
-        static string Mask(string? v) => string.IsNullOrEmpty(v) ? "null" : "[FILTERED]";
         var ips = AllowedSipIps == null ? "null" : $"[{string.Join(", ", AllowedSipIps)}]";
         return $"CredentialsAndIpAuthenticationMethod(AllowedSipIps={ips}, TechPrefix={TechPrefix ?? "null"}, " +
-               $"Username={Mask(Username)}, Password={Mask(Password)})";
+               $"Username={Redact.Mask(Username)}, Password={Redact.Mask(Password)})";
     }
 }
