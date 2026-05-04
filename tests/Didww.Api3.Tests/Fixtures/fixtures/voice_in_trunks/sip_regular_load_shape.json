@@ -1,0 +1,10 @@
+{
+  "type": "sip_configurations",
+  "attributes": {
+    "host": "sip.example.com",
+    "port": 5060,
+    "enabled_sip_registration": false,
+    "use_did_in_ruri": true,
+    "incoming_auth_username": "srv-user"
+  }
+}

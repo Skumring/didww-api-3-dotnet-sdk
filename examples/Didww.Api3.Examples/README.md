@@ -36,6 +36,7 @@ You can also use `--framework net9.0` if you have .NET 9 installed.
 | [`DidHistoryExample.cs`](DidHistoryExample.cs) | `did-history` | Lists DID ownership history (last 90 days, 2026-04-16). |
 | [`DidsExample.cs`](DidsExample.cs) | `dids` | Lists DIDs and demonstrates DID updates (2026-04-16 emergency fields and identity). |
 | [`TrunksExample.cs`](TrunksExample.cs) | `trunks` | Creates SIP and PSTN trunks, lists and deletes. |
+| [`VoiceInTrunkSipRegistrationExample.cs`](VoiceInTrunkSipRegistrationExample.cs) | `voice-in-trunk-sip-registration` | End-to-end SIP registration flow: create with `EnabledSipRegistration=true`, rename, disable by setting `Host`, re-enable by toggling the flag. The SDK keeps the dependent fields (`Host`, `Port`, `UseDidInRuri`) aligned with the server's validation rules automatically. |
 | [`TrunkGroupsExample.cs`](TrunkGroupsExample.cs) | `trunk-groups` | Creates trunk group with two trunks, lists, updates, deletes. |
 | [`VoiceOutTrunksExample.cs`](VoiceOutTrunksExample.cs) | `voice-out-trunks` | CRUD operations on outbound trunks. |
 | [`OrdersExample.cs`](OrdersExample.cs) | `orders` | Orders a DID by resolving SKU from DID group. |

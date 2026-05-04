@@ -112,6 +112,9 @@ try
         case "voice-in-trunk-groups":
             await VoiceInTrunkGroupsExample.RunAsync(client!);
             break;
+        case "voice-in-trunk-sip-registration":
+            await VoiceInTrunkSipRegistrationExample.RunAsync(client!);
+            break;
         case "all":
             await BalanceExample.RunAsync(client!);
             Console.WriteLine();

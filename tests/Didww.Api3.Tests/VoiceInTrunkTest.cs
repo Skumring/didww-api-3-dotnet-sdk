@@ -389,10 +389,10 @@ public class VoiceInTrunkTest : BaseTest
     [Fact]
     public async Task TestDisableSipRegistrationPatchSerializesAllThreeFields()
     {
-        // The disable flow is a multi-field PATCH because the server's V3
-        // form rejects (422) any request that flips EnabledSipRegistration
-        // to false without simultaneously providing a non-blank Host
-        // (model-level presence) and UseDidInRuri = false (form-level).
+        // The disable flow is a multi-field PATCH because the server
+        // returns 422 for any request that flips EnabledSipRegistration
+        // to false without simultaneously providing a non-blank Host and
+        // UseDidInRuri = false.
         // Lock those three fields in the same request body — if EnabledSip-
         // Registration ever becomes a plain `bool`, the explicit `false`
         // will silently drop and this test will fail.
@@ -457,6 +457,96 @@ public class VoiceInTrunkTest : BaseTest
         var trunk = JsonConvert.DeserializeObject<VoiceInTrunk>(json, settings);
         trunk.Should().NotBeNull();
         trunk!.Configuration.Should().BeNull();
+    }
+
+    [Fact]
+    public void TestEnablingSipRegistrationClearsHostAndPort()
+    {
+        var cfg = new SipConfiguration { Host = "sip.example.com", Port = 5060 };
+        cfg.EnabledSipRegistration = true;
+        cfg.Host.Should().BeNull();
+        cfg.Port.Should().BeNull();
+        cfg.EnabledSipRegistration.Should().BeTrue();
+    }
+
+    [Fact]
+    public void TestDisablingSipRegistrationForcesUseDidInRuriToFalse()
+    {
+        var cfg = new SipConfiguration { EnabledSipRegistration = true, UseDidInRuri = true };
+        cfg.EnabledSipRegistration = false;
+        cfg.EnabledSipRegistration.Should().BeFalse();
+        cfg.UseDidInRuri.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestSettingHostDisablesSipRegistrationAndForcesUseDidInRuriToFalse()
+    {
+        var cfg = new SipConfiguration { EnabledSipRegistration = true, UseDidInRuri = true };
+        cfg.Host = "sip.example.com";
+        cfg.Host.Should().Be("sip.example.com");
+        cfg.EnabledSipRegistration.Should().BeFalse();
+        cfg.UseDidInRuri.Should().BeFalse();
+    }
+
+    [Fact]
+    public void TestEnablingSipRegistrationLeavesUseDidInRuriUntouched()
+    {
+        var cfg = new SipConfiguration { EnabledSipRegistration = true, UseDidInRuri = true };
+        cfg.EnabledSipRegistration = true;
+        cfg.UseDidInRuri.Should().BeTrue();
+    }
+
+    [Fact]
+    public void TestSipConfigurationWirePayloadReflectsCascadedState()
+    {
+        // Mirror dimension: after the cascade fires from a property setter,
+        // the on-the-wire payload (Newtonsoft.Json output) must contain the
+        // cascaded field values — not just the in-memory state. This is the
+        // wire-format check; the cascade-state check is covered separately.
+        var cfg = new SipConfiguration
+        {
+            EnabledSipRegistration = true,
+            UseDidInRuri = true,
+        };
+        cfg.Host = "sip.example.com"; // triggers the cascade
+        var json = JsonConvert.SerializeObject(cfg);
+        json.Should().Contain("\"host\":\"sip.example.com\"");
+        json.Should().Contain("\"enabled_sip_registration\":false");
+        json.Should().Contain("\"use_did_in_ruri\":false");
+    }
+
+    [Fact]
+    public void TestDeserializingServerResponseDoesNotTriggerCascade()
+    {
+        // Server-returned shapes (sip_registration enabled with host: null,
+        // or sip_registration disabled with host: present) are already
+        // consistent — the cascade must not run during deserialization
+        // because the property-set order is up to Newtonsoft.Json and
+        // would clobber valid combinations.
+        var token = Newtonsoft.Json.Linq.JToken.Parse(LoadFixture("voice_in_trunks/sip_regular_load_shape.json"));
+        var attrs = token["attributes"]!;
+        var serializer = JsonSerializer.CreateDefault();
+        var config = attrs.ToObject<SipConfiguration>(serializer)!;
+        config.Host.Should().Be("sip.example.com");
+        config.Port.Should().Be(5060);
+        config.EnabledSipRegistration.Should().BeFalse();
+        config.UseDidInRuri.Should().BeTrue("deserialization must not cascade UseDidInRuri to false");
+    }
+
+    [Fact]
+    public void TestEnablingSipRegistrationOnFreshConfigEmitsHostAndPortAsNullOnWire()
+    {
+        // Regression: PATCH against an existing trunk that already has a
+        // host/port persisted server-side. The local SipConfiguration starts
+        // empty (Host/Port never assigned), so the cascade must still emit
+        // "host": null and "port": null on the wire — otherwise the server
+        // merges the new EnabledSipRegistration=true with the persisted
+        // host and rejects with 422.
+        var cfg = new SipConfiguration { EnabledSipRegistration = true };
+        var json = JsonConvert.SerializeObject(cfg);
+        json.Should().Contain("\"host\":null");
+        json.Should().Contain("\"port\":null");
+        json.Should().Contain("\"enabled_sip_registration\":true");
     }
 
     [Fact]

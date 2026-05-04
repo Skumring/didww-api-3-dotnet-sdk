@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using Didww.Api3.Resource.Enums;
 using Newtonsoft.Json;
 
@@ -14,14 +15,69 @@ public class SipConfiguration : TrunkConfiguration
     [JsonIgnore]
     public override string ConfigurationType => "sip_configurations";
 
+    // Suppresses the auto-cascade in property setters during JSON
+    // deserialization. The server's response shape is already consistent —
+    // running the cascade against it would clobber valid combinations
+    // (e.g. EnabledSipRegistration: true would null out a Host the server
+    // had set before the deserializer reached EnabledSipRegistration).
+    // The cascade logic only fires when the application sets a property.
+    [JsonIgnore]
+    private bool _isDeserializing;
+
+    [OnDeserializing]
+    internal void OnDeserializing(StreamingContext _) => _isDeserializing = true;
+
+    [OnDeserialized]
+    internal void OnDeserialized(StreamingContext _) => _isDeserializing = false;
+
     [JsonProperty("username")]
     public string? Username { get; set; }
 
-    [JsonProperty("host")]
-    public string? Host { get; set; }
+    private string? _host;
+    private int? _port;
+    private bool _hostExplicit;
+    private bool _portExplicit;
 
-    [JsonProperty("port")]
-    public int? Port { get; set; }
+    /// <summary>
+    /// Setting <see cref="Host"/> to a non-null value cascades
+    /// <see cref="EnabledSipRegistration"/> = false and
+    /// <see cref="UseDidInRuri"/> = false because the server requires those
+    /// states whenever <c>host</c> is present (API 2026-04-16). The wire
+    /// payload reflects the cascaded state.
+    /// </summary>
+    [JsonProperty("host", NullValueHandling = NullValueHandling.Include)]
+    public string? Host
+    {
+        get => _host;
+        set
+        {
+            if (!_isDeserializing)
+            {
+                _hostExplicit = true;
+                if (value != null)
+                {
+                    _enabledSipRegistration = false;
+                    UseDidInRuri = false;
+                }
+            }
+            _host = value;
+        }
+    }
+
+    [JsonProperty("port", NullValueHandling = NullValueHandling.Include)]
+    public int? Port
+    {
+        get => _port;
+        set
+        {
+            if (!_isDeserializing)
+                _portExplicit = true;
+            _port = value;
+        }
+    }
+
+    public bool ShouldSerializeHost() => _hostExplicit;
+    public bool ShouldSerializePort() => _portExplicit;
 
     [JsonProperty("codec_ids")]
     public List<Codec>? CodecIds { get; set; }
@@ -120,8 +176,51 @@ public class SipConfiguration : TrunkConfiguration
     /// <see cref="UseDidInRuri"/> to <c>false</c>, or the server returns 422.
     /// (API 2026-04-16)
     /// </summary>
+    private bool? _enabledSipRegistration;
+
+    /// <summary>
+    /// Setting <see cref="EnabledSipRegistration"/> cascades dependent fields
+    /// to satisfy the server's validation rules (API 2026-04-16):
+    /// <list type="bullet">
+    /// <item>
+    /// <c>true</c> -> nullify <see cref="Host"/> / <see cref="Port"/> and
+    /// emit them as <c>null</c> on the wire (host/port must be blank when
+    /// sip_registration is on). The wire emission fires unconditionally so
+    /// PATCH against an existing trunk that already has host/port set
+    /// server-side is told to clear them.
+    /// </item>
+    /// <item>
+    /// <c>false</c> -> force <see cref="UseDidInRuri"/> = false (must be
+    /// disabled when sip_registration is disabled).
+    /// </item>
+    /// </list>
+    /// </summary>
     [JsonProperty("enabled_sip_registration")]
-    public bool? EnabledSipRegistration { get; set; }
+    public bool? EnabledSipRegistration
+    {
+        get => _enabledSipRegistration;
+        set
+        {
+            if (!_isDeserializing)
+            {
+                if (value == true)
+                {
+                    // Always emit host: null and port: null on the wire so a
+                    // PATCH against an existing trunk that already has them
+                    // persisted on the server side is told to clear them.
+                    _host = null;
+                    _hostExplicit = true;
+                    _port = null;
+                    _portExplicit = true;
+                }
+                else if (value == false)
+                {
+                    UseDidInRuri = false;
+                }
+            }
+            _enabledSipRegistration = value;
+        }
+    }
 
     [JsonProperty("use_did_in_ruri")]
     public bool? UseDidInRuri { get; set; }
