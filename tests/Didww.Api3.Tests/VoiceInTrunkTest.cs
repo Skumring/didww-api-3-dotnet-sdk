@@ -458,4 +458,37 @@ public class VoiceInTrunkTest : BaseTest
         trunk.Should().NotBeNull();
         trunk!.Configuration.Should().BeNull();
     }
+
+    [Fact]
+    public void TestSipConfigurationToStringRedactsCredentials()
+    {
+        // Default ToString output is what shows up in default logging /
+        // debugger inspection / unhandled exception traces — none of those
+        // contexts should ever expose SIP credentials in plaintext.
+        var loadedJson = """
+        {
+            "type": "sip_configurations",
+            "attributes": {
+                "username": "alice",
+                "host": "sip.example.com",
+                "auth_password": "s3cret-Pa55",
+                "enabled_sip_registration": true,
+                "incoming_auth_username": "srv-user-xyz",
+                "incoming_auth_password": "srv-pass-xyz"
+            }
+        }
+        """;
+        var token = Newtonsoft.Json.Linq.JToken.Parse(loadedJson);
+        var attrs = token["attributes"]!;
+        var serializer = JsonSerializer.CreateDefault();
+        var config = attrs.ToObject<SipConfiguration>(serializer)!;
+
+        var output = config.ToString();
+        output.Should().Contain("alice", "non-sensitive Username should still be visible");
+        output.Should().Contain("sip.example.com", "non-sensitive Host should still be visible");
+        output.Should().NotContain("s3cret-Pa55");
+        output.Should().NotContain("srv-user-xyz");
+        output.Should().NotContain("srv-pass-xyz");
+        output.Should().Contain("[FILTERED]");
+    }
 }

@@ -153,6 +153,18 @@ public class SipConfiguration : TrunkConfiguration
     // they return false.
     public bool ShouldSerializeIncomingAuthUsername() => false;
     public bool ShouldSerializeIncomingAuthPassword() => false;
+
+    // Override ToString so default logging / debugger / error reports never
+    // leak SIP credentials. The wire payload is unaffected — Newtonsoft.Json
+    // serializes the real values (or strips read-only ones via the
+    // ShouldSerialize* hooks above).
+    public override string ToString()
+    {
+        static string Mask(string? v) => string.IsNullOrEmpty(v) ? "null" : "[FILTERED]";
+        return $"SipConfiguration(Username={Username ?? "null"}, Host={Host ?? "null"}, Port={Port?.ToString() ?? "null"}, " +
+               $"AuthPassword={Mask(AuthPassword)}, EnabledSipRegistration={EnabledSipRegistration?.ToString() ?? "null"}, " +
+               $"IncomingAuthUsername={Mask(IncomingAuthUsername)}, IncomingAuthPassword={Mask(IncomingAuthPassword)})";
+    }
 }
 
 public class PstnConfiguration : TrunkConfiguration

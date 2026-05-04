@@ -23,4 +23,14 @@ public class CredentialsAndIpAuthenticationMethod : AuthenticationMethodBase
 
     [JsonProperty("password")]
     public string? Password { get; set; }
+
+    // Override ToString so default logging / debugger / error reports never
+    // leak the server-generated credentials.
+    public override string ToString()
+    {
+        static string Mask(string? v) => string.IsNullOrEmpty(v) ? "null" : "[FILTERED]";
+        var ips = AllowedSipIps == null ? "null" : $"[{string.Join(", ", AllowedSipIps)}]";
+        return $"CredentialsAndIpAuthenticationMethod(AllowedSipIps={ips}, TechPrefix={TechPrefix ?? "null"}, " +
+               $"Username={Mask(Username)}, Password={Mask(Password)})";
+    }
 }
