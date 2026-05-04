@@ -103,6 +103,56 @@ public class SipConfiguration : TrunkConfiguration
 
     [JsonProperty("diversion_relay_policy")]
     public DiversionRelayPolicy? DiversionRelayPolicy { get; set; }
+
+    [JsonProperty("diversion_inject_mode")]
+    public DiversionInjectMode? DiversionInjectMode { get; set; }
+
+    [JsonProperty("network_protocol_priority")]
+    public NetworkProtocolPriority? NetworkProtocolPriority { get; set; }
+
+    /// <summary>
+    /// Whether SIP registration is enabled. When <c>true</c> the server
+    /// generates <see cref="IncomingAuthUsername"/> /
+    /// <see cref="IncomingAuthPassword"/> and the trunk's
+    /// <see cref="Host"/> and <see cref="Port"/> must be left blank. When
+    /// disabling sip registration on an existing trunk, the same PATCH must
+    /// also set <see cref="Host"/> to a non-blank value and
+    /// <see cref="UseDidInRuri"/> to <c>false</c>, or the server returns 422.
+    /// (API 2026-04-16)
+    /// </summary>
+    [JsonProperty("enabled_sip_registration")]
+    public bool? EnabledSipRegistration { get; set; }
+
+    [JsonProperty("use_did_in_ruri")]
+    public bool? UseDidInRuri { get; set; }
+
+    [JsonProperty("cnam_lookup")]
+    public bool? CnamLookup { get; set; }
+
+    /// <summary>
+    /// Server-generated SIP authentication username, returned in responses
+    /// when <see cref="EnabledSipRegistration"/> is <c>true</c>.
+    /// Read-only: the API rejects any write attempt with HTTP 400 "Param not allowed".
+    /// (API 2026-04-16)
+    /// </summary>
+    [JsonProperty("incoming_auth_username")]
+    public string? IncomingAuthUsername { get; private set; }
+
+    /// <summary>
+    /// Server-generated SIP authentication password, returned in responses
+    /// when <see cref="EnabledSipRegistration"/> is <c>true</c>.
+    /// Read-only: the API rejects any write attempt with HTTP 400 "Param not allowed".
+    /// (API 2026-04-16)
+    /// </summary>
+    [JsonProperty("incoming_auth_password")]
+    public string? IncomingAuthPassword { get; private set; }
+
+    // Read-only fields: deserialize from server responses but never serialize
+    // back into POST/PATCH request bodies. Newtonsoft.Json discovers these
+    // ShouldSerialize* methods via reflection and skips the property when
+    // they return false.
+    public bool ShouldSerializeIncomingAuthUsername() => false;
+    public bool ShouldSerializeIncomingAuthPassword() => false;
 }
 
 public class PstnConfiguration : TrunkConfiguration
