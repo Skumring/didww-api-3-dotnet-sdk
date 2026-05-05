@@ -8,10 +8,13 @@
     <PackageId>Didww.Api3</PackageId>
     <Version>3.0.0</Version>
     <Authors>DIDWW</Authors>
+    <Company>DIDWW</Company>
+    <Copyright>Copyright (c) DIDWW</Copyright>
     <Description>DIDWW API v3 SDK for .NET</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/didww/didww-api-3-dotnet-sdk</PackageProjectUrl>
     <RepositoryUrl>https://github.com/didww/didww-api-3-dotnet-sdk</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageTags>didww;api;voip;did;telephony</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
