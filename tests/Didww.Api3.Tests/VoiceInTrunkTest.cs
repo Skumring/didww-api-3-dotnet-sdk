@@ -217,7 +217,16 @@ public class VoiceInTrunkTest : BaseTest
             },
             MediaEncryptionMode = MediaEncryptionMode.Zrtp,
             StirShakenMode = StirShakenMode.Pai,
-            AllowedRtpIps = new List<string> { "203.0.113.1" }
+            AllowedRtpIps = new List<string> { "203.0.113.1" },
+            // API 2026-04-16 writable attributes
+            DiversionRelayPolicy = DiversionRelayPolicy.AsIs,
+            DiversionInjectMode = DiversionInjectMode.DidNumber,
+            NetworkProtocolPriority = NetworkProtocolPriority.ForceIpv4,
+            CnamLookup = true,
+            // use_did_in_ruri must stay false unless EnabledSipRegistration
+            // is also true (server returns 422 otherwise).  Setting it here
+            // is redundant against the default but documents the field.
+            UseDidInRuri = false,
         };
 
         var trunk = new VoiceInTrunk
@@ -235,6 +244,180 @@ public class VoiceInTrunkTest : BaseTest
         config.ReroutingDisconnectCodeIds![0].Should().Be(ReroutingDisconnectCode.SIP_400_BAD_REQUEST);
         config.ReroutingDisconnectCodeIds[^1].Should().Be(ReroutingDisconnectCode.RINGING_TIMEOUT);
         config.ReroutingDisconnectCodeIds.Should().Contain(ReroutingDisconnectCode.SIP_480_TEMPORARILY_UNAVAILABLE);
+    }
+
+    [Fact]
+    public async Task TestListSipRegistrationAttributesNoRegistration()
+    {
+        StubGet("voice_in_trunks", "voice_in_trunks/index.json");
+
+        var response = await Client.VoiceInTrunks().ListAsync();
+        var sipTrunk = response.Data.FirstOrDefault(t => t.Configuration is SipConfiguration);
+        sipTrunk.Should().NotBeNull();
+
+        var config = (SipConfiguration)sipTrunk!.Configuration!;
+        config.DiversionInjectMode.Should().Be(DiversionInjectMode.None);
+        config.NetworkProtocolPriority.Should().Be(NetworkProtocolPriority.Any);
+        config.EnabledSipRegistration.Should().BeFalse();
+        config.UseDidInRuri.Should().BeFalse();
+        config.CnamLookup.Should().BeFalse();
+        config.IncomingAuthUsername.Should().BeNull();
+        config.IncomingAuthPassword.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task TestShowSipRegistrationEnabledIncludesIncomingAuth()
+    {
+        var id = "f1c5d834-1d1f-49cc-8e88-3f73c0a35b31";
+        StubGet($"voice_in_trunks/{id}", "voice_in_trunks/show_sip_registration.json");
+
+        var response = await Client.VoiceInTrunks().FindAsync(id);
+        var trunk = response.Data;
+
+        var config = (SipConfiguration)trunk.Configuration!;
+        config.EnabledSipRegistration.Should().BeTrue();
+        config.UseDidInRuri.Should().BeTrue();
+        config.CnamLookup.Should().BeTrue();
+        config.DiversionInjectMode.Should().Be(DiversionInjectMode.DidNumber);
+        config.NetworkProtocolPriority.Should().Be(NetworkProtocolPriority.PreferIpv4);
+        config.IncomingAuthUsername.Should().Be("srv_generated_user");
+        config.IncomingAuthPassword.Should().Be("srv_generated_pass");
+    }
+
+    [Fact]
+    public async Task TestCreateSipRegistrationTrunkSerializesWritableAttrsOnly()
+    {
+        StubPost("voice_in_trunks",
+            "voice_in_trunks/create_sip_registration_request.json",
+            "voice_in_trunks/show_sip_registration.json");
+
+        // Note: Username/Host/Port are intentionally NOT set — the server
+        // requires them blank when EnabledSipRegistration is true (returns
+        // 422 otherwise). Verified against sandbox.
+        var sipConfig = new SipConfiguration
+        {
+            EnabledSipRegistration = true,
+            UseDidInRuri = true,
+            CnamLookup = true,
+            DiversionInjectMode = DiversionInjectMode.DidNumber,
+            NetworkProtocolPriority = NetworkProtocolPriority.PreferIpv4
+        };
+
+        var trunk = new VoiceInTrunk
+        {
+            Name = "sip registration trunk",
+            Configuration = sipConfig
+        };
+
+        var response = await Client.VoiceInTrunks().CreateAsync(trunk);
+        response.Data.Id.Should().Be("f1c5d834-1d1f-49cc-8e88-3f73c0a35b31");
+
+        // The server returns 201 with server-generated incoming_auth_*
+        // credentials. The SDK must surface those populated values to the
+        // caller (NOT null) so users can wire them into their endpoints.
+        var created = (SipConfiguration)response.Data.Configuration!;
+        created.IncomingAuthUsername.Should().NotBeNullOrEmpty();
+        created.IncomingAuthPassword.Should().NotBeNullOrEmpty();
+    }
+
+    [Fact]
+    public void TestIncomingAuthFieldsAreNotSerialized()
+    {
+        // Simulate a SipConfiguration loaded from a server response with
+        // populated incoming_auth_* values, then serialize it standalone
+        // and assert those keys never appear in the output.
+        var json = """
+        {
+            "type": "sip_configurations",
+            "attributes": {
+                "username": "u",
+                "host": "203.0.113.1",
+                "enabled_sip_registration": true,
+                "incoming_auth_username": "srv_user",
+                "incoming_auth_password": "srv_pass"
+            }
+        }
+        """;
+
+        var token = Newtonsoft.Json.Linq.JToken.Parse(json);
+        var attrs = token["attributes"]!;
+        var serializer = JsonSerializer.CreateDefault();
+        var loaded = attrs.ToObject<SipConfiguration>(serializer)!;
+
+        loaded.IncomingAuthUsername.Should().Be("srv_user");
+        loaded.IncomingAuthPassword.Should().Be("srv_pass");
+
+        var output = JsonConvert.SerializeObject(loaded);
+        output.Should().NotContain("incoming_auth_username");
+        output.Should().NotContain("incoming_auth_password");
+    }
+
+    [Fact]
+    public async Task TestRoundTripPatchDoesNotEchoIncomingAuth()
+    {
+        var id = "f1c5d834-1d1f-49cc-8e88-3f73c0a35b31";
+
+        // Step 1: load the trunk via GET — the resulting SipConfiguration
+        // has incoming_auth_username / incoming_auth_password populated.
+        StubGet($"voice_in_trunks/{id}", "voice_in_trunks/show_sip_registration.json");
+        var loaded = await Client.VoiceInTrunks().FindAsync(id);
+        var loadedConfig = (SipConfiguration)loaded.Data.Configuration!;
+        loadedConfig.IncomingAuthUsername.Should().NotBeNull();
+        loadedConfig.IncomingAuthPassword.Should().NotBeNull();
+
+        // Step 2: PATCH the trunk reusing the loaded configuration.
+        StubPatch($"voice_in_trunks/{id}", "voice_in_trunks/show_sip_registration.json");
+
+        var trunk = VoiceInTrunk.Build(id);
+        trunk.Configuration = loadedConfig;
+
+        var response = await Client.VoiceInTrunks().UpdateAsync(trunk);
+        response.Data.Id.Should().Be(id);
+
+        // Step 3: assert the captured PATCH request body does not contain
+        // incoming_auth_username / incoming_auth_password — the API rejects
+        // those keys with 400 Param not allowed, so the SDK must strip them.
+        var patchRequests = WireMock.LogEntries
+            .Where(e => e.RequestMessage.Method == "PATCH")
+            .ToList();
+        patchRequests.Should().HaveCount(1);
+        var body = patchRequests[0].RequestMessage.Body ?? string.Empty;
+        body.Should().NotContain("incoming_auth_username");
+        body.Should().NotContain("incoming_auth_password");
+    }
+
+    [Fact]
+    public async Task TestDisableSipRegistrationPatchSerializesAllThreeFields()
+    {
+        // The disable flow is a multi-field PATCH because the server
+        // returns 422 for any request that flips EnabledSipRegistration
+        // to false without simultaneously providing a non-blank Host and
+        // UseDidInRuri = false.
+        // Lock those three fields in the same request body — if EnabledSip-
+        // Registration ever becomes a plain `bool`, the explicit `false`
+        // will silently drop and this test will fail.
+        var id = "57a939dd-1600-41a6-80b1-f624e22a1f4c";
+        StubPatch($"voice_in_trunks/{id}",
+            "voice_in_trunks/disable_sip_registration_request.json",
+            "voice_in_trunks/disable_sip_registration.json");
+
+        var sipConfig = new SipConfiguration
+        {
+            EnabledSipRegistration = false,
+            UseDidInRuri = false,
+            Host = "203.0.113.10"
+        };
+
+        var trunk = VoiceInTrunk.Build(id);
+        trunk.Configuration = sipConfig;
+
+        var response = await Client.VoiceInTrunks().UpdateAsync(trunk);
+        var updated = (SipConfiguration)response.Data.Configuration!;
+        updated.EnabledSipRegistration.Should().BeFalse();
+        updated.UseDidInRuri.Should().BeFalse();
+        updated.Host.Should().Be("203.0.113.10");
+        updated.IncomingAuthUsername.Should().BeNull();
+        updated.IncomingAuthPassword.Should().BeNull();
     }
 
     [Fact]
@@ -274,5 +457,137 @@ public class VoiceInTrunkTest : BaseTest
         var trunk = JsonConvert.DeserializeObject<VoiceInTrunk>(json, settings);
         trunk.Should().NotBeNull();
         trunk!.Configuration.Should().BeNull();
+    }
+
+    [Fact]
+    public void TestEnablingSipRegistrationClearsHostAndPortOnWire()
+    {
+        // The cascade is wire-time (in SipConfigurationJsonConverter), not
+        // setter-side. In-memory the user's struct stays as written; the
+        // converter applies the server-required invariant only at serialize.
+        var cfg = new SipConfiguration { Host = "sip.example.com", Port = 5060, EnabledSipRegistration = true };
+        var json = JsonConvert.SerializeObject(cfg);
+        json.Should().Contain("\"host\":null");
+        json.Should().Contain("\"port\":null");
+        json.Should().Contain("\"enabled_sip_registration\":true");
+    }
+
+    [Fact]
+    public void TestDisablingSipRegistrationForcesUseDidInRuriToFalseOnWire()
+    {
+        var cfg = new SipConfiguration { EnabledSipRegistration = false, UseDidInRuri = true };
+        var json = JsonConvert.SerializeObject(cfg);
+        json.Should().Contain("\"enabled_sip_registration\":false");
+        json.Should().Contain("\"use_did_in_ruri\":false");
+    }
+
+    [Fact]
+    public void TestSettingHostDisablesSipRegistrationAndForcesUseDidInRuriToFalseOnWire()
+    {
+        // When Host is set without an explicit EnabledSipRegistration=true,
+        // the converter forces enabled_sip_registration=false and
+        // use_did_in_ruri=false on the wire — matching the server's
+        // requirement when host is present.
+        var cfg = new SipConfiguration { UseDidInRuri = true, Host = "sip.example.com" };
+        var json = JsonConvert.SerializeObject(cfg);
+        json.Should().Contain("\"host\":\"sip.example.com\"");
+        json.Should().Contain("\"enabled_sip_registration\":false");
+        json.Should().Contain("\"use_did_in_ruri\":false");
+    }
+
+    [Fact]
+    public void TestEnablingSipRegistrationLeavesUseDidInRuriUntouchedOnWire()
+    {
+        var cfg = new SipConfiguration { EnabledSipRegistration = true, UseDidInRuri = true };
+        var json = JsonConvert.SerializeObject(cfg);
+        json.Should().Contain("\"enabled_sip_registration\":true");
+        json.Should().Contain("\"use_did_in_ruri\":true");
+    }
+
+    [Fact]
+    public void TestSipConfigurationWirePayloadReflectsCascadedState()
+    {
+        // Wire-format integration check: Host-driven cascade fires through
+        // SipConfigurationJsonConverter (Host non-blank ⇒ enabled=false,
+        // useDidInRuri=false), and the read-only credential fields are
+        // stripped. EnabledSipRegistration is left null in the input so the
+        // Host rule applies — see TestEnablingSipRegistrationClearsHostAnd-
+        // PortOnWire for the precedence-of-Enabled case.
+        var cfg = new SipConfiguration
+        {
+            UseDidInRuri = true,
+            Host = "sip.example.com",
+        };
+        var json = JsonConvert.SerializeObject(cfg);
+        json.Should().Contain("\"host\":\"sip.example.com\"");
+        json.Should().Contain("\"enabled_sip_registration\":false");
+        json.Should().Contain("\"use_did_in_ruri\":false");
+    }
+
+    [Fact]
+    public void TestDeserializingServerResponseDoesNotTriggerCascade()
+    {
+        // Server-returned shapes (sip_registration enabled with host: null,
+        // or sip_registration disabled with host: present) are already
+        // consistent — the cascade must not run during deserialization
+        // because the property-set order is up to Newtonsoft.Json and
+        // would clobber valid combinations.
+        var token = Newtonsoft.Json.Linq.JToken.Parse(LoadFixture("voice_in_trunks/sip_regular_load_shape.json"));
+        var attrs = token["attributes"]!;
+        var serializer = JsonSerializer.CreateDefault();
+        var config = attrs.ToObject<SipConfiguration>(serializer)!;
+        config.Host.Should().Be("sip.example.com");
+        config.Port.Should().Be(5060);
+        config.EnabledSipRegistration.Should().BeFalse();
+        config.UseDidInRuri.Should().BeTrue("deserialization must not cascade UseDidInRuri to false");
+    }
+
+    [Fact]
+    public void TestEnablingSipRegistrationOnFreshConfigEmitsHostAndPortAsNullOnWire()
+    {
+        // Regression: PATCH against an existing trunk that already has a
+        // host/port persisted server-side. The local SipConfiguration starts
+        // empty (Host/Port never assigned), so the cascade must still emit
+        // "host": null and "port": null on the wire — otherwise the server
+        // merges the new EnabledSipRegistration=true with the persisted
+        // host and rejects with 422.
+        var cfg = new SipConfiguration { EnabledSipRegistration = true };
+        var json = JsonConvert.SerializeObject(cfg);
+        json.Should().Contain("\"host\":null");
+        json.Should().Contain("\"port\":null");
+        json.Should().Contain("\"enabled_sip_registration\":true");
+    }
+
+    [Fact]
+    public void TestSipConfigurationToStringRedactsCredentials()
+    {
+        // Default ToString output is what shows up in default logging /
+        // debugger inspection / unhandled exception traces — none of those
+        // contexts should ever expose SIP credentials in plaintext.
+        var loadedJson = """
+        {
+            "type": "sip_configurations",
+            "attributes": {
+                "username": "alice",
+                "host": "sip.example.com",
+                "auth_password": "s3cret-Pa55",
+                "enabled_sip_registration": true,
+                "incoming_auth_username": "srv-user-xyz",
+                "incoming_auth_password": "srv-pass-xyz"
+            }
+        }
+        """;
+        var token = Newtonsoft.Json.Linq.JToken.Parse(loadedJson);
+        var attrs = token["attributes"]!;
+        var serializer = JsonSerializer.CreateDefault();
+        var config = attrs.ToObject<SipConfiguration>(serializer)!;
+
+        var output = config.ToString();
+        output.Should().Contain("alice", "non-sensitive Username should still be visible");
+        output.Should().Contain("sip.example.com", "non-sensitive Host should still be visible");
+        output.Should().NotContain("s3cret-Pa55");
+        output.Should().NotContain("srv-user-xyz");
+        output.Should().NotContain("srv-pass-xyz");
+        output.Should().Contain("[FILTERED]");
     }
 }

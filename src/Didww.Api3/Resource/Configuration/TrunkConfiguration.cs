@@ -1,3 +1,4 @@
+using Didww.Api3.Internal;
 using Didww.Api3.Resource.Enums;
 using Newtonsoft.Json;
 
@@ -9,6 +10,18 @@ public abstract class TrunkConfiguration
     public abstract string ConfigurationType { get; }
 }
 
+/// <summary>
+/// SIP trunk configuration. Plain data class — server-enforced multi-field
+/// invariants (API 2026-04-16) are applied at serialization time by
+/// <see cref="SipConfigurationJsonConverter"/>, not by setter side-effects.
+/// Setting <c>EnabledSipRegistration = true</c> emits <c>"host":null</c> /
+/// <c>"port":null</c> on the wire; setting <c>Host</c> to a non-empty value
+/// forces <c>enabled_sip_registration</c> and <c>use_did_in_ruri</c> to
+/// false on the wire. Read-only credential fields
+/// (<see cref="IncomingAuthUsername"/> / <see cref="IncomingAuthPassword"/>)
+/// are stripped from POST/PATCH bodies by the same converter.
+/// </summary>
+[JsonConverter(typeof(SipConfigurationJsonConverter))]
 public class SipConfiguration : TrunkConfiguration
 {
     [JsonIgnore]
@@ -103,6 +116,56 @@ public class SipConfiguration : TrunkConfiguration
 
     [JsonProperty("diversion_relay_policy")]
     public DiversionRelayPolicy? DiversionRelayPolicy { get; set; }
+
+    [JsonProperty("diversion_inject_mode")]
+    public DiversionInjectMode? DiversionInjectMode { get; set; }
+
+    [JsonProperty("network_protocol_priority")]
+    public NetworkProtocolPriority? NetworkProtocolPriority { get; set; }
+
+    /// <summary>
+    /// Whether SIP registration is enabled. When <c>true</c> the server
+    /// generates <see cref="IncomingAuthUsername"/> /
+    /// <see cref="IncomingAuthPassword"/> and the trunk's
+    /// <see cref="Host"/> and <see cref="Port"/> must be left blank.
+    /// (API 2026-04-16)
+    /// </summary>
+    [JsonProperty("enabled_sip_registration")]
+    public bool? EnabledSipRegistration { get; set; }
+
+    [JsonProperty("use_did_in_ruri")]
+    public bool? UseDidInRuri { get; set; }
+
+    [JsonProperty("cnam_lookup")]
+    public bool? CnamLookup { get; set; }
+
+    /// <summary>
+    /// Server-generated SIP authentication username, returned in responses
+    /// when <see cref="EnabledSipRegistration"/> is <c>true</c>.
+    /// Read-only: the API rejects any write attempt with HTTP 400 "Param not allowed".
+    /// (API 2026-04-16)
+    /// </summary>
+    [JsonProperty("incoming_auth_username")]
+    public string? IncomingAuthUsername { get; set; }
+
+    /// <summary>
+    /// Server-generated SIP authentication password, returned in responses
+    /// when <see cref="EnabledSipRegistration"/> is <c>true</c>.
+    /// Read-only: the API rejects any write attempt with HTTP 400 "Param not allowed".
+    /// (API 2026-04-16)
+    /// </summary>
+    [JsonProperty("incoming_auth_password")]
+    public string? IncomingAuthPassword { get; set; }
+
+    // Default ToString redacts credentials so logs / debugger / unhandled
+    // exception traces never leak them. Wire payload is unaffected — the
+    // converter writes the real values (and strips read-only ones).
+    public override string ToString()
+    {
+        return $"SipConfiguration(Username={Username ?? "null"}, Host={Host ?? "null"}, Port={Port?.ToString() ?? "null"}, " +
+               $"AuthPassword={Redact.Mask(AuthPassword)}, EnabledSipRegistration={EnabledSipRegistration?.ToString() ?? "null"}, " +
+               $"IncomingAuthUsername={Redact.Mask(IncomingAuthUsername)}, IncomingAuthPassword={Redact.Mask(IncomingAuthPassword)})";
+    }
 }
 
 public class PstnConfiguration : TrunkConfiguration

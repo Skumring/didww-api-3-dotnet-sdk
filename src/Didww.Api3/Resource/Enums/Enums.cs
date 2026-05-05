@@ -96,6 +96,23 @@ public enum DiversionRelayPolicy
 }
 
 [JsonConverter(typeof(TolerantStringEnumConverter))]
+public enum DiversionInjectMode
+{
+    [System.Runtime.Serialization.EnumMember(Value = "none")] None,
+    [System.Runtime.Serialization.EnumMember(Value = "did_number")] DidNumber
+}
+
+[JsonConverter(typeof(TolerantStringEnumConverter))]
+public enum NetworkProtocolPriority
+{
+    [System.Runtime.Serialization.EnumMember(Value = "force_ipv4")] ForceIpv4,
+    [System.Runtime.Serialization.EnumMember(Value = "force_ipv6")] ForceIpv6,
+    [System.Runtime.Serialization.EnumMember(Value = "any")] Any,
+    [System.Runtime.Serialization.EnumMember(Value = "prefer_ipv4")] PreferIpv4,
+    [System.Runtime.Serialization.EnumMember(Value = "prefer_ipv6")] PreferIpv6
+}
+
+[JsonConverter(typeof(TolerantStringEnumConverter))]
 public enum MediaEncryptionMode
 {
     [System.Runtime.Serialization.EnumMember(Value = "disabled")] Disabled,

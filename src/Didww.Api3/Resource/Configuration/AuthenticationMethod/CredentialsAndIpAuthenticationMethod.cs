@@ -1,3 +1,4 @@
+using Didww.Api3.Internal;
 using Newtonsoft.Json;
 
 namespace Didww.Api3.Resource.Configuration.AuthenticationMethod;
@@ -23,4 +24,13 @@ public class CredentialsAndIpAuthenticationMethod : AuthenticationMethodBase
 
     [JsonProperty("password")]
     public string? Password { get; set; }
+
+    // Override ToString so default logging / debugger / error reports never
+    // leak the server-generated credentials.
+    public override string ToString()
+    {
+        var ips = AllowedSipIps == null ? "null" : $"[{string.Join(", ", AllowedSipIps)}]";
+        return $"CredentialsAndIpAuthenticationMethod(AllowedSipIps={ips}, TechPrefix={TechPrefix ?? "null"}, " +
+               $"Username={Redact.Mask(Username)}, Password={Redact.Mask(Password)})";
+    }
 }
