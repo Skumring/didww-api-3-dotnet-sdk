@@ -460,55 +460,64 @@ public class VoiceInTrunkTest : BaseTest
     }
 
     [Fact]
-    public void TestEnablingSipRegistrationClearsHostAndPort()
+    public void TestEnablingSipRegistrationClearsHostAndPortOnWire()
     {
-        var cfg = new SipConfiguration { Host = "sip.example.com", Port = 5060 };
-        cfg.EnabledSipRegistration = true;
-        cfg.Host.Should().BeNull();
-        cfg.Port.Should().BeNull();
-        cfg.EnabledSipRegistration.Should().BeTrue();
+        // The cascade is wire-time (in SipConfigurationJsonConverter), not
+        // setter-side. In-memory the user's struct stays as written; the
+        // converter applies the server-required invariant only at serialize.
+        var cfg = new SipConfiguration { Host = "sip.example.com", Port = 5060, EnabledSipRegistration = true };
+        var json = JsonConvert.SerializeObject(cfg);
+        json.Should().Contain("\"host\":null");
+        json.Should().Contain("\"port\":null");
+        json.Should().Contain("\"enabled_sip_registration\":true");
     }
 
     [Fact]
-    public void TestDisablingSipRegistrationForcesUseDidInRuriToFalse()
+    public void TestDisablingSipRegistrationForcesUseDidInRuriToFalseOnWire()
     {
-        var cfg = new SipConfiguration { EnabledSipRegistration = true, UseDidInRuri = true };
-        cfg.EnabledSipRegistration = false;
-        cfg.EnabledSipRegistration.Should().BeFalse();
-        cfg.UseDidInRuri.Should().BeFalse();
+        var cfg = new SipConfiguration { EnabledSipRegistration = false, UseDidInRuri = true };
+        var json = JsonConvert.SerializeObject(cfg);
+        json.Should().Contain("\"enabled_sip_registration\":false");
+        json.Should().Contain("\"use_did_in_ruri\":false");
     }
 
     [Fact]
-    public void TestSettingHostDisablesSipRegistrationAndForcesUseDidInRuriToFalse()
+    public void TestSettingHostDisablesSipRegistrationAndForcesUseDidInRuriToFalseOnWire()
     {
-        var cfg = new SipConfiguration { EnabledSipRegistration = true, UseDidInRuri = true };
-        cfg.Host = "sip.example.com";
-        cfg.Host.Should().Be("sip.example.com");
-        cfg.EnabledSipRegistration.Should().BeFalse();
-        cfg.UseDidInRuri.Should().BeFalse();
+        // When Host is set without an explicit EnabledSipRegistration=true,
+        // the converter forces enabled_sip_registration=false and
+        // use_did_in_ruri=false on the wire — matching the server's
+        // requirement when host is present.
+        var cfg = new SipConfiguration { UseDidInRuri = true, Host = "sip.example.com" };
+        var json = JsonConvert.SerializeObject(cfg);
+        json.Should().Contain("\"host\":\"sip.example.com\"");
+        json.Should().Contain("\"enabled_sip_registration\":false");
+        json.Should().Contain("\"use_did_in_ruri\":false");
     }
 
     [Fact]
-    public void TestEnablingSipRegistrationLeavesUseDidInRuriUntouched()
+    public void TestEnablingSipRegistrationLeavesUseDidInRuriUntouchedOnWire()
     {
         var cfg = new SipConfiguration { EnabledSipRegistration = true, UseDidInRuri = true };
-        cfg.EnabledSipRegistration = true;
-        cfg.UseDidInRuri.Should().BeTrue();
+        var json = JsonConvert.SerializeObject(cfg);
+        json.Should().Contain("\"enabled_sip_registration\":true");
+        json.Should().Contain("\"use_did_in_ruri\":true");
     }
 
     [Fact]
     public void TestSipConfigurationWirePayloadReflectsCascadedState()
     {
-        // Mirror dimension: after the cascade fires from a property setter,
-        // the on-the-wire payload (Newtonsoft.Json output) must contain the
-        // cascaded field values — not just the in-memory state. This is the
-        // wire-format check; the cascade-state check is covered separately.
+        // Wire-format integration check: Host-driven cascade fires through
+        // SipConfigurationJsonConverter (Host non-blank ⇒ enabled=false,
+        // useDidInRuri=false), and the read-only credential fields are
+        // stripped. EnabledSipRegistration is left null in the input so the
+        // Host rule applies — see TestEnablingSipRegistrationClearsHostAnd-
+        // PortOnWire for the precedence-of-Enabled case.
         var cfg = new SipConfiguration
         {
-            EnabledSipRegistration = true,
             UseDidInRuri = true,
+            Host = "sip.example.com",
         };
-        cfg.Host = "sip.example.com"; // triggers the cascade
         var json = JsonConvert.SerializeObject(cfg);
         json.Should().Contain("\"host\":\"sip.example.com\"");
         json.Should().Contain("\"enabled_sip_registration\":false");

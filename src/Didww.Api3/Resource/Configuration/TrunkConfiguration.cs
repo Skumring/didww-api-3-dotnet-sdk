@@ -1,4 +1,3 @@
-using System.Runtime.Serialization;
 using Didww.Api3.Internal;
 using Didww.Api3.Resource.Enums;
 using Newtonsoft.Json;
@@ -11,74 +10,31 @@ public abstract class TrunkConfiguration
     public abstract string ConfigurationType { get; }
 }
 
+/// <summary>
+/// SIP trunk configuration. Plain data class — server-enforced multi-field
+/// invariants (API 2026-04-16) are applied at serialization time by
+/// <see cref="SipConfigurationJsonConverter"/>, not by setter side-effects.
+/// Setting <c>EnabledSipRegistration = true</c> emits <c>"host":null</c> /
+/// <c>"port":null</c> on the wire; setting <c>Host</c> to a non-empty value
+/// forces <c>enabled_sip_registration</c> and <c>use_did_in_ruri</c> to
+/// false on the wire. Read-only credential fields
+/// (<see cref="IncomingAuthUsername"/> / <see cref="IncomingAuthPassword"/>)
+/// are stripped from POST/PATCH bodies by the same converter.
+/// </summary>
+[JsonConverter(typeof(SipConfigurationJsonConverter))]
 public class SipConfiguration : TrunkConfiguration
 {
     [JsonIgnore]
     public override string ConfigurationType => "sip_configurations";
 
-    // Suppresses the auto-cascade in property setters during JSON
-    // deserialization. The server's response shape is already consistent —
-    // running the cascade against it would clobber valid combinations
-    // (e.g. EnabledSipRegistration: true would null out a Host the server
-    // had set before the deserializer reached EnabledSipRegistration).
-    // The cascade logic only fires when the application sets a property.
-    [JsonIgnore]
-    private bool _isDeserializing;
-
-    [OnDeserializing]
-    internal void OnDeserializing(StreamingContext _) => _isDeserializing = true;
-
-    [OnDeserialized]
-    internal void OnDeserialized(StreamingContext _) => _isDeserializing = false;
-
     [JsonProperty("username")]
     public string? Username { get; set; }
 
-    private string? _host;
-    private int? _port;
-    private bool _hostExplicit;
-    private bool _portExplicit;
+    [JsonProperty("host")]
+    public string? Host { get; set; }
 
-    /// <summary>
-    /// Setting <see cref="Host"/> to a non-null value cascades
-    /// <see cref="EnabledSipRegistration"/> = false and
-    /// <see cref="UseDidInRuri"/> = false because the server requires those
-    /// states whenever <c>host</c> is present (API 2026-04-16). The wire
-    /// payload reflects the cascaded state.
-    /// </summary>
-    [JsonProperty("host", NullValueHandling = NullValueHandling.Include)]
-    public string? Host
-    {
-        get => _host;
-        set
-        {
-            if (!_isDeserializing)
-            {
-                _hostExplicit = true;
-                if (value != null)
-                {
-                    _enabledSipRegistration = false;
-                    UseDidInRuri = false;
-                }
-            }
-            _host = value;
-        }
-    }
-
-    [JsonProperty("port", NullValueHandling = NullValueHandling.Include)]
-    public int? Port
-    {
-        get => _port;
-        set
-        {
-            if (!_isDeserializing)
-                _portExplicit = true;
-            _port = value;
-        }
-    }
-
-    public bool ShouldSerializeHost() => _hostExplicit;
-    public bool ShouldSerializePort() => _portExplicit;
+    [JsonProperty("port")]
+    public int? Port { get; set; }
 
     [JsonProperty("codec_ids")]
     public List<Codec>? CodecIds { get; set; }
@@ -171,57 +127,11 @@ public class SipConfiguration : TrunkConfiguration
     /// Whether SIP registration is enabled. When <c>true</c> the server
     /// generates <see cref="IncomingAuthUsername"/> /
     /// <see cref="IncomingAuthPassword"/> and the trunk's
-    /// <see cref="Host"/> and <see cref="Port"/> must be left blank. When
-    /// disabling sip registration on an existing trunk, the same PATCH must
-    /// also set <see cref="Host"/> to a non-blank value and
-    /// <see cref="UseDidInRuri"/> to <c>false</c>, or the server returns 422.
+    /// <see cref="Host"/> and <see cref="Port"/> must be left blank.
     /// (API 2026-04-16)
     /// </summary>
-    private bool? _enabledSipRegistration;
-
-    /// <summary>
-    /// Setting <see cref="EnabledSipRegistration"/> cascades dependent fields
-    /// to satisfy the server's validation rules (API 2026-04-16):
-    /// <list type="bullet">
-    /// <item>
-    /// <c>true</c> -> nullify <see cref="Host"/> / <see cref="Port"/> and
-    /// emit them as <c>null</c> on the wire (host/port must be blank when
-    /// sip_registration is on). The wire emission fires unconditionally so
-    /// PATCH against an existing trunk that already has host/port set
-    /// server-side is told to clear them.
-    /// </item>
-    /// <item>
-    /// <c>false</c> -> force <see cref="UseDidInRuri"/> = false (must be
-    /// disabled when sip_registration is disabled).
-    /// </item>
-    /// </list>
-    /// </summary>
     [JsonProperty("enabled_sip_registration")]
-    public bool? EnabledSipRegistration
-    {
-        get => _enabledSipRegistration;
-        set
-        {
-            if (!_isDeserializing)
-            {
-                if (value == true)
-                {
-                    // Always emit host: null and port: null on the wire so a
-                    // PATCH against an existing trunk that already has them
-                    // persisted on the server side is told to clear them.
-                    _host = null;
-                    _hostExplicit = true;
-                    _port = null;
-                    _portExplicit = true;
-                }
-                else if (value == false)
-                {
-                    UseDidInRuri = false;
-                }
-            }
-            _enabledSipRegistration = value;
-        }
-    }
+    public bool? EnabledSipRegistration { get; set; }
 
     [JsonProperty("use_did_in_ruri")]
     public bool? UseDidInRuri { get; set; }
@@ -236,7 +146,7 @@ public class SipConfiguration : TrunkConfiguration
     /// (API 2026-04-16)
     /// </summary>
     [JsonProperty("incoming_auth_username")]
-    public string? IncomingAuthUsername { get; private set; }
+    public string? IncomingAuthUsername { get; set; }
 
     /// <summary>
     /// Server-generated SIP authentication password, returned in responses
@@ -245,19 +155,11 @@ public class SipConfiguration : TrunkConfiguration
     /// (API 2026-04-16)
     /// </summary>
     [JsonProperty("incoming_auth_password")]
-    public string? IncomingAuthPassword { get; private set; }
+    public string? IncomingAuthPassword { get; set; }
 
-    // Read-only fields: deserialize from server responses but never serialize
-    // back into POST/PATCH request bodies. Newtonsoft.Json discovers these
-    // ShouldSerialize* methods via reflection and skips the property when
-    // they return false.
-    public bool ShouldSerializeIncomingAuthUsername() => false;
-    public bool ShouldSerializeIncomingAuthPassword() => false;
-
-    // Override ToString so default logging / debugger / error reports never
-    // leak SIP credentials. The wire payload is unaffected — Newtonsoft.Json
-    // serializes the real values (or strips read-only ones via the
-    // ShouldSerialize* hooks above).
+    // Default ToString redacts credentials so logs / debugger / unhandled
+    // exception traces never leak them. Wire payload is unaffected — the
+    // converter writes the real values (and strips read-only ones).
     public override string ToString()
     {
         return $"SipConfiguration(Username={Username ?? "null"}, Host={Host ?? "null"}, Port={Port?.ToString() ?? "null"}, " +
